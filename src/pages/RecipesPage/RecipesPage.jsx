@@ -1,16 +1,12 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-
-import { Link } from "react-router-dom";
-
-const MONGO_URI =  process.env.MONGODB_URI 
-
-
+import RecipesList from "./../../components/RecipesList/RecipesList";
 
 function RecipesPage() {
   return (
-    <div>RecipesPage</div>
-  )
+    <>
+      <h1>Our Dishes</h1>
+      <RecipesList />
+    </>
+  );
 }
 
-export default RecipesPage
+export default RecipesPage;
