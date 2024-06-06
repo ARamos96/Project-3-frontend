@@ -1,13 +1,15 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 
+import Navbar from "./components/Navbar/Navbar";
+
 import HomePage from "./pages/HomePage/HomePage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SignupPage from "./pages/SignupPage/SignupPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RecipesPage from "./pages/RecipesPage/RecipesPage";
+import RecipeDetailsPage from "./pages/RecipeDetailsPage/RecipeDetailsPage";
 
-import Navbar from "./components/Navbar/Navbar";
 import IsPrivate from "./components/IsPrivate/IsPrivate";
 import IsAnon from "./components/IsAnon/IsAnon";
 
@@ -49,6 +51,14 @@ function App() {
           element={
             <IsAnon>
               <RecipesPage />
+            </IsAnon>
+          }
+        />
+        <Route
+          path="/recipes/:recipeId"
+          element={
+            <IsAnon>
+              <RecipeDetailsPage />
             </IsAnon>
           }
         />
