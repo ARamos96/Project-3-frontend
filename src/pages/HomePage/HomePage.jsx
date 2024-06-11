@@ -1,5 +1,5 @@
 import "./HomePage.css";
-import "./../../components/Footer.jsx"
+import Footer from "./../../components/Footer/Footer"
 
 
 function HomePage() {
