@@ -85,14 +85,19 @@ function RecipeDetailsPage() {
         </div>
       )}
       {recipe.steps && (
-  <ul className="recipe-steps">
-    {recipe.steps.map((step, index) => (
-      <li key={`step-${index}`}>
-        <span><b>Step {index + 1}</b> {step}</span>
-      </li>
-    ))}
-  </ul>
-)}
+        <div className="recipe-steps-container">
+          <h2>Step-by-step</h2>
+          <ul className="recipe-steps">
+            {recipe.steps.map((step, index) => (
+              <li key={`step-${index}`}>
+                <span>
+                  <b>Step {index + 1}</b> {step}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
