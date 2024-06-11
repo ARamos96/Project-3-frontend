@@ -9,6 +9,7 @@ import HomePage from "./pages/HomePage/HomePage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import SignupPage from "./pages/SignupPage/SignupPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
+import HowItWorksPage from "./pages/HowItWorksPage/HowItWorksPage";
 import RecipesPage from "./pages/RecipesPage/RecipesPage";
 import RecipeDetailsPage from "./pages/RecipeDetailsPage/RecipeDetailsPage";
 import MealPlan from "./pages/MealPlan/MealPlan";
@@ -51,6 +52,16 @@ function App() {
         />
         
         <Route path="/mealplan" element={<MealPlan />} />
+
+        <Route
+          path="/howitworks"
+          element={
+            <IsAnon>
+              <HowItWorksPage />
+            </IsAnon>
+          }
+        />
+
         <Route path="/recipes" element={<RecipesPage />} />
         <Route path="/recipes/:recipeId" element={<RecipeDetailsPage />} />
       </Routes>
