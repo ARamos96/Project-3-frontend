@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar/Navbar";
 
-import Footer from "./components/Footer/Footer"
+import Footer from "./components/Footer/Footer";
 
 import HomePage from "./pages/HomePage/HomePage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
@@ -48,22 +48,8 @@ function App() {
             </IsAnon>
           }
         />
-        <Route
-          path="/recipes"
-          element={
-            <IsAnon>
-              <RecipesPage />
-            </IsAnon>
-          }
-        />
-        <Route
-          path="/recipes/:recipeId"
-          element={
-            <IsAnon>
-              <RecipeDetailsPage />
-            </IsAnon>
-          }
-        />
+        <Route path="/recipes" element={<RecipesPage />} />
+        <Route path="/recipes/:recipeId" element={<RecipeDetailsPage />} />
       </Routes>
 
       <Footer />
