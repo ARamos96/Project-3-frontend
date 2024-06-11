@@ -11,6 +11,7 @@ function RecipeDetailsPage() {
   // Obtain Id from URL
   const { recipeId } = useParams();
 
+  // Get single recipe details
   useEffect(() => {
     axios
       .get(`${MONGO_URI}/${recipeId}`)
