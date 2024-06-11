@@ -11,6 +11,7 @@ import SignupPage from "./pages/SignupPage/SignupPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import RecipesPage from "./pages/RecipesPage/RecipesPage";
 import RecipeDetailsPage from "./pages/RecipeDetailsPage/RecipeDetailsPage";
+import MealPlan from "./pages/MealPlan/MealPlan";
 
 import IsPrivate from "./components/IsPrivate/IsPrivate";
 import IsAnon from "./components/IsAnon/IsAnon";
@@ -48,6 +49,8 @@ function App() {
             </IsAnon>
           }
         />
+        
+        <Route path="/mealplan" element={<MealPlan />} />
         <Route path="/recipes" element={<RecipesPage />} />
         <Route path="/recipes/:recipeId" element={<RecipeDetailsPage />} />
       </Routes>

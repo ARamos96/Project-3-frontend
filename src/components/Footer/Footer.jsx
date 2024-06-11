@@ -8,8 +8,7 @@ function Footer() {
     <div className='footer'>
         <Link>How it works</Link>
         <Link to="/recipes">Dishes</Link>
-        <Link>Subscriptions</Link>
-        <Link to="/signup">Create account</Link>
+        <Link tp="/mealplans">Meal Plans</Link>
         <Link>X</Link>
         <Link>Facebook</Link>
         <Link>Instagram</Link>    

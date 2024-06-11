@@ -1,16 +1,17 @@
 import "./HomePage.css";
 //import "../HowitWorks/HowitWorks"
 import { Link } from "react-router-dom";
+import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
 
 
 function HomePage() {
   return (
     <div>
-      <article>
+      <section>
         <h1>Savor Swift</h1>
-      </article>
+      </section>
 
-      <article>
+      <section>
         <h2>What is Savor Swift?</h2>
         <p>
           Savor Swift is an online meal delivery service dedicated to bringing a diverse array of freshly prepared, gourmet meals right to your doorstep. Our mission is to provide a convenient and high-quality dining experience by using locally-sourced, organic ingredients and catering to a wide range of dietary preferences and needs.
@@ -20,9 +21,9 @@ function HomePage() {
           Join our community to receive exclusive offers, updates on new menu items, and cooking tips from our chefs. Follow us on social media to stay connected and share your Savor Swift experience with friends and family.
           Savor Swift – bringing the joy of delicious, home-cooked meals to your doorstep. Order today and taste the difference!
         </p>
-      </article>
+      </section>
 
-      <article>
+      <section>
         <h2>How it works?</h2>
         <p>Step 1</p>
         <p>Step 2</p>
@@ -30,22 +31,17 @@ function HomePage() {
         <Link to="/howitworks">
           <button> See more! </button>
         </Link>
-      </article>
+      </section>
 
-      <article>
+      <section>
         <h2>Dishes</h2>
         <p>
-          card 1
-          card 2
-          card 3
-          card 4
-          ...
-
+        <DishesCarrousel/>
         </p>
         <Link to="/recipes">
           <button> Our Meals! </button>
         </Link>
-      </article>
+      </section>
 
       <br />
 
