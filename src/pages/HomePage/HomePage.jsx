@@ -1,5 +1,4 @@
 import "./HomePage.css";
-import Footer from "./../../components/Footer/Footer"
 
 
 function HomePage() {
@@ -7,7 +6,7 @@ function HomePage() {
     <div>
       <h1>Home page</h1>
 
-      <Footer />
+      
     </div>
   );
 }
