@@ -1,5 +1,5 @@
 .profile-page {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
@@ -7,20 +7,66 @@
     color: white; /* Set text color to white for contrast */
   }
   
-  .profile-info {
+  .profile-columns {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .profile-column {
+    width: 48%;
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 20px;
-    background-color: #333; /* Dark background for the profile info section */
+    background-color: #333; /* Dark background for the profile column */
   }
   
   .profile-item {
     margin-bottom: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
   }
   
   .profile-item strong {
     margin-right: 10px;
   }
+  
+  .button-group {
+    display: flex;
+    gap: 10px;
+  }
+  
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  form .profile-item {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  form .profile-item label {
+    margin-bottom: 5px;
+  }
+  
+  form .profile-item input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+  
