@@ -21,4 +21,16 @@
 .step-container img{
     width: 250px;
     height: 250px;
+    border-radius: 125px;
+}
+.FAQs {
+    width: 100vw;
+}
+
+.FAQs h2{
+    height: 80px;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    text-align: center; /* Center the text within the element */
 }
