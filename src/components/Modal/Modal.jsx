@@ -1,7 +1,7 @@
 import React from 'react';
 import './Modal.css';
 
-const Modal = ({ show, handleClose, handleConfirm, message }) => {
+const Modal = ({ show, handleClose, handleConfirm, heading, message, confirmMessage, closeMessage }) => {
   if (!show) {
     return null;
   }
@@ -9,11 +9,11 @@ const Modal = ({ show, handleClose, handleConfirm, message }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <h2>Are you sure?</h2>
+        <h2>{heading}</h2>
         <p>{message}</p>
         <div className="modal-buttons">
-          <button onClick={handleConfirm}>Yes</button>
-          <button onClick={handleClose}>No</button>
+          {handleConfirm && <button onClick={handleConfirm}>{confirmMessage}</button>}
+          <button onClick={handleClose}>{closeMessage}</button>
         </div>
       </div>
     </div>

@@ -3,15 +3,24 @@ import "./ProfilePage.css";
 import { AuthContext } from "../../context/auth.context";
 import Loading from "../../components/Loading/Loading";
 import Modal from "../../components/Modal/Modal";
+import authService from "../../services/auth.service";
 
 function ProfilePage() {
   const { user } = useContext(AuthContext);
+
+  // Controls the editing of each element
   const [isEditingPersonalDetails, setIsEditingPersonalDetails] =
     useState(false);
   const [isEditingPaymentMethod, setIsEditingPaymentMethod] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
+
+  const { authenticateUser } = useContext(AuthContext);
+
+  // 1 form for changes in personal , password, address, payment details
   const [formData, setFormData] = useState({});
+
+  // Modal controls - component at bottom of page
   const [showModal, setShowModal] = useState(false);
   const [closeAction, setCloseAction] = useState(null);
 
@@ -25,7 +34,6 @@ function ProfilePage() {
       name: user.name || "",
       lastName: user.lastName || "",
       email: user.email || "",
-      address: user.address ? user.address.address : "",
     });
   };
 
@@ -60,9 +68,58 @@ function ProfilePage() {
     setFormData({ ...formData, [name]: value });
   };
 
+  // Go back button triggers modal - sends setIsEditing___ as a callback
+  const handleGoBack = (action) => {
+    setShowModal(true);
+    setCloseAction(() => action);
+  };
+
+  // When user clicks on confirmation, relevant editing field is closed
+  const confirmGoBack = () => {
+    setShowModal(false);
+    if (closeAction) {
+      closeAction();
+    }
+  };
+
+  // Compares differing fields between user and formData and returns a new object
+  const getChangedFields = (originalData, newData) => {
+    const changedFields = {};
+    for (const key in newData) {
+      if (newData[key] !== originalData[key]) {
+        changedFields[key] = newData[key];
+      }
+    }
+    return changedFields;
+  };
+
   const handlePersonalDetailsSubmit = (e) => {
     e.preventDefault();
-    // Submit the personal details form data to the server or update the user state
+
+    // Subset of personalDetails in user context
+    const userPersonalDetails = {
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
+    };
+
+    const changedFields = getChangedFields(userPersonalDetails, formData);
+    if (Object.keys(changedFields).length > 0) {
+      // Submit changedFields to the server or update the user state
+      console.log("Changed fields:", changedFields);
+      authService
+        .patchPersonalDetails(changedFields, user._id)
+        .then((response) => {
+          alert("YOU DID ITTTTTTTTT");
+          // how to get user again and load it?
+          authenticateUser();
+        })
+        .catch((error) => {
+          // If the request resolves with an error, set the error message in the state
+          const errorDescription = error.response.data.message;
+        });
+      // Example: axios.post('/api/updateUser', changedFields);
+    }
     setIsEditingPersonalDetails(false);
     // Optionally update the user context here
   };
@@ -86,18 +143,6 @@ function ProfilePage() {
     // Submit the change password form data to the server
     setIsChangingPassword(false);
     // Optionally update the user context here
-  };
-
-  const handleGoBack = (action) => {
-    setShowModal(true);
-    setCloseAction(() => action);
-  };
-
-  const confirmGoBack = () => {
-    setShowModal(false);
-    if (closeAction) {
-      closeAction();
-    }
   };
 
   return (
@@ -137,7 +182,12 @@ function ProfilePage() {
               </div>
               <div className="button-group">
                 <button type="submit">Save</button>
-                <button type="button" onClick={() => handleGoBack(() => setIsEditingPersonalDetails(false))}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleGoBack(() => setIsEditingPersonalDetails(false))
+                  }
+                >
                   Go Back Without Saving
                 </button>
               </div>
@@ -224,7 +274,10 @@ function ProfilePage() {
               </div>
               <div className="button-group">
                 <button type="submit">Save</button>
-                <button type="button" onClick={() => handleGoBack(() => setIsEditingAddress(false))}>
+                <button
+                  type="button"
+                  onClick={() => handleGoBack(() => setIsEditingAddress(false))}
+                >
                   Go Back Without Saving
                 </button>
               </div>
@@ -273,7 +326,12 @@ function ProfilePage() {
               </div>
               <div className="button-group">
                 <button type="submit">Save</button>
-                <button type="button" onClick={() => handleGoBack(() => setIsEditingPaymentMethod(false))}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleGoBack(() => setIsEditingPaymentMethod(false))
+                  }
+                >
                   Go Back Without Saving
                 </button>
               </div>
@@ -305,7 +363,12 @@ function ProfilePage() {
               </div>
               <div className="button-group">
                 <button type="submit">Change Password</button>
-                <button type="button" onClick={() => handleGoBack(() => setIsChangingPassword(false))}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleGoBack(() => setIsChangingPassword(false))
+                  }
+                >
                   Go Back Without Saving
                 </button>
               </div>
@@ -477,7 +540,10 @@ function ProfilePage() {
         show={showModal}
         handleClose={() => setShowModal(false)}
         handleConfirm={confirmGoBack}
+        heading="Are you sure?"
         message="Your changes will be lost."
+        confirmMessage="Yes"
+        closeMessage="No"
       />
     </div>
   );
