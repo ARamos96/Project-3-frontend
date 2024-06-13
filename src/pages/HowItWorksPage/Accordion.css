@@ -1,0 +1,25 @@
+.accordion .p-accordion-header-link {
+    color: inherit; /* Ensure the text color is not like a link */
+    text-decoration: none; /* Remove any underline effect */
+    font-weight: bolder; /* Make the question text bold */
+    font-size: 20px;
+    text-transform: uppercase;
+  }
+
+  
+  .accordion .p-accordion-content {
+    padding: 15px;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .accordion .p-accordion-tab {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 10px 0;
+  }
+  
+  .accordion .p-accordion-header {
+    background-color: rgb(255, 165, 0);;
+    padding: 15px;
+  }

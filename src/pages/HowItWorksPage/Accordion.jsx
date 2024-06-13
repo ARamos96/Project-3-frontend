@@ -1,11 +1,13 @@
 import React from 'react';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 
+import "./Accordion.css";
+
 export default function AccordionComponent(props) {
 
     const { question, answer } = props;
     return (
-        <div className="card">
+        <div className="accordion">
             <Accordion activeIndex={0}>
                 <AccordionTab header={question}>
                     <p className="m-0">
