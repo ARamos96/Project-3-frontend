@@ -11,7 +11,7 @@ function HowItWorksPage() {
       <h1>How does SavourSwift Work?</h1>
       <div className="steps">
         <div className="step-container">
-          <img classname="step-thumbnail" src="/HIW-Step-1.jpg" alt="Step-1" />
+          <img className="step-thumbnail" src="/HIW-Step-1.jpg" alt="Step-1" />
           <h2>Choose</h2>
           <p>
             Pick a diet preference, or mix and match tasty nutritionist-designed
@@ -19,7 +19,7 @@ function HowItWorksPage() {
           </p>
         </div>
         <div className="step-container">
-          <img classname="step-thumbnail" src="/HIW-Step-2.jpg" alt="Step-2" />
+          <img className="step-thumbnail" src="/HIW-Step-2.jpg" alt="Step-2" />
           <h2>Cook</h2>
           <p>
             Receive quality ingredients and easy-to-follow recipes, with most
@@ -27,7 +27,7 @@ function HowItWorksPage() {
           </p>
         </div>
         <div className="step-container">
-          <img classname="step-thumbnail" src="/HIW-Step-3.jpg" alt="Step-3" />
+          <img className="step-thumbnail" src="/HIW-Step-3.jpg" alt="Step-3" />
           <h2>Enjoy</h2>
           <p>
             You get the right portion size, carbs, protein, fats and calories to
