@@ -38,55 +38,7 @@ function HowItWorksPage() {
       <button onClick={() => navigate("/recipes")}>Let's get STARTED!</button>
       <div className="FAQs">
         <h2>Frequently Asked Questions</h2>
-        {/* <div className="FAQs-container">
-          <h3>What is SavourSwift?</h3>
-          <p>
-            SavourSwift is a meal subscription service that provides
-            nutritionist-designed recipes, allowing you to mix and match meals
-            to fit your lifestyle. We deliver quality ingredients right to your
-            doorstep, making healthy eating easy and convenient.
-          </p>
-        </div>
 
-        <div className="FAQs-container">
-          <h3>How does the subscription work?</h3>
-          <p>
-            When you subscribe to SavourSwift, you can choose a meal plan that
-            fits your dietary preferences and schedule. Every week, you'll
-            receive a box with fresh ingredients and step-by-step recipes to
-            create delicious and nutritious meals at home.
-          </p>
-        </div>
-
-        <div className="FAQs-container">
-          <h3>Can I customize my meal plan?</h3>
-          <p>
-            Yes, you can customize your meal plan based on your dietary needs
-            and preferences. Whether you are vegetarian, vegan, gluten-free, or
-            have other specific requirements, SavourSwift offers a variety of
-            options to ensure your meals are tailored to your lifestyle.
-          </p>
-        </div>
-
-        <div className="FAQs-container">
-          <h3>What if I have food allergies?</h3>
-          <p>
-            SavourSwift takes food allergies seriously. During the sign-up
-            process, you can specify any allergies or dietary restrictions. Our
-            team will ensure that your meals are prepared accordingly, providing
-            you with safe and delicious options.
-          </p>
-        </div>
-
-        <div className="FAQs-container">
-          <h3>How flexible is SavourSwift? What am I committing to?</h3>
-          <p>
-            SavourSwift is a flexible weekly subscription with no minimum
-            commitment and no cancellation fees. You can change your recipes,
-            modify your delivery, or skip weeks without any obligation.
-          </p>
-        </div> */}
-        
         <AccordionComponent
           question="What is SavourSwift?"
           answer="SavourSwift is a meal subscription service that provides
