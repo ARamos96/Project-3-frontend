@@ -10,7 +10,7 @@ const Modal = ({ show, handleClose, handleConfirm, heading, message, confirmMess
     <div className="modal-overlay">
       <div className="modal-content">
         <h2>{heading}</h2>
-        <p>{message}</p>
+        <p className='p-modal'>{message}</p>
         <div className="modal-buttons">
           {handleConfirm && <button onClick={handleConfirm}>{confirmMessage}</button>}
           <button onClick={handleClose}>{closeMessage}</button>

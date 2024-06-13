@@ -178,8 +178,8 @@ function ProfilePage() {
                 />
               </div>
               <div className="button-group">
-                <button type="submit">Save</button>
-                <button
+                <button className="button-profile" type="submit">Save</button>
+                <button className="button-profile"
                   type="button"
                   onClick={() =>
                     handleGoBack(() => setIsEditingPersonalDetails(false))
@@ -208,7 +208,7 @@ function ProfilePage() {
                   {user.address.phone}
                 </div>
               )}
-              <button onClick={handleEditPersonalDetailsClick}>
+              <button className="button-profile" onClick={handleEditPersonalDetailsClick}>
                 Edit Personal Details
               </button>
             </>
@@ -270,8 +270,8 @@ function ProfilePage() {
                 />
               </div>
               <div className="button-group">
-                <button type="submit">Save</button>
-                <button
+                <button className="button-profile" type="submit">Save</button>
+                <button className="button-profile"
                   type="button"
                   onClick={() => handleGoBack(() => setIsEditingAddress(false))}
                 >
@@ -280,7 +280,7 @@ function ProfilePage() {
               </div>
             </form>
           ) : (
-            <button onClick={handleEditAddressClick}>Edit Address</button>
+            <button className="button-profile" onClick={handleEditAddressClick}>Edit Address</button>
           )}
 
           {isEditingPaymentMethod ? (
@@ -322,8 +322,8 @@ function ProfilePage() {
                 />
               </div>
               <div className="button-group">
-                <button type="submit">Save</button>
-                <button
+                <button className="button-profile" type="submit">Save</button>
+                <button className="button-profile"
                   type="button"
                   onClick={() =>
                     handleGoBack(() => setIsEditingPaymentMethod(false))
@@ -334,7 +334,7 @@ function ProfilePage() {
               </div>
             </form>
           ) : (
-            <button onClick={handleEditPaymentMethodClick}>
+            <button className="button-profile" onClick={handleEditPaymentMethodClick}>
               Edit Payment Method
             </button>
           )}
@@ -359,8 +359,8 @@ function ProfilePage() {
                 />
               </div>
               <div className="button-group">
-                <button type="submit">Change Password</button>
-                <button
+                <button className="button-profile" type="submit">Change Password</button>
+                <button className="button-profile"
                   type="button"
                   onClick={() =>
                     handleGoBack(() => setIsChangingPassword(false))
@@ -371,7 +371,7 @@ function ProfilePage() {
               </div>
             </form>
           ) : (
-            <button onClick={handleChangePasswordClick}>Change Password</button>
+            <button className="button-profile" onClick={handleChangePasswordClick}>Change Password</button>
           )}
         </div>
         {(user.activeSubscription ||

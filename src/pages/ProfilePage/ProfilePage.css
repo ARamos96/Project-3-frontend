@@ -33,7 +33,7 @@
     gap: 10px;
   }
   
-  button {
+  .button-profile {
     background-color: #007bff;
     color: white;
     border: none;
