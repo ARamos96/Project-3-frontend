@@ -18,6 +18,14 @@ function Navbar() {
         <button>Our Meals</button>
       </Link>
 
+      <Link to="/howitworks">
+        <button>How It Works</button>
+      </Link>
+
+      <Link to="/mealplan">
+        <button>Meal Plan</button>
+      </Link>
+      
       {isLoggedIn && (
         <>
           <button onClick={logOutUser}>Logout</button>
