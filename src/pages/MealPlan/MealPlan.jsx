@@ -1,10 +1,11 @@
-import React, { useState, useContext} from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
 import "./MealPlan.css";
 import authService from "../../services/auth.service.js";
 import { AuthContext } from "../../context/auth.context";
+import { CartContext } from "../../context/cart.context.jsx";
 
 const MONGO_URI = "http://localhost:5005/mealplan";
 
@@ -17,6 +18,7 @@ function MealPlan() {
   const [price, setPrice] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const { user } = useContext(AuthContext);
+  const { setMealPlan } = useContext(CartContext);
   const navigate = useNavigate();
 
   // function to handle how many people are going to be selected
@@ -67,7 +69,7 @@ function MealPlan() {
     authService
       .postMealPlan(mealPlanData)
       .then((response) => {
-        localStorage.setItem("mealPlan", JSON.stringify(response.data));
+        setMealPlan(response.data);
         setManyPeople(0);
         setManyDishes(0);
         setDiet([]);

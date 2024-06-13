@@ -22,22 +22,29 @@ function CartProviderWrapper(props) {
     // Log the product to be added
     console.log("This is the product:", product);
 
-    // Update the cart state with the new product
-    setCart((prevCart) => {
-      const newCart = [...prevCart, product];
+    const mealPlan = getMealPlan();
 
-      // Update localStorage with the new cart
-      localStorage.setItem("cart", JSON.stringify(newCart));
+    if (cart.length >= mealPlan.dishesPerWeek) {
+      alert("You have reached the maximum number of dishes per week");
+      return;
+    } else {
+      // Update the cart state with the new product
+      setCart((prevCart) => {
+        const newCart = [...prevCart, product];
 
-      // Log the new cart
-      console.log("This is the new cart:", newCart);
+        // Update localStorage with the new cart
+        localStorage.setItem("cart", JSON.stringify(newCart));
 
-      // Return the new cart state
-      return newCart;
-    });
+        // Log the new cart
+        console.log("This is the new cart:", newCart);
 
-    // Navigate to the cart page
-    navigate(`/cart`);
+        // Return the new cart state
+        return newCart;
+      });
+
+      // Navigate to the cart page
+      navigate(`/cart`);
+    }
   };
 
   const buyCart = () => {
@@ -53,6 +60,19 @@ function CartProviderWrapper(props) {
 
     // Navigate to the cart page
     navigate(`/`);
+  };
+
+  const setMealPlan = (mealPlan) => {
+    localStorage.setItem("mealPlan", JSON.stringify(mealPlan));
+  };
+
+  const getMealPlan = () => {
+    const storedMealPlan = localStorage.getItem("mealPlan");
+    if (storedMealPlan) {
+      return JSON.parse(storedMealPlan);
+    } else {
+      return null;
+    }
   };
 
   return (
