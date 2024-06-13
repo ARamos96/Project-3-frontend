@@ -2,6 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar/Navbar";
+import TailWindNavbar from "./components/Navbar/TailWindNavbar";
 
 import Footer from "./components/Footer/Footer";
 
@@ -21,6 +22,7 @@ function App() {
   return (
     <div className="App">
       <Navbar />
+      {/* <TailWindNavbar /> */}
 
       <Routes>
         <Route path="/" element={<HomePage />} />
