@@ -1,4 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext} from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
 import "./MealPlan.css";
@@ -16,6 +17,7 @@ function MealPlan() {
   const [price, setPrice] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // function to handle how many people are going to be selected
 
@@ -71,6 +73,7 @@ function MealPlan() {
         setDiet([]);
         setPrice(0);
         setSubmitted(true); // Optionally, set a flag to indicate that the form has been submitted
+        navigate("/recipes");
       })
       .catch((error) => {
         console.error("Error creating meal plan:", error);
