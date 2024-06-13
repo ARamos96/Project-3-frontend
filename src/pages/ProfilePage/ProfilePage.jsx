@@ -6,7 +6,7 @@ import Modal from "../../components/Modal/Modal";
 import authService from "../../services/auth.service";
 
 function ProfilePage() {
-  const { user } = useContext(AuthContext);
+  const { user, authenticateUser, setUser } = useContext(AuthContext);
 
   // Controls the editing of each element
   const [isEditingPersonalDetails, setIsEditingPersonalDetails] =
@@ -14,8 +14,6 @@ function ProfilePage() {
   const [isEditingPaymentMethod, setIsEditingPaymentMethod] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
-
-  const { authenticateUser } = useContext(AuthContext);
 
   // 1 form for changes in personal , password, address, payment details
   const [formData, setFormData] = useState({});
@@ -111,8 +109,7 @@ function ProfilePage() {
         .patchPersonalDetails(changedFields, user._id)
         .then((response) => {
           alert("YOU DID ITTTTTTTTT");
-          // how to get user again and load it?
-          authenticateUser();
+          setUser(response.data);
         })
         .catch((error) => {
           // If the request resolves with an error, set the error message in the state
