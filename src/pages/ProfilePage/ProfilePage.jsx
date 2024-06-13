@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import "./ProfilePage.css";
 import { AuthContext } from "../../context/auth.context";
+import Loading from "../../components/Loading/Loading";
+import Modal from "../../components/Modal/Modal";
 
 function ProfilePage() {
   const { user } = useContext(AuthContext);
@@ -8,14 +10,13 @@ function ProfilePage() {
     useState(false);
   const [isEditingPaymentMethod, setIsEditingPaymentMethod] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [formData, setFormData] = useState({});
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: "",
-    newPassword: "",
-  });
+  const [showModal, setShowModal] = useState(false);
+  const [closeAction, setCloseAction] = useState(null);
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const handleEditPersonalDetailsClick = () => {
@@ -25,6 +26,18 @@ function ProfilePage() {
       lastName: user.lastName || "",
       email: user.email || "",
       address: user.address ? user.address.address : "",
+    });
+  };
+
+  const handleEditAddressClick = () => {
+    setIsEditingAddress(true);
+    setFormData({
+      address: user.address.address || "",
+      city: user.address.city || "",
+      region: user.address.region || "",
+      zipCode: user.address.zipCode || "",
+      country: user.address.country || "",
+      phone: user.address.phone || "",
     });
   };
 
@@ -40,7 +53,6 @@ function ProfilePage() {
 
   const handleChangePasswordClick = () => {
     setIsChangingPassword(true);
-    setPasswordData({ currentPassword: "", newPassword: "" });
   };
 
   const handleInputChange = (e) => {
@@ -48,15 +60,17 @@ function ProfilePage() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handlePasswordInputChange = (e) => {
-    const { name, value } = e.target;
-    setPasswordData({ ...passwordData, [name]: value });
-  };
-
   const handlePersonalDetailsSubmit = (e) => {
     e.preventDefault();
     // Submit the personal details form data to the server or update the user state
     setIsEditingPersonalDetails(false);
+    // Optionally update the user context here
+  };
+
+  const handleAddressSubmit = (e) => {
+    e.preventDefault();
+    // Submit the address form data to the server or update the user state
+    setIsEditingAddress(false);
     // Optionally update the user context here
   };
 
@@ -74,10 +88,16 @@ function ProfilePage() {
     // Optionally update the user context here
   };
 
-  const handleGoBack = () => {
-    setIsEditingPersonalDetails(false);
-    setIsEditingPaymentMethod(false);
-    setIsChangingPassword(false);
+  const handleGoBack = (action) => {
+    setShowModal(true);
+    setCloseAction(() => action);
+  };
+
+  const confirmGoBack = () => {
+    setShowModal(false);
+    if (closeAction) {
+      closeAction();
+    }
   };
 
   return (
@@ -115,18 +135,9 @@ function ProfilePage() {
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="profile-item">
-                <label>Address:</label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                />
-              </div>
               <div className="button-group">
                 <button type="submit">Save</button>
-                <button type="button" onClick={handleGoBack}>
+                <button type="button" onClick={() => handleGoBack(() => setIsEditingPersonalDetails(false))}>
                   Go Back Without Saving
                 </button>
               </div>
@@ -155,6 +166,73 @@ function ProfilePage() {
               </button>
             </>
           )}
+          {isEditingAddress ? (
+            <form onSubmit={handleAddressSubmit}>
+              <div className="profile-item">
+                <label>Address:</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="profile-item">
+                <label>City:</label>
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="profile-item">
+                <label>Region:</label>
+                <input
+                  type="text"
+                  name="region"
+                  value={formData.region}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="profile-item">
+                <label>Zip Code:</label>
+                <input
+                  type="text"
+                  name="zipCode"
+                  value={formData.zipCode}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="profile-item">
+                <label>Country:</label>
+                <input
+                  type="text"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="profile-item">
+                <label>Phone:</label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                />
+              </div>
+              <div className="button-group">
+                <button type="submit">Save</button>
+                <button type="button" onClick={() => handleGoBack(() => setIsEditingAddress(false))}>
+                  Go Back Without Saving
+                </button>
+              </div>
+            </form>
+          ) : (
+            <button onClick={handleEditAddressClick}>Edit Address</button>
+          )}
+
           {isEditingPaymentMethod ? (
             <form onSubmit={handlePaymentMethodSubmit}>
               <div className="profile-item">
@@ -195,7 +273,7 @@ function ProfilePage() {
               </div>
               <div className="button-group">
                 <button type="submit">Save</button>
-                <button type="button" onClick={handleGoBack}>
+                <button type="button" onClick={() => handleGoBack(() => setIsEditingPaymentMethod(false))}>
                   Go Back Without Saving
                 </button>
               </div>
@@ -211,9 +289,9 @@ function ProfilePage() {
                 <label>Current Password:</label>
                 <input
                   type="password"
-                  name="currentPassword"
-                  value={passwordData.currentPassword}
-                  onChange={handlePasswordInputChange}
+                  name="oldPassword"
+                  value={formData.oldPassword}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="profile-item">
@@ -221,13 +299,13 @@ function ProfilePage() {
                 <input
                   type="password"
                   name="newPassword"
-                  value={passwordData.newPassword}
-                  onChange={handlePasswordInputChange}
+                  value={formData.newPassword}
+                  onChange={handleInputChange}
                 />
               </div>
               <div className="button-group">
                 <button type="submit">Change Password</button>
-                <button type="button" onClick={handleGoBack}>
+                <button type="button" onClick={() => handleGoBack(() => setIsChangingPassword(false))}>
                   Go Back Without Saving
                 </button>
               </div>
@@ -395,6 +473,12 @@ function ProfilePage() {
           </div>
         )}
       </div>
+      <Modal
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+        handleConfirm={confirmGoBack}
+        message="Your changes will be lost."
+      />
     </div>
   );
 }
