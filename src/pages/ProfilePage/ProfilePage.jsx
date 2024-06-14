@@ -4,9 +4,10 @@ import { AuthContext } from "../../context/auth.context";
 import Loading from "../../components/Loading/Loading";
 import Modal from "../../components/Modal/Modal";
 import authService from "../../services/auth.service";
+import PersonalForm from "../../components/Forms/PersonalForm";
 
 function ProfilePage() {
-  const { user, authenticateUser, setUser } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
 
   // Controls the editing of each element
   const [isEditingPersonalDetails, setIsEditingPersonalDetails] =
@@ -14,6 +15,13 @@ function ProfilePage() {
   const [isEditingPaymentMethod, setIsEditingPaymentMethod] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
+
+  // Subset of personalDetails in user context
+  const userPersonalDetails = {
+    name: user.name,
+    lastName: user.lastName,
+    email: user.email,
+  };
 
   // 1 form for changes in personal , password, address, payment details
   const [formData, setFormData] = useState({});
@@ -29,9 +37,9 @@ function ProfilePage() {
   const handleEditPersonalDetailsClick = () => {
     setIsEditingPersonalDetails(true);
     setFormData({
-      name: user.name || "",
-      lastName: user.lastName || "",
-      email: user.email || "",
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
     });
   };
 
@@ -67,13 +75,18 @@ function ProfilePage() {
   };
 
   // Go back button triggers modal - sends setIsEditing___ as a callback
-  const handleGoBack = (action) => {
-    setShowModal(true);
-    setCloseAction(() => action);
+  const handleGoBack = (newData, action) => {
+    if (newData) {
+      const numChanges = getChangedFields(newData);
+      if (Object.keys(numChanges).length !== 0) {
+        setShowModal(true);
+      }
+    }
+    setCloseAction(action());
   };
 
-  // When user clicks on confirmation, relevant editing field is closed
-  const confirmGoBack = () => {
+  // Modal - When user clicks on confirmation, relevant editing field is closed
+  const handleConfirm = () => {
     setShowModal(false);
     if (closeAction) {
       closeAction();
@@ -81,11 +94,11 @@ function ProfilePage() {
   };
 
   // Compares differing fields between user and formData and returns a new object
-  const getChangedFields = (originalData, newData) => {
+  const getChangedFields = (oldData) => {
     const changedFields = {};
-    for (const key in newData) {
-      if (newData[key] !== originalData[key]) {
-        changedFields[key] = newData[key];
+    for (const key in oldData) {
+      if (oldData[key] !== formData[key]) {
+        changedFields[key] = formData[key];
       }
     }
     return changedFields;
@@ -94,14 +107,7 @@ function ProfilePage() {
   const handlePersonalDetailsSubmit = (e) => {
     e.preventDefault();
 
-    // Subset of personalDetails in user context
-    const userPersonalDetails = {
-      name: user.name,
-      lastName: user.lastName,
-      email: user.email,
-    };
-
-    const changedFields = getChangedFields(userPersonalDetails, formData);
+    const changedFields = getChangedFields(userPersonalDetails);
     if (Object.keys(changedFields).length > 0) {
       // Submit changedFields to the server or update the user state
       console.log("Changed fields:", changedFields);
@@ -109,7 +115,10 @@ function ProfilePage() {
         .patchPersonalDetails(changedFields, user._id)
         .then((response) => {
           alert("YOU DID ITTTTTTTTT");
-          setUser(response.data);
+          setUser((prevUser) => ({
+            ...prevUser,
+            ...changedFields,
+          }));
         })
         .catch((error) => {
           // If the request resolves with an error, set the error message in the state
@@ -149,46 +158,14 @@ function ProfilePage() {
         <div className="profile-column">
           <h2>Personal Details</h2>
           {isEditingPersonalDetails ? (
-            <form onSubmit={handlePersonalDetailsSubmit}>
-              <div className="profile-item">
-                <label>Name:</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="profile-item">
-                <label>Last Name:</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="profile-item">
-                <label>Email:</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="button-group">
-                <button className="button-profile" type="submit">Save</button>
-                <button className="button-profile"
-                  type="button"
-                  onClick={() =>
-                    handleGoBack(() => setIsEditingPersonalDetails(false))
-                  }
-                >
-                  Go Back Without Saving
-                </button>
-              </div>
-            </form>
+            <PersonalForm
+              formData={formData}
+              handleInputChange={handleInputChange}
+              handlePersonalDetailsSubmit={handlePersonalDetailsSubmit}
+              handleGoBack={handleGoBack}
+              setIsEditingPersonalDetails={setIsEditingPersonalDetails}
+              userPersonalDetails={userPersonalDetails}
+            />
           ) : (
             <>
               <div className="profile-item">
@@ -208,7 +185,10 @@ function ProfilePage() {
                   {user.address.phone}
                 </div>
               )}
-              <button className="button-profile" onClick={handleEditPersonalDetailsClick}>
+              <button
+                className="button-profile"
+                onClick={handleEditPersonalDetailsClick}
+              >
                 Edit Personal Details
               </button>
             </>
@@ -270,17 +250,22 @@ function ProfilePage() {
                 />
               </div>
               <div className="button-group">
-                <button className="button-profile" type="submit">Save</button>
-                <button className="button-profile"
+                <button className="button-profile" type="submit">
+                  Save
+                </button>
+                <button
+                  className="button-profile"
                   type="button"
-                  onClick={() => handleGoBack(() => setIsEditingAddress(false))}
+                  onClick={() => handleGoBack(undefined, () => setIsEditingAddress(false))}
                 >
                   Go Back Without Saving
                 </button>
               </div>
             </form>
           ) : (
-            <button className="button-profile" onClick={handleEditAddressClick}>Edit Address</button>
+            <button className="button-profile" onClick={handleEditAddressClick}>
+              Edit Address
+            </button>
           )}
 
           {isEditingPaymentMethod ? (
@@ -322,11 +307,14 @@ function ProfilePage() {
                 />
               </div>
               <div className="button-group">
-                <button className="button-profile" type="submit">Save</button>
-                <button className="button-profile"
+                <button className="button-profile" type="submit">
+                  Save
+                </button>
+                <button
+                  className="button-profile"
                   type="button"
                   onClick={() =>
-                    handleGoBack(() => setIsEditingPaymentMethod(false))
+                    handleGoBack(undefined, () => setIsEditingPaymentMethod(false))
                   }
                 >
                   Go Back Without Saving
@@ -334,7 +322,10 @@ function ProfilePage() {
               </div>
             </form>
           ) : (
-            <button className="button-profile" onClick={handleEditPaymentMethodClick}>
+            <button
+              className="button-profile"
+              onClick={handleEditPaymentMethodClick}
+            >
               Edit Payment Method
             </button>
           )}
@@ -359,11 +350,14 @@ function ProfilePage() {
                 />
               </div>
               <div className="button-group">
-                <button className="button-profile" type="submit">Change Password</button>
-                <button className="button-profile"
+                <button className="button-profile" type="submit">
+                  Change Password
+                </button>
+                <button
+                  className="button-profile"
                   type="button"
                   onClick={() =>
-                    handleGoBack(() => setIsChangingPassword(false))
+                    handleGoBack(undefined, () => setIsChangingPassword(false))
                   }
                 >
                   Go Back Without Saving
@@ -371,7 +365,12 @@ function ProfilePage() {
               </div>
             </form>
           ) : (
-            <button className="button-profile" onClick={handleChangePasswordClick}>Change Password</button>
+            <button
+              className="button-profile"
+              onClick={handleChangePasswordClick}
+            >
+              Change Password
+            </button>
           )}
         </div>
         {(user.activeSubscription ||
@@ -536,7 +535,7 @@ function ProfilePage() {
       <Modal
         show={showModal}
         handleClose={() => setShowModal(false)}
-        handleConfirm={confirmGoBack}
+        handleConfirm={handleConfirm}
         heading="Are you sure?"
         message="Your changes will be lost."
         confirmMessage="Yes"
