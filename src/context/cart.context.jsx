@@ -85,9 +85,7 @@ function CartProviderWrapper(props) {
 
   // Update count on badge, after adding or removing a dish
   const updateBadge = (count) => {
-    if (count <= 0) {
-      setBadge(count + 1);
-    } else setBadge(Math.max(count - 1, 0));
+    setBadge(count);
   };
 
   // Count each item in the cart, including duplicates
