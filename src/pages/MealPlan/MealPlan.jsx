@@ -74,12 +74,18 @@ function MealPlan() {
         setManyDishes(0);
         setDiet([]);
         setPrice(0);
-        setSubmitted(true); // Optionally, set a flag to indicate that the form has been submitted
+        setSubmitted(true); // Returns true to indicate that the form has been submitted
         navigate("/recipes");
       })
       .catch((error) => {
         console.error("Error creating meal plan:", error);
       });
+  };
+
+  // Added for the conditional rendering when the user is not logged.
+
+  const handleLoginRedirect = () => {
+    navigate("/login");
   };
 
   return (
@@ -141,9 +147,15 @@ function MealPlan() {
           <p>{price}</p>
         </div>
 
-        {user && (
+
+
+        {user ? (
           <div>
             <button onClick={handleSubmit}>Submit!</button>
+          </div>
+        ) : (
+          <div>
+            <button onClick={handleLoginRedirect}>To get a meal Plan, please Log in!</button>
           </div>
         )}
 
