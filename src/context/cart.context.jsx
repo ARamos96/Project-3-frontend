@@ -10,6 +10,7 @@ function CartProviderWrapper(props) {
 
   const [cart, setCart] = useState([]);
   const [badge, setBadge] = useState(0);
+  const [mealPlan, setMealPlan] = useState({});
 
   useEffect(() => {
     // Load cart from localStorage if it exists
@@ -49,23 +50,37 @@ function CartProviderWrapper(props) {
 
   // Limit of total dishes, including duplicates, is set in mealplan.dishesPerWeek
   const isCartFull = () => {
-    return cart.length === getMealPlan().dishesPerWeek;
+    return cart.length === mealPlan.dishesPerWeek;
   };
 
   // Remove dish from cart state and local storage
   const removeFromCart = (dish) => {
-    // Update the cart state, removing the provided dish
-    setCart((prevCart) => {
-      const newCart = prevCart.filter((item) => item.id !== dish.id);
+    // If there is only one dish in cart, empty cart
+    if (cart.length === 1 && cart[0]._id === dish._id) {
+      emptyCart();
+    } else {
+      // Update the cart state, removing the provided dish
+      setCart((prevCart) => {
+        const newCart = prevCart.filter((item) => item._id !== dish._id);
 
-      // Update localStorage with the new cart
-      localStorage.setItem("cart", JSON.stringify(newCart));
+        // Update localStorage with the new cart
+        localStorage.setItem("cart", JSON.stringify(newCart));
 
-      // Update badge
-      updateBadge(newCart.length);
+        // Update badge
+        updateBadge(newCart.length);
 
-      return newCart;
-    });
+        return newCart;
+      });
+    }
+  };
+
+  // Empty the cart in its state, localStorage and clear badge
+  const emptyCart = () => {
+    setCart([]);
+
+    localStorage.removeItem("cart");
+
+    updateBadge(0);
   };
 
   // Update count on badge, after adding or removing a dish
@@ -111,17 +126,9 @@ function CartProviderWrapper(props) {
   };
 
   // After posting new mealplan in MealPlan page, save it to local storage
-  const setMealPlan = (mealPlan) => {
+  const setMealPlanInStateAndStorage = (mealPlan) => {
     localStorage.setItem("mealPlan", JSON.stringify(mealPlan));
-  };
-
-  const getMealPlan = () => {
-    const storedMealPlan = localStorage.getItem("mealPlan");
-    if (storedMealPlan) {
-      return JSON.parse(storedMealPlan);
-    } else {
-      return null;
-    }
+    setMealPlan(mealPlan);
   };
 
   return (
@@ -137,8 +144,7 @@ function CartProviderWrapper(props) {
         updateBadge,
         getDishesAndQuantity,
         checkout,
-        getMealPlan,
-        setMealPlan,
+        setMealPlanInStateAndStorage,
       }}
     >
       {props.children}

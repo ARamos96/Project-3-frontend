@@ -18,7 +18,7 @@ function MealPlan() {
   const [price, setPrice] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const { user } = useContext(AuthContext);
-  const { setMealPlan } = useContext(CartContext);
+  const { setMealPlanInStateAndStorage } = useContext(CartContext);
   const navigate = useNavigate();
 
   // function to handle how many people are going to be selected
@@ -69,7 +69,7 @@ function MealPlan() {
     authService
       .postMealPlan(mealPlanData)
       .then((response) => {
-        setMealPlan(response.data);
+        setMealPlanInStateAndStorage(response.data);
         setManyPeople(0);
         setManyDishes(0);
         setDiet([]);
