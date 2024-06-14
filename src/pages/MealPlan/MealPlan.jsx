@@ -88,8 +88,12 @@ function MealPlan() {
         <h2>Choose your Meal Plan</h2>
         <h3>How many people?</h3>
         <div>
-          {[1, 2, 3, 4].map((num) => (
-            <button key={num} onClick={() => handlePeopleClick(num)}>
+        {[1, 2, 3, 4].map((num) => (
+            <button
+              key={num}
+              onClick={() => handlePeopleClick(num)}
+              className={manyPeople === num ? "selected" : ""}
+            >
               {num}
             </button>
           ))}
@@ -98,10 +102,14 @@ function MealPlan() {
         <h3>How many dishes per week?</h3>
         <div>
           {[2, 3, 4, 5].map((num) => (
-            <button key={num} onClick={() => handleDishesClick(num)}>
-              {num}
-            </button>
-          ))}
+             <button
+             key={num}
+             onClick={() => handleDishesClick(num)}
+             className={manyDishes === num ? "selected" : ""}
+           >
+             {num}
+           </button>
+         ))}
         </div>
 
         <h3>Diet</h3>
@@ -117,13 +125,13 @@ function MealPlan() {
             "Paleo",
             "Gluten-free",
             "Dairy-free",
-          ].map((diet) => (
+          ].map((dietOption) => (
             <button
-              key={diet}
-              onClick={() => handleDietClick(diet)}
-              className={diet.includes(diet) ? "selected" : ""}
+              key={dietOption}
+              onClick={() => handleDietClick(dietOption)}
+              className={diet.includes(dietOption) ? "selected" : ""}
             >
-              {diet}
+              {dietOption}
             </button>
           ))}
         </div>
@@ -133,9 +141,11 @@ function MealPlan() {
           <p>{price}</p>
         </div>
 
-        <div>
-          <button onClick={handleSubmit}>Submit!</button>
-        </div>
+        {user && (
+          <div>
+            <button onClick={handleSubmit}>Submit!</button>
+          </div>
+        )}
 
         <DishesCarrousel />
       </section>

@@ -6,3 +6,9 @@ h3{
     background-color: rgb(255, 165, 0) ;
 }
 
+
+.selected {
+    background-color: #b9ac62;
+    color: white;
+  }
+
