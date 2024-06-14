@@ -23,6 +23,22 @@ function ProfilePage() {
     email: user.email,
   };
 
+  const userAddress = {
+    address: user.address.address,
+    city: user.address.city,
+    region: user.address.region,
+    zipCode: user.address.zipCode,
+    country: user.address.country,
+    phone: user.address.phone,
+  };
+
+  const userPaymentMethod = {
+    method: user.paymentMethod.method,
+    number: user.paymentMethod.number,
+    expiration: user.paymentMethod.expiration,
+    CVV: user.paymentMethod.CVV,
+  };
+
   // 1 form for changes in personal , password, address, payment details
   const [formData, setFormData] = useState({});
 
@@ -76,21 +92,22 @@ function ProfilePage() {
 
   // Go back button triggers modal - sends setIsEditing___ as a callback
   const handleGoBack = (newData, action) => {
-    if (newData) {
-      const numChanges = getChangedFields(newData);
-      if (Object.keys(numChanges).length !== 0) {
-        setShowModal(true);
-      }
-    }
-    setCloseAction(action());
+    const numChanges = getChangedFields(newData);
+    if (Object.keys(numChanges).length !== 0) {
+      setShowModal(true);
+    } else closeRelevantForm();
+  };
+
+  const closeRelevantForm = () => {
+    if (isEditingPersonalDetails) setIsEditingPersonalDetails(false);
+    if (isEditingPaymentMethod) setIsEditingPaymentMethod(false);
+    if (isEditingAddress) setIsEditingAddress(false);
   };
 
   // Modal - When user clicks on confirmation, relevant editing field is closed
-  const handleConfirm = () => {
+  const handleConfirm = (e) => {
     setShowModal(false);
-    if (closeAction) {
-      closeAction();
-    }
+    closeRelevantForm();
   };
 
   // Compares differing fields between user and formData and returns a new object
@@ -132,16 +149,58 @@ function ProfilePage() {
 
   const handleAddressSubmit = (e) => {
     e.preventDefault();
-    // Submit the address form data to the server or update the user state
+
+    const changedFields = getChangedFields(userAddress, formData);
+
+    if (Object.keys(changedFields).length > 0) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        address: {
+          ...prevUser.address,
+          ...changedFields,
+        },
+      }));
+
+      authService
+        .patchAddress(changedFields, user.address._id)
+        .then((response) => {
+          console.log("Address updated successfully");
+        })
+        .catch((error) => {
+          console.error("Error updating address:", error);
+        });
+    }
+
     setIsEditingAddress(false);
-    // Optionally update the user context here
   };
 
   const handlePaymentMethodSubmit = (e) => {
     e.preventDefault();
-    // Submit the payment method form data to the server or update the user state
-    setIsEditingPaymentMethod(false);
-    // Optionally update the user context here
+    const changedFields = getChangedFields(userPaymentMethod, formData);
+
+  if (Object.keys(changedFields).length > 0) {
+    setUser(prevUser => ({
+      ...prevUser,
+      paymentMethod: {
+        ...prevUser.paymentMethod,
+        ...changedFields
+      }
+    }));
+    
+    // Optionally, send the changedFields to the server to update the database
+    authService
+      .patchPaymentMethod(changedFields, user.paymentMethod._id)
+      .then((response) => {
+        // Handle successful response
+        console.log('Payment method updated successfully');
+      })
+      .catch((error) => {
+        // Handle error
+        console.error('Error updating payment method:', error);
+      });
+  }
+  
+  setIsEditingPaymentMethod(false);
   };
 
   const handleChangePasswordSubmit = (e) => {
@@ -256,7 +315,9 @@ function ProfilePage() {
                 <button
                   className="button-profile"
                   type="button"
-                  onClick={() => handleGoBack(undefined, () => setIsEditingAddress(false))}
+                  onClick={() =>
+                    handleGoBack(userAddress, () => setIsEditingAddress(false))
+                  }
                 >
                   Go Back Without Saving
                 </button>
@@ -314,7 +375,9 @@ function ProfilePage() {
                   className="button-profile"
                   type="button"
                   onClick={() =>
-                    handleGoBack(undefined, () => setIsEditingPaymentMethod(false))
+                    handleGoBack(userPaymentMethod, () =>
+                      setIsEditingPaymentMethod(false)
+                    )
                   }
                 >
                   Go Back Without Saving

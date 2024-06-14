@@ -43,6 +43,14 @@ class AuthService {
     // return axios.post("http://localhost:5005/auth/verify");
   };
 
+  patchAddress = (data, id) => {
+    return this.api.patch(`/address/${id}`, data);
+  };
+
+  patchPaymentMethod = (data, id) => {
+    return this.api.patch(`/payment/${id}`, data);
+  }
+
   postMealPlan = (requestBody) => {
     return this.api.post("/mealplan", requestBody);
     // same as
