@@ -14,6 +14,7 @@ import HowItWorksPage from "./pages/HowItWorksPage/HowItWorksPage";
 import RecipesPage from "./pages/RecipesPage/RecipesPage";
 import RecipeDetailsPage from "./pages/RecipeDetailsPage/RecipeDetailsPage";
 import MealPlan from "./pages/MealPlan/MealPlan";
+import CheckOut from "./pages/Checkout/CheckOut";
 
 import IsPrivate from "./components/IsPrivate/IsPrivate";
 import IsAnon from "./components/IsAnon/IsAnon";
@@ -53,7 +54,9 @@ function App() {
           }
         />
         
-        <Route path="/mealplan" element={<MealPlan />} />
+        <Route path="/mealplan" element={<IsAnon><MealPlan /></IsAnon>} />
+
+        <Route path="/checkout" element={ <IsAnon><CheckOut /></IsAnon>} />
 
         <Route
           path="/howitworks"
