@@ -1,8 +1,8 @@
-import "./RecipeList.css";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
+import "./RecipeList.css";
 import "primeicons/primeicons.css"
 
 const MONGO_URI = "http://localhost:5005/dishes";
