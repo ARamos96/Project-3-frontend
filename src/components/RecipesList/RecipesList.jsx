@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
+import { CartContext } from "../../context/cart.context";
 import "./RecipeList.css";
 import "primeicons/primeicons.css"
 
@@ -10,7 +11,8 @@ const MONGO_URI = "http://localhost:5005/dishes";
 function RecipesList() {
    // Subscribe to the AuthContext to gain access to
   // the values from AuthContext.Provider's `value` prop
-  const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
+  const { addToCart } = useContext(CartContext);
 
   // Define recipes
   const [recipes, setRecipes] = useState([]);
@@ -24,6 +26,11 @@ function RecipesList() {
       })
       .catch((err) => console.log(err));
   }, []);
+
+  // Handler function to add recipe to the cart
+  const handleAddToCart = (recipe) => {
+    addToCart(recipe);
+  };
 
   return (
     <div className="recipe-menu">
@@ -40,7 +47,7 @@ function RecipesList() {
               </div>
             </Link>
             {isLoggedIn ? 
-            <button>Add to Subscription</button> 
+            <button className='subscription-button' onClick={() => handleAddToCart(recipe)}>Add to Subscription</button> 
             : ""}
           </div>
         ))}
