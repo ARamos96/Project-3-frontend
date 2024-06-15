@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
+import "primeicons/primeicons.css"
 
 const MONGO_URI = "http://localhost:5005/dishes";
 
@@ -33,9 +34,9 @@ function RecipesList() {
               <img src={recipe.smallImageURL} alt={`${recipe.name}`}></img>
               <p>{recipe.name}</p>
               <div className="recipe-info">
-                <p>{recipe.cookingTime}'</p>
+                <p><span className="pi pi-stopwatch" />{recipe.cookingTime}'</p>
                 <p>{recipe.nutritionalValuePerServing.calories}kcal</p>
-                <p>{recipe.rating}⭐</p>
+                <p>{recipe.rating} <span className="pi pi-star-fill" /></p>
               </div>
             </Link>
             {isLoggedIn ? 
