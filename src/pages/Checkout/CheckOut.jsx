@@ -1,30 +1,36 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import "./CheckOut.css";
 import axios from 'axios';
 import { AuthContext } from "../../context/auth.context";
+import { CartContext } from "../../context/cart.context.jsx";
 
 
 function CheckOut() {
 
+  // take user data from context
+
   const { user } = useContext(AuthContext);
 
+  // take user data from cart context
 
+  const { cart } = useContext(CartContext);
+ 
   const [formData, setFormData] = useState({
-    address: '',
-    city: '',
-    region: '',
-    zipCode: '',
-    country: '',
-    phone: '',
-    user:user ? user._id : null,
-    subscription: '',
+    address: user && user.address ? user.address : '',
+    city: user && user.address ? user.address.city : '',
+    region: user && user.address ? user.address.region : '',
+    zipCode: user && user.address ? user.address.zipCode : '',
+    country: user && user.address ? user.address.country : '',
+    phone: user && user.address ? user.address.phone : '',
+    user: user ? user._id : null,
+    subscription: user && user.subscription ? user.subscription: '',
   });
 
   const [paymentData, setPaymentData] = useState({
-    method: '',
-    number: '',
-    expiration: '',
-    CVV: '',
+    method: user && user.paymentMethod ? user.paymentMethod.method : '',
+    number: user && user.paymentMethod ? user.paymentMethod.number : '',
+    expiration: user && user.paymentMethod ? user.paymentMethod.expiration : '',
+    CVV: user && user.paymentMethod ? user.paymentMethod.CVV : '',
   });
 
   const handleAddressChange = (e) => {
@@ -46,11 +52,30 @@ function CheckOut() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // post the adress data
+      // post the address data
       const addressResponse = await axios.post('/address', formData);
 
       // post the payment data
       const paymentResponse = await axios.post('/payment', paymentData);
+
+      // Clear the address and payment data
+
+      setFormData({
+        address: '',
+        city: '',
+        region: '',
+        zipCode: '',
+        country: '',
+        phone: '',
+        user: user ? user._id : null,
+        subscription: '',
+      });
+      setPaymentData({
+        method: '',
+        number: '',
+        expiration: '',
+        CVV: '',
+      });
 
     } catch (error) {
       console.error('Error saving the address or payment method:', error);
@@ -63,10 +88,13 @@ function CheckOut() {
 
       <h3>Your meal plan</h3>
       <div>
+      
       </div>
 
       <h3>Your choices</h3>
       <div>
+
+
       </div>
 
       <h3>Your details</h3>
