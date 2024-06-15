@@ -13,7 +13,7 @@ function CheckOut() {
 
   // take user data from cart context
 
-  const { cart } = useContext(CartContext);
+  const { cart, mealPlan } = useContext(CartContext);
  
   const [formData, setFormData] = useState({
     address: user && user.address ? user.address : '',
@@ -82,17 +82,29 @@ function CheckOut() {
     }
   };
 
+  if (!mealPlan) {
+    return <h1> Get a mealplan first!!!</h1>
+  }
+
   return (
     <div>
       <h2>Subscription summary</h2>
 
       <h3>Your meal plan</h3>
       <div>
+        <p>Number of People: {mealPlan.numberOfPeople} </p>
+        <p>Dishes per week: {mealPlan.dishesPerWeek} </p>
+        <p>Diet: {mealPlan.diet} </p>
+        <p>Price: {mealPlan.price} </p>
       
       </div>
 
       <h3>Your choices</h3>
       <div>
+      {cart.map((item) => (
+          <div key={item._id} className="cart-item">
+            <p>Name: {item.name}</p></div>
+        ))}
 
 
       </div>
