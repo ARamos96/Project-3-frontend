@@ -1,11 +1,16 @@
 import "./RecipeList.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/auth.context";
 
 const MONGO_URI = "http://localhost:5005/dishes";
 
 function RecipesList() {
+   // Subscribe to the AuthContext to gain access to
+  // the values from AuthContext.Provider's `value` prop
+  const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
+
   // Define recipes
   const [recipes, setRecipes] = useState([]);
 
@@ -33,6 +38,9 @@ function RecipesList() {
                 <p>{recipe.rating}⭐</p>
               </div>
             </Link>
+            {isLoggedIn ? 
+            <button>Add to Subscription</button> 
+            : ""}
           </div>
         ))}
     </div>
