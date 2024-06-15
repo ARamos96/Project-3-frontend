@@ -1,0 +1,18 @@
+.first-recipe-section {
+    display: flex;
+    justify-content: space-evenly;
+	align-items: center;
+}
+
+.recipe-tags {
+    display: flex;
+    justify-content: center;
+	align-items: center;
+    gap: 30px;
+}
+
+.recipe-tags p{
+    border: 1px solid white;
+    padding: 10px;
+}
+

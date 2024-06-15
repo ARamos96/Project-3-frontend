@@ -1,12 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import { AuthContext } from "../../context/auth.context";
+import { CartContext } from "../../context/cart.context";
 import "./RecipeDetailsPage.css";
+import "primeicons/primeicons.css"
 
 const MONGO_URI = "http://localhost:5005/dishes";
 
 function RecipeDetailsPage() {
+  // Subscribe to the AuthContext to gain access to
+  // the values from AuthContext.Provider's `value` prop
+  const { isLoggedIn } = useContext(AuthContext);
+  const { addToCart } = useContext(CartContext);
+
   const [recipe, setRecipe] = useState({});
+
 
   // Obtain Id from URL
   const { recipeId } = useParams();
@@ -19,19 +28,24 @@ function RecipeDetailsPage() {
       .catch((err) => console.log(err));
   }, [recipeId]);
 
+  // Handler function to add the current recipe to the cart
+  const handleAddToCart = () => {
+    addToCart(recipe);
+  };
+
   return (
     <div className="recipe-details">
       <h1>{recipe.name}</h1>
-      <div className="1st-recipe-section">
+      <div className="first-recipe-section">
         <img src={recipe.bigImageURL} alt={recipe.name}></img>
         <div className="recipe-basic-info">
-          <p>{recipe.cookingTime}</p>
-          <p>{recipe.rating}</p>
-          <p>{recipe.difficulty}</p>
+          <p><span className="pi pi-stopwatch" /> Cooking Time {recipe.cookingTime}'</p>
+          <p>Rating {recipe.rating} <span className="pi pi-star-fill" /></p>
+          <p>Difficulty: {recipe.difficulty}</p>
         </div>
-        {/* {isSubscribed ? 
-      <Link>Add To Subscription</Link>
-      : <Link>Let's get started!</Link>} */}
+        {isLoggedIn ? 
+            <button onClick={handleAddToCart}>Add to Subscription</button> 
+            : ""}
       </div>
       <div className="recipe-tags">
         {recipe.categories && (
