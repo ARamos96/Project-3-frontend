@@ -8,7 +8,7 @@ export default function AccordionComponent(props) {
     const { question, answer } = props;
     return (
         <div className="accordion">
-            <Accordion activeIndex={0}>
+            <Accordion activeIndex={1}>
                 <AccordionTab header={question}>
                     <p className="m-0">
                     {answer}
