@@ -3,8 +3,9 @@
 .footer {
     background-color: rgb(255, 165, 0);
     padding: 20px;
+    margin-top: 25px;
     text-align: center;
-    /* position: fixed; */
+    position: sticky;
     bottom: 0;
     width: 100%;
     display: flex;
