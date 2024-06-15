@@ -54,16 +54,16 @@ function App() {
           }
         />
         
-        <Route path="/mealplan" element={<IsAnon><MealPlan /></IsAnon>} />
+        <Route path="/mealplan" element={<MealPlan />} />
 
-        <Route path="/checkout" element={ <IsAnon><CheckOut /></IsAnon>} />
+        <Route path="/checkout" element={ <CheckOut />} />
 
         <Route
           path="/howitworks"
           element={
-            <IsAnon>
+            
               <HowItWorksPage />
-            </IsAnon>
+           
           }
         />
 
