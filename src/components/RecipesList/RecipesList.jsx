@@ -41,7 +41,7 @@ function RecipesList() {
               <img src={recipe.smallImageURL} alt={`${recipe.name}`}></img>
               <p>{recipe.name}</p>
               <div className="recipe-info">
-                <p><span className="pi pi-stopwatch" />{recipe.cookingTime}'</p>
+                <p><span className="pi pi-stopwatch" /> {recipe.cookingTime}'</p>
                 <p>{recipe.nutritionalValuePerServing.calories}kcal</p>
                 <p>{recipe.rating} <span className="pi pi-star-fill" /></p>
               </div>
