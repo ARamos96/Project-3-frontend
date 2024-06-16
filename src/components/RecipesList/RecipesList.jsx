@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
 import "./RecipeList.css";
@@ -12,7 +12,8 @@ function RecipesList() {
    // Subscribe to the AuthContext to gain access to
   // the values from AuthContext.Provider's `value` prop
   const { isLoggedIn } = useContext(AuthContext);
-  const { addToCart } = useContext(CartContext);
+  const { addToCart, mealPlan } = useContext(CartContext);
+  const navigate = useNavigate();
 
   // Define recipes
   const [recipes, setRecipes] = useState([]);
@@ -29,7 +30,11 @@ function RecipesList() {
 
   // Handler function to add recipe to the cart
   const handleAddToCart = (recipe) => {
-    addToCart(recipe);
+    if (!mealPlan || !mealPlan.dishesPerWeek) {
+      navigate("/mealplan");
+    } else {
+      addToCart(recipe);
+    }
   };
 
   return (
