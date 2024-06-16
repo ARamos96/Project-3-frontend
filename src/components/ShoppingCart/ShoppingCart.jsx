@@ -40,16 +40,15 @@ function ShoppingCart() {
               <DishInCart key={dish._id} dish={dish} />
             ))}
           </List>
-          <Divider />
           <List>
-            <ListItem>
               <ListItemText>TOTAL {mealPlan.price} euros</ListItemText>
-            </ListItem>
+            <ListItem>
             <Link to="/checkout" style={{ textDecoration: "none" }}>
               <Button variant="contained" color="primary" sx={{ mt: 2 }}>
                 Checkout
               </Button>
             </Link>
+            </ListItem>
             <Button
               variant="outlined"
               color="secondary"
