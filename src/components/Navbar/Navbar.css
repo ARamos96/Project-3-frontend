@@ -1,0 +1,31 @@
+/* Navbar.css */
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #333;
+    padding: 10px;
+  }
+  
+  nav a {
+    text-decoration: none;
+    margin-right: 15px;
+  }
+  
+  
+  nav span {
+    color: white;
+    margin-right: 15px;
+  }
+  
+  nav .right-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  nav .shopping-cart-icon {
+    font-size: 36px; 
+    color: white; 
+    margin-left: 15px; 
+  }
+  
