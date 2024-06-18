@@ -68,7 +68,7 @@ export default function Navbar() {
     const start = (
         <img
             alt="logo"
-            src="https://primefaces.org/cdn/primereact/images/logo.png"
+            src="/SavourSwift.jpg"
             height="40"
             className="mr-2"
         />

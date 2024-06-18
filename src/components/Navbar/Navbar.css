@@ -42,6 +42,10 @@ nav {
     gap: 5px;
 }
 
+.p-menubar img {
+    border-radius: 20px;
+}
+
 .p-menubar-root-list{
     display: flex;
     justify-content: space-evenly;
