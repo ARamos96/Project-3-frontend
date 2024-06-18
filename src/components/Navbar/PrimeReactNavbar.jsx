@@ -5,7 +5,7 @@ import { Menubar } from 'primereact/menubar';
 import { Badge } from 'primereact/badge';
 import { Avatar } from 'primereact/avatar';
 import PrimeButton from './PrimeButton';
-// import ShoppingCart from './';
+import ShoppingCart from '../ShoppingCart/ShoppingCart';
 import './Navbar.css'; // Import your custom CSS file for Navbar styling
 
 export default function Navbar() {
@@ -47,11 +47,6 @@ export default function Navbar() {
             command: () => navigate("/mealplan")
         },
         isLoggedIn && {
-            label: 'Cart',
-            icon: 'pi pi-shopping-cart',
-            command: () => navigate("/dashboard")
-        },
-        isLoggedIn && {
             label: 'My Account',
             icon: 'pi pi-user',
             items: [
@@ -84,11 +79,13 @@ export default function Navbar() {
     const end = (
         <div className="flex items-center gap-2 ml-auto w-300px">
             {isLoggedIn ? (
+                <>
                 <Avatar
                     image="https://static-00.iconduck.com/assets.00/user-avatar-icon-2048x2048-wpp8os2d.png" // Adjust the path to your avatar image
                     shape="circle"
                 />
-                
+                <ShoppingCart />
+                </>
             ) : (
                 <>
                     <Link to="/signup">
