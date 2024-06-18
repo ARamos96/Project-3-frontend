@@ -25,7 +25,7 @@ function RecipesList() {
       .then((res) => {
         setRecipes(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error('Error fetching recipes:', err));
   }, []);
 
   // Handler function to add recipe to the cart
