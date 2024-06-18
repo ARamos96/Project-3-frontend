@@ -5,7 +5,7 @@ import { Menubar } from 'primereact/menubar';
 import { Badge } from 'primereact/badge';
 import { Avatar } from 'primereact/avatar';
 import PrimeButton from './PrimeButton';
-import ShoppingCart from './';
+// import ShoppingCart from './';
 import './Navbar.css'; // Import your custom CSS file for Navbar styling
 
 export default function Navbar() {
