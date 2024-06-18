@@ -12,6 +12,7 @@ import ListItemText from "@mui/material/ListItemText";
 import DishInCart from "../DishInCart/DishInCart";
 
 import { CartContext } from "../../context/cart.context";
+import "primeicons/primeicons.css"
 import "./ShoppingCart.css";
 
 function ShoppingCart() {
@@ -85,11 +86,16 @@ function ShoppingCart() {
     >
       <div>
         <Badge color="secondary" badgeContent={badge}>
-          <ShoppingCartIcon
+          {/* <ShoppingCartIcon
             fontSize="large"
             className="icon"
             onClick={toggleDrawer("right", true)}
-          />
+          /> */}
+          <i
+            className="pi pi-shopping-cart pi-large"
+            onClick={toggleDrawer("right", true)}
+            style={{ fontSize: "2rem", cursor: "pointer" }}
+          ></i>
         </Badge>
       </div>
       <SwipeableDrawer

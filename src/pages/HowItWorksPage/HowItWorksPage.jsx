@@ -8,7 +8,7 @@ function HowItWorksPage() {
 
   return (
     <div className="howitworks">
-      {/* <h1>How does SavorSwift Work?</h1>
+      <h1>How does SavorSwift Work?</h1>
       <div className="steps">
         <div className="step-container">
           <img className="step-thumbnail" src="/HIW-Step-1.jpg" alt="Step-1" />
@@ -37,10 +37,10 @@ function HowItWorksPage() {
       </div>
       <button onClick={() => navigate("/recipes")}>Let's get STARTED!</button>
       <div className="FAQs">
-        <h2>Frequently Asked Questions</h2> */}
+        <h2>Frequently Asked Questions</h2>
 
-        {/* <AccordionComponent
-          question="What is SavourSwift?"
+        <AccordionComponent
+          question="What is SavorSwift?"
           answer="SavourSwift is a meal subscription service that provides
   nutritionist-designed recipes, allowing you to mix and match meals
   to fit your lifestyle. We deliver quality ingredients right to your
@@ -71,11 +71,11 @@ function HowItWorksPage() {
   you with safe and delicious options."
         />
         <AccordionComponent
-          question="How flexible is SavourSwift? What am I committing to?"
+          question="How flexible is SavorSwift? What am I committing to?"
           answer="SavourSwift is a flexible weekly subscription with no minimum
             commitment and no cancellation fees. You can change your recipes,
             modify your delivery, or skip weeks without any obligation."
-        /> */}
+        />
       </div>
     </div>
   );
