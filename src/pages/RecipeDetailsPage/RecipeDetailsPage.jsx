@@ -6,7 +6,7 @@ import { CartContext } from "../../context/cart.context";
 import "./RecipeDetailsPage.css";
 import "primeicons/primeicons.css"
 
-const MONGO_URI = "http://localhost:5005/dishes";
+const MONGO_URI = `${process.env.REACT_APP_SERVER_URL}/dishes` || "http://localhost:5005/dishes";
 
 function RecipeDetailsPage() {
   // Subscribe to the AuthContext to gain access to
