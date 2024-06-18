@@ -5,6 +5,7 @@ import { Menubar } from 'primereact/menubar';
 import { Badge } from 'primereact/badge';
 import { Avatar } from 'primereact/avatar';
 import PrimeButton from './PrimeButton';
+import ShoppingCart from './';
 import './Navbar.css'; // Import your custom CSS file for Navbar styling
 
 export default function Navbar() {
@@ -44,6 +45,11 @@ export default function Navbar() {
             label: 'Meal Plan',
             icon: 'pi pi-calculator',
             command: () => navigate("/mealplan")
+        },
+        isLoggedIn && {
+            label: 'Cart',
+            icon: 'pi pi-shopping-cart',
+            command: () => navigate("/dashboard")
         },
         isLoggedIn && {
             label: 'My Account',
