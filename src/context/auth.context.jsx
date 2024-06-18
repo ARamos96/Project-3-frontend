@@ -37,6 +37,7 @@ function AuthProviderWrapper(props) {
           setIsLoggedIn(true);
           setIsLoading(false);
           setUser(user);
+          localStorage.setItem("user", JSON.stringify(user));
         })
         .catch((error) => {
           // If the server sends an error response (invalid token) ❌
@@ -58,9 +59,18 @@ function AuthProviderWrapper(props) {
   };
 
   const logOutUser = () => {
-    // Upon logout, remove the token from the localStorage
+    // Upon logout, remove the token and user from the localStorage
     removeToken();
+    localStorage.removeItem("user");
     authenticateUser();
+  };
+
+  const setUserInStorage = (user) => {
+    localStorage.setItem("user", JSON.stringify(user));
+  };
+
+  const getUserFromStorage = () => {
+    return JSON.parse(localStorage.getItem("user"));
   };
 
   useEffect(() => {
@@ -76,6 +86,8 @@ function AuthProviderWrapper(props) {
         isLoading,
         user,
         setUser,
+        setUserInStorage,
+        getUserFromStorage,
         storeToken,
         authenticateUser,
         logOutUser,

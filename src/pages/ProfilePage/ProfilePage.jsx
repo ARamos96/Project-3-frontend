@@ -7,7 +7,9 @@ import authService from "../../services/auth.service";
 import PersonalForm from "../../components/Forms/PersonalForm";
 
 function ProfilePage() {
-  const { user, setUser } = useContext(AuthContext);
+  const { getUserFromStorage, setUser, setUserInStorage } =
+    useContext(AuthContext);
+  const user = getUserFromStorage();
 
   // Controls the editing of each element
   const [isEditingPersonalDetails, setIsEditingPersonalDetails] =
@@ -136,6 +138,10 @@ function ProfilePage() {
             ...prevUser,
             ...changedFields,
           }));
+          setUserInStorage({
+            ...user,
+            ...changedFields,
+          });
         })
         .catch((error) => {
           // If the request resolves with an error, set the error message in the state
@@ -165,6 +171,7 @@ function ProfilePage() {
         .patchAddress(changedFields, user.address._id)
         .then((response) => {
           console.log("Address updated successfully");
+          setUserInStorage(response.data);
         })
         .catch((error) => {
           console.error("Error updating address:", error);
@@ -178,29 +185,29 @@ function ProfilePage() {
     e.preventDefault();
     const changedFields = getChangedFields(userPaymentMethod, formData);
 
-  if (Object.keys(changedFields).length > 0) {
-    setUser(prevUser => ({
-      ...prevUser,
-      paymentMethod: {
-        ...prevUser.paymentMethod,
-        ...changedFields
-      }
-    }));
-    
-    // Optionally, send the changedFields to the server to update the database
-    authService
-      .patchPaymentMethod(changedFields, user.paymentMethod._id)
-      .then((response) => {
-        // Handle successful response
-        console.log('Payment method updated successfully');
-      })
-      .catch((error) => {
-        // Handle error
-        console.error('Error updating payment method:', error);
-      });
-  }
-  
-  setIsEditingPaymentMethod(false);
+    if (Object.keys(changedFields).length > 0) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        paymentMethod: {
+          ...prevUser.paymentMethod,
+          ...changedFields,
+        },
+      }));
+
+      // Optionally, send the changedFields to the server to update the database
+      authService
+        .patchPaymentMethod(changedFields, user.paymentMethod._id)
+        .then((response) => {
+          // Handle successful response
+          console.log("Payment method updated successfully");
+        })
+        .catch((error) => {
+          // Handle error
+          console.error("Error updating payment method:", error);
+        });
+    }
+
+    setIsEditingPaymentMethod(false);
   };
 
   const handleChangePasswordSubmit = (e) => {
