@@ -1,13 +1,15 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/auth.context';
 import { Menubar } from 'primereact/menubar';
 import { Badge } from 'primereact/badge';
 import { Avatar } from 'primereact/avatar';
+import PrimeButton from './PrimeButton';
 import './Navbar.css'; // Import your custom CSS file for Navbar styling
 
 export default function Navbar() {
     const { isLoggedIn, logOutUser } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const itemRenderer = (item) => (
         <a className="p-menuitem-link">
@@ -25,19 +27,23 @@ export default function Navbar() {
     const items = [
         {
             label: 'Home',
-            icon: 'pi pi-home'
+            icon: 'pi pi-home',
+            command: () => navigate("/"),
         },
         {
-            label: 'Our Meals',
-            icon: 'pi pi-book'
+            label: 'Our Dishes',
+            icon: 'pi pi-book',
+            command: () => navigate("/recipes"),
         },
         {
             label: 'How It Works',
-            icon: 'pi pi-question'
+            icon: 'pi pi-question',
+            command: () => navigate("/howitworks"),
         },
         {
             label: 'Meal Plan',
-            icon: 'pi pi-calculator'
+            icon: 'pi pi-calculator',
+            command: () => navigate("/mealplan")
         },
         isLoggedIn && {
             label: 'My Account',
@@ -46,6 +52,7 @@ export default function Navbar() {
                 {
                     label: 'Profile',
                     icon: 'pi pi-user-edit',
+                    command: () => navigate("/profile"),
                     template: itemRenderer
                 },
                 {
@@ -68,23 +75,30 @@ export default function Navbar() {
     );
 
     const end = (
-        <div className="flex align-items-center gap-2 ml-auto">
+        <div className="flex items-center gap-2 ml-auto w-300px">
             {isLoggedIn ? (
                 <Avatar
-                    image="/client/public/user-avatar.jpg" // Adjust the path to your avatar image
+                    image="https://static-00.iconduck.com/assets.00/user-avatar-icon-2048x2048-wpp8os2d.png" // Adjust the path to your avatar image
                     shape="circle"
                 />
+                
             ) : (
                 <>
                     <Link to="/signup">
-                        <button className="p-button p-component p-button-text p-button-plain">
+                        <PrimeButton
+                        label="Sign Up"
+                        icon="pi pi-user-plus"
+                        >
                             Sign Up
-                        </button>
+                        </PrimeButton>
                     </Link>
                     <Link to="/login">
-                        <button className="p-button p-component p-button-text p-button-plain">
+                        <PrimeButton
+                        label="Login"
+                        icon="pi pi-sign-in"
+                        >
                             Login
-                        </button>
+                        </PrimeButton>
                     </Link>
                 </>
             )}
