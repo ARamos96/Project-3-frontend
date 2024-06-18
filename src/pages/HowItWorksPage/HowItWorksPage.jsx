@@ -76,7 +76,7 @@ function HowItWorksPage() {
             commitment and no cancellation fees. You can change your recipes,
             modify your delivery, or skip weeks without any obligation."
         /> */}
-      </div>
+      {/* </div> */}
     </div>
   );
 }
