@@ -71,6 +71,7 @@ export default function Navbar() {
             src="/SavourSwift.jpg"
             height="40"
             className="mr-2"
+            onClick={() => navigate("/")}
         />
     );
 

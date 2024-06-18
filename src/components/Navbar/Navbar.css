@@ -46,6 +46,10 @@ nav {
     border-radius: 20px;
 }
 
+.p-menubar img:hover {
+    cursor: pointer;
+}
+
 .p-menubar-root-list{
     display: flex;
     justify-content: space-evenly;
