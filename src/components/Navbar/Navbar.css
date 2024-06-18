@@ -1,0 +1,23 @@
+.navbar-container {
+    width: 100%;
+    background-color: #f0f0f0; /* Example background color */
+}
+
+.p-menubar {
+    width: 100%; /* Ensure Menubar stretches across the container */
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    align-items: center; /* Align items vertically */
+    padding: 0 20px; /* Optional padding adjustment */
+}
+
+.p-menuitem-link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+}
+
+.ml-auto {
+    margin-left: auto;
+}
