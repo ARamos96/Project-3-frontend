@@ -1,0 +1,11 @@
+.HowItWorksstepper{
+    display: flex;
+    justify-content: space-evenly;
+    gap: 20px;
+
+}
+
+.HowItWorksstepper span {
+    font-style: italic;
+}
+

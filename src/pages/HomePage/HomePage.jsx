@@ -25,18 +25,31 @@ function HomePage() {
 
       <section>
         <h2>How it works?</h2>
-        <p>Step 1</p>
-        <p>Step 2</p>
-        <p>Step 3</p>
+        <div className="HowItWorksstepper">
+          <div>
+            <h5>Choose</h5>
+            <p><span>"Pick a diet preference, or mix and match tasty nutritionist-designed recipes to fit your lifestyle."</span></p>
+          </div>
+          <div>
+            <h5>Cook</h5>
+            <p><span>"Receive quality ingredients and easy-to-follow recipes, with most dinners ready in 30 minutes or less."</span></p>
+          </div>
+          <div>
+            <h5>Enjoy</h5>
+            <p><span>"You get the right portion size, carbs, protein, fats, and calories to align with your health goals."</span></p>
+          </div>
+        </div>
+
         <Link to="/howitworks">
           <button> See more! </button>
         </Link>
       </section>
 
+
       <section>
         <h2>Dishes</h2>
         <p>
-        <DishesCarrousel/>
+          <DishesCarrousel />
         </p>
         <Link to="/recipes">
           <button> Our Meals! </button>

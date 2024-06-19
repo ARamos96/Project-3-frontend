@@ -52,6 +52,16 @@ h3{
   background-color: rgb(255, 165, 0) ;
 }
 
+h5{
+
+  color : white;
+  text-align: center;
+  font-size: 20px;
+  font-family: "Kalam";
+  background-color: rgb(255, 165, 0) ;
+
+}
+
 
 .selected {
   background-color: #b9ac62;
@@ -67,3 +77,4 @@ ul {
 li {
   margin-bottom: 10px;
 }
+
