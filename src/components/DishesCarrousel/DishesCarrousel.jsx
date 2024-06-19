@@ -4,9 +4,9 @@ import "./DishesCarrousel.css"
 
 function DishesCarrousel() {
   return (
-    <div>
+    <div >
       <h3>Look some of our dishes</h3>
-      <section>
+      <section className='carrousel-main'>
         <div>
           <img src="" alt="Image 1" />
           <p>Dish 1</p>
