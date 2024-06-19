@@ -45,8 +45,7 @@ const PersonalForm = ({
         className="button-profile"
         type="button"
         onClick={() =>
-          handleGoBack(userPersonalDetails, () =>
-            setIsEditingPersonalDetails(false)
+          handleGoBack(userPersonalDetails, "personalDetails"
           )
         }
       >

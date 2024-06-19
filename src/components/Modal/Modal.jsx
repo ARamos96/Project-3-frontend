@@ -5,6 +5,7 @@ const Modal = ({
   show,
   handleClose,
   handleConfirm,
+  confirmAction,
   heading,
   message,
   confirmMessage,
@@ -21,7 +22,9 @@ const Modal = ({
         <p className="p-modal">{message}</p>
         <div className="modal-buttons">
           {handleConfirm && (
-            <button onClick={handleConfirm}>{confirmMessage}</button>
+            <button onClick={() => handleConfirm(confirmAction)}>
+              {confirmMessage}
+            </button>
           )}
           <button onClick={handleClose}>{closeMessage}</button>
         </div>

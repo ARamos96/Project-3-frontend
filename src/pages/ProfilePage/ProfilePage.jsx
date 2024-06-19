@@ -7,7 +7,8 @@ import authService from "../../services/auth.service";
 import PersonalForm from "../../components/Forms/PersonalForm";
 
 function ProfilePage() {
-  const { user, setUser } = useContext(AuthContext);
+  const { handleUserUpdate, user, setUser, setUserInStorage } =
+    useContext(AuthContext);
 
   // Controls the editing of each element
   const [isEditingPersonalDetails, setIsEditingPersonalDetails] =
@@ -15,6 +16,7 @@ function ProfilePage() {
   const [isEditingPaymentMethod, setIsEditingPaymentMethod] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [confirmAction, setConfirmAction] = useState("");
 
   // Subset of personalDetails in user context
   const userPersonalDetails = {
@@ -44,14 +46,27 @@ function ProfilePage() {
 
   // Modal controls - component at bottom of page
   const [showModal, setShowModal] = useState(false);
-  const [closeAction, setCloseAction] = useState(null);
 
   if (!user) {
     return <Loading />;
   }
 
+  const alertIfOtherFormsOpen = () => {
+    if (
+      isEditingPersonalDetails ||
+      isChangingPassword ||
+      isEditingAddress ||
+      isEditingPaymentMethod
+    ) {
+      alert("You must close the other forms before opening a new one");
+      return true;
+    }
+  };
+
   const handleEditPersonalDetailsClick = () => {
+    if (alertIfOtherFormsOpen()) return;
     setIsEditingPersonalDetails(true);
+    setConfirmAction("personalDetails");
     setFormData({
       name: user.name,
       lastName: user.lastName,
@@ -60,7 +75,9 @@ function ProfilePage() {
   };
 
   const handleEditAddressClick = () => {
+    if (alertIfOtherFormsOpen()) return;
     setIsEditingAddress(true);
+    setConfirmAction("address");
     setFormData({
       address: user.address.address || "",
       city: user.address.city || "",
@@ -72,7 +89,9 @@ function ProfilePage() {
   };
 
   const handleEditPaymentMethodClick = () => {
+    if (alertIfOtherFormsOpen()) return;
     setIsEditingPaymentMethod(true);
+    setConfirmAction("paymentMethod");
     setFormData({
       method: user.paymentMethod.method || "",
       number: user.paymentMethod.number || "",
@@ -82,7 +101,9 @@ function ProfilePage() {
   };
 
   const handleChangePasswordClick = () => {
+    if (alertIfOtherFormsOpen()) return;
     setIsChangingPassword(true);
+    setConfirmAction("password");
   };
 
   const handleInputChange = (e) => {
@@ -92,22 +113,51 @@ function ProfilePage() {
 
   // Go back button triggers modal - sends setIsEditing___ as a callback
   const handleGoBack = (newData, action) => {
-    const numChanges = getChangedFields(newData);
-    if (Object.keys(numChanges).length !== 0) {
+    let changesInFields = {};
+
+    if (action === "personalDetails") {
+      changesInFields = getChangedFields(newData, userPersonalDetails);
+    }
+    if (action === "address") {
+      changesInFields = getChangedFields(newData, userAddress);
+    }
+    if (action === "paymentMethod") {
+      changesInFields = getChangedFields(newData, userPaymentMethod);
+    }
+    if (action === "password") {
+      changesInFields = 1;
+    }
+
+    if (Object.keys(changesInFields).length !== 0) {
       setShowModal(true);
-    } else closeRelevantForm();
+    } else {
+      closeRelevantForm(action);
+    }
   };
 
-  const closeRelevantForm = () => {
-    if (isEditingPersonalDetails) setIsEditingPersonalDetails(false);
-    if (isEditingPaymentMethod) setIsEditingPaymentMethod(false);
-    if (isEditingAddress) setIsEditingAddress(false);
+  const closeRelevantForm = (action) => {
+    if (action === "personalDetails") {
+      setIsEditingPersonalDetails(false);
+      setConfirmAction("");
+    }
+    if (action === "address") {
+      setIsEditingAddress(false);
+      setConfirmAction("");
+    }
+    if (action === "paymentMethod") {
+      setIsEditingPaymentMethod(false);
+      setConfirmAction("");
+    }
+    if (action === "password") {
+      setIsChangingPassword(false);
+      setConfirmAction("");
+    }
   };
 
   // Modal - When user clicks on confirmation, relevant editing field is closed
-  const handleConfirm = (e) => {
+  const handleConfirm = (confirmAction) => {
     setShowModal(false);
-    closeRelevantForm();
+    closeRelevantForm(confirmAction);
   };
 
   // Compares differing fields between user and formData and returns a new object
@@ -124,24 +174,9 @@ function ProfilePage() {
   const handlePersonalDetailsSubmit = (e) => {
     e.preventDefault();
 
-    const changedFields = getChangedFields(userPersonalDetails);
+    const changedFields = getChangedFields(userPersonalDetails, formData);
     if (Object.keys(changedFields).length > 0) {
-      // Submit changedFields to the server or update the user state
-      console.log("Changed fields:", changedFields);
-      authService
-        .patchPersonalDetails(changedFields, user._id)
-        .then((response) => {
-          alert("YOU DID ITTTTTTTTT");
-          setUser((prevUser) => ({
-            ...prevUser,
-            ...changedFields,
-          }));
-        })
-        .catch((error) => {
-          // If the request resolves with an error, set the error message in the state
-          const errorDescription = error.response.data.message;
-        });
-      // Example: axios.post('/api/updateUser', changedFields);
+      handleUserUpdate(changedFields, "personalDetails");
     }
     setIsEditingPersonalDetails(false);
     // Optionally update the user context here
@@ -153,54 +188,19 @@ function ProfilePage() {
     const changedFields = getChangedFields(userAddress, formData);
 
     if (Object.keys(changedFields).length > 0) {
-      setUser((prevUser) => ({
-        ...prevUser,
-        address: {
-          ...prevUser.address,
-          ...changedFields,
-        },
-      }));
-
-      authService
-        .patchAddress(changedFields, user.address._id)
-        .then((response) => {
-          console.log("Address updated successfully");
-        })
-        .catch((error) => {
-          console.error("Error updating address:", error);
-        });
+      handleUserUpdate(changedFields, "address");
+      setIsEditingAddress(false);
     }
-
-    setIsEditingAddress(false);
   };
 
   const handlePaymentMethodSubmit = (e) => {
     e.preventDefault();
     const changedFields = getChangedFields(userPaymentMethod, formData);
 
-  if (Object.keys(changedFields).length > 0) {
-    setUser(prevUser => ({
-      ...prevUser,
-      paymentMethod: {
-        ...prevUser.paymentMethod,
-        ...changedFields
-      }
-    }));
-    
-    // Optionally, send the changedFields to the server to update the database
-    authService
-      .patchPaymentMethod(changedFields, user.paymentMethod._id)
-      .then((response) => {
-        // Handle successful response
-        console.log('Payment method updated successfully');
-      })
-      .catch((error) => {
-        // Handle error
-        console.error('Error updating payment method:', error);
-      });
-  }
-  
-  setIsEditingPaymentMethod(false);
+    if (Object.keys(changedFields).length > 0) {
+      handleUserUpdate(changedFields, "paymentMethod");
+      setIsEditingPaymentMethod(false);
+    }
   };
 
   const handleChangePasswordSubmit = (e) => {
@@ -315,9 +315,7 @@ function ProfilePage() {
                 <button
                   className="button-profile"
                   type="button"
-                  onClick={() =>
-                    handleGoBack(userAddress, () => setIsEditingAddress(false))
-                  }
+                  onClick={() => handleGoBack(userAddress, "address")}
                 >
                   Go Back Without Saving
                 </button>
@@ -375,9 +373,7 @@ function ProfilePage() {
                   className="button-profile"
                   type="button"
                   onClick={() =>
-                    handleGoBack(userPaymentMethod, () =>
-                      setIsEditingPaymentMethod(false)
-                    )
+                    handleGoBack(userPaymentMethod, "paymentMethod")
                   }
                 >
                   Go Back Without Saving
@@ -419,9 +415,7 @@ function ProfilePage() {
                 <button
                   className="button-profile"
                   type="button"
-                  onClick={() =>
-                    handleGoBack(undefined, () => setIsChangingPassword(false))
-                  }
+                  onClick={() => handleGoBack(undefined, "password")}
                 >
                   Go Back Without Saving
                 </button>
@@ -599,6 +593,7 @@ function ProfilePage() {
         show={showModal}
         handleClose={() => setShowModal(false)}
         handleConfirm={handleConfirm}
+        confirmAction={confirmAction}
         heading="Are you sure?"
         message="Your changes will be lost."
         confirmMessage="Yes"

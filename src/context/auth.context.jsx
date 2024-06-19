@@ -36,7 +36,15 @@ function AuthProviderWrapper(props) {
           // Update state variables
           setIsLoggedIn(true);
           setIsLoading(false);
-          setUser(user);
+          if (!localStorage.getItem("user")) {
+            setUser(user);
+            localStorage.setItem("user", JSON.stringify(user));
+          } else {
+            setUser((prevUser) => ({
+              ...prevUser,
+              ...JSON.parse(localStorage.getItem("user")),
+            }));
+          }
         })
         .catch((error) => {
           // If the server sends an error response (invalid token) ❌
@@ -63,6 +71,85 @@ function AuthProviderWrapper(props) {
     authenticateUser();
   };
 
+  const setUserInStorage = (user) => {
+    localStorage.setItem("user", JSON.stringify(user));
+  };
+
+  const getUserFromStorage = () => {
+    return JSON.parse(localStorage.getItem("user"));
+  };
+
+  const handleUserUpdate = async (changedFields, updateType) => {
+    try {
+      let response;
+      if (updateType === "address") {
+        response = await authService.patchAddress(
+          changedFields,
+          user.address._id
+        );
+      } else if (updateType === "paymentMethod") {
+        response = await authService.patchPaymentMethod(
+          changedFields,
+          user.paymentMethod._id
+        );
+      } else if (updateType === "personalDetails") {
+        response = await authService.patchPersonalDetails(
+          changedFields,
+          user._id
+        );
+      }
+
+      updateUserStateAndLocalStorage(response.data, updateType);
+    } catch (error) {
+      console.error(`Error updating ${updateType}:`, error);
+    }
+  };
+
+  const updateUserStateAndLocalStorage = (updatedUserData, updateType) => {
+    // Control for nested fields
+
+    if (updateType === "address") {
+      setUser((prevUser) => {
+        const updatedUser = {
+          ...prevUser,
+          address: {
+            ...prevUser.address,
+            ...updatedUserData,
+          },
+        };
+
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+
+        return updatedUser;
+      });
+    } else if (updateType === "paymentMethod") {
+      setUser((prevUser) => {
+        const updatedUser = {
+          ...prevUser,
+          paymentMethod: {
+            ...prevUser.paymentMethod,
+            ...updatedUserData,
+          },
+        };
+
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+
+        return updatedUser;
+      });
+    } else if (updateType === "personalDetails") {
+      setUser((prevUser) => {
+        const updatedUser = {
+          ...prevUser,
+          ...updatedUserData,
+        };
+
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+
+        return updatedUser;
+      });
+    }
+  };
+
   useEffect(() => {
     // Run this code once the AuthProviderWrapper component in the App loads for the first time.
     // This effect runs when the application and the AuthProviderWrapper component load for the first time.
@@ -76,6 +163,9 @@ function AuthProviderWrapper(props) {
         isLoading,
         user,
         setUser,
+        setUserInStorage,
+        handleUserUpdate,
+        getUserFromStorage,
         storeToken,
         authenticateUser,
         logOutUser,
