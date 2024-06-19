@@ -1,8 +1,14 @@
 import React from 'react'
+import "./DishesCarrousel.css"
+
 
 function DishesCarrousel() {
   return (
-    <div>DishesCarrousel</div>
+    <div>
+      <h3>Look some of our dishes</h3>
+      
+
+    </div>
   )
 }
 

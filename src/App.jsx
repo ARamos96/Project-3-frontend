@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar/Navbar";
 import TailWindNavbar from "./components/Navbar/TailWindNavbar";
+import PrimeReactNavbar from "./components/Navbar/PrimeReactNavbar";
 
 import Footer from "./components/Footer/Footer";
 
@@ -22,8 +23,9 @@ import IsAnon from "./components/IsAnon/IsAnon";
 function App() {
   return (
     <div className="App">
-      <Navbar />
+      {/* <Navbar /> */}
       {/* <TailWindNavbar /> */}
+      <PrimeReactNavbar />
 
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -54,16 +56,16 @@ function App() {
           }
         />
         
-        <Route path="/mealplan" element={<IsAnon><MealPlan /></IsAnon>} />
+        <Route path="/mealplan" element={<MealPlan />} />
 
-        <Route path="/checkout" element={ <IsAnon><CheckOut /></IsAnon>} />
+        <Route path="/checkout" element={ <CheckOut />} />
 
         <Route
           path="/howitworks"
           element={
-            <IsAnon>
+            
               <HowItWorksPage />
-            </IsAnon>
+           
           }
         />
 

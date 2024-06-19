@@ -61,7 +61,15 @@ function CartProviderWrapper(props) {
     } else {
       // Update the cart state, removing the provided dish
       setCart((prevCart) => {
-        const newCart = prevCart.filter((item) => item._id !== dish._id);
+        let newCart = prevCart;
+        // If there are no multiple units of the same dish
+        if (dish.count === 0) {
+          newCart = prevCart.filter((item) => item._id !== dish._id);
+        } else {
+          // Find first instance of dish._id and splice it from prevCart
+          const index = prevCart.findIndex((item) => item._id === dish._id);
+          newCart = prevCart.toSpliced(index, 1);
+        }
 
         // Update localStorage with the new cart
         localStorage.setItem("cart", JSON.stringify(newCart));
@@ -103,6 +111,7 @@ function CartProviderWrapper(props) {
         // Otherwise, add another entry
         accumulatorArray.push({
           _id: currentDish._id,
+          smallImageURL: currentDish.smallImageURL,
           name: currentDish.name,
           count: 1,
         });
@@ -134,6 +143,7 @@ function CartProviderWrapper(props) {
       value={{
         cart,
         badge,
+        mealPlan,
         setCart,
         addToCart,
         isCartFull,

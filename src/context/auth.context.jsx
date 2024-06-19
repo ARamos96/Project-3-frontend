@@ -66,8 +66,9 @@ function AuthProviderWrapper(props) {
   };
 
   const logOutUser = () => {
-    // Upon logout, remove the token from the localStorage
+    // Upon logout, remove the token and user from the localStorage
     removeToken();
+    localStorage.removeItem("user");
     authenticateUser();
   };
 
