@@ -92,6 +92,11 @@ function AuthProviderWrapper(props) {
           changedFields,
           user.paymentMethod._id
         );
+      } else if (updateType === "password") {
+        response = await authService.patchPassword(
+          changedFields,
+          user._id
+        );
       } else if (updateType === "personalDetails") {
         response = await authService.patchPersonalDetails(
           changedFields,

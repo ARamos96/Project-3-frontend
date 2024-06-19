@@ -100,7 +100,7 @@ function ProfilePage() {
     });
   };
 
-  const handleChangePasswordClick = () => {
+  const handlePasswordClick = () => {
     if (alertIfOtherFormsOpen()) return;
     setIsChangingPassword(true);
     setConfirmAction("password");
@@ -162,6 +162,7 @@ function ProfilePage() {
 
   // Compares differing fields between user and formData and returns a new object
   const getChangedFields = (oldData) => {
+    if (Object.keys(oldData).includes("oldPassword")) return { changed: true };
     const changedFields = {};
     for (const key in oldData) {
       if (oldData[key] !== formData[key]) {
@@ -203,11 +204,14 @@ function ProfilePage() {
     }
   };
 
-  const handleChangePasswordSubmit = (e) => {
+  const handlePasswordSubmit = (e) => {
     e.preventDefault();
-    // Submit the change password form data to the server
-    setIsChangingPassword(false);
-    // Optionally update the user context here
+    const changedFields = getChangedFields(formData, "password");
+
+    if (Object.keys(changedFields).length > 0) {
+      handleUserUpdate(formData, "password");
+      setIsChangingPassword(false);
+    }
   };
 
   return (
@@ -389,7 +393,7 @@ function ProfilePage() {
             </button>
           )}
           {isChangingPassword ? (
-            <form onSubmit={handleChangePasswordSubmit}>
+            <form onSubmit={handlePasswordSubmit}>
               <div className="profile-item">
                 <label>Current Password:</label>
                 <input
@@ -422,10 +426,7 @@ function ProfilePage() {
               </div>
             </form>
           ) : (
-            <button
-              className="button-profile"
-              onClick={handleChangePasswordClick}
-            >
+            <button className="button-profile" onClick={handlePasswordClick}>
               Change Password
             </button>
           )}

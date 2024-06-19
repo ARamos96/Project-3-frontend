@@ -46,6 +46,9 @@ class AuthService {
   patchAddress = (data, id) => {
     return this.api.patch(`/address/${id}`, data);
   };
+  patchPassword = (data, id) => {
+    return this.api.patch(`/user/${id}/password`, data);
+  };
 
   patchPaymentMethod = (data, id) => {
     return this.api.patch(`/payment/${id}`, data);
