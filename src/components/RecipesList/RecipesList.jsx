@@ -68,7 +68,14 @@ function RecipesList() {
               >
                 Add to Subscription
               </button>
-            ) : null}
+            ) 
+            : <button
+                className="subscription-button"
+                onClick={() => navigate("/mealplan")}
+              >
+                Start Subscription
+              </button>
+            }
           </div>
         ))
       )}
