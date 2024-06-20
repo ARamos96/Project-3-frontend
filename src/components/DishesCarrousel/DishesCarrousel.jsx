@@ -2,9 +2,10 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import "./DishesCarrousel.css";
 
-const MONGO_URI =
-  `${process.env.REACT_APP_SERVER_URL}/dishes` ||
-  "http://localhost:5005/dishes";
+const MONGO_URI = process.env.REACT_APP_SERVER_URL
+  ? `${process.env.REACT_APP_SERVER_URL}/dishes`
+  : "http://localhost:5005/dishes";
+
 
 function DishesCarrousel() {
   // Define recipes
