@@ -19,8 +19,8 @@ function RecipesList() {
 
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState([]);
-  const [selectedOrigin, setSelectedOrigin] = useState(null);
-  const [selectedDiet, setSelectedDiet] = useState(null);
+  const [selectedOrigins, setSelectedOrigins] = useState([]);
+  const [selectedDiets, setSelectedDiets] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
 
   // Retrieve all recipes from the server
@@ -29,6 +29,7 @@ function RecipesList() {
       .get(MONGO_URI)
       .then((res) => {
         setRecipes(res.data);
+        setFilteredRecipes(res.data); // Set initial filtered recipes to all recipes
         setLoading(false);
       })
       .catch((err) => {
@@ -37,35 +38,43 @@ function RecipesList() {
       });
   }, []);
 
-  // Function to origin tag on click
-  const handleOriginClick = (origin) => {
-    setSelectedOrigin(origin);
-    filterRecipes(origin, selectedDiet);
-  };
+ // Function to handle origin tag click
+ const handleOriginClick = (origin) => {
+  setSelectedOrigins((prevOrigins) =>
+    prevOrigins.includes(origin)
+      ? prevOrigins.filter((item) => item !== origin)
+      : [...prevOrigins, origin]
+  );
+};
 
-  // Function to diet tag on click
-  const handleDietClick = (diet) => {
-    setSelectedDiet(diet);
-    filterRecipes(selectedOrigin, diet);
-  };
+// Function to handle diet tag click
+const handleDietClick = (diet) => {
+  setSelectedDiets((prevDiets) =>
+    prevDiets.includes(diet)
+      ? prevDiets.filter((item) => item !== diet)
+      : [...prevDiets, diet]
+  );
+};
 
   // Function to filter recipes based on selected origin and diet
-  const filterRecipes = (origin, diet) => {
+  // Filter recipes based on selected origins and diets
+  useEffect(() => {
     let recipesToFilter = recipes;
-    if (origin) {
+    if (selectedOrigins.length > 0) {
       recipesToFilter = recipesToFilter.filter((recipe) =>
-        recipe.categories.origin.includes(origin)
+        selectedOrigins.some((origin) => recipe.categories.origin.includes(origin))
       );
     }
-    if (diet) {
+    if (selectedDiets.length > 0) {
       recipesToFilter = recipesToFilter.filter((recipe) =>
-        recipe.categories.diet.includes(diet)
+        selectedDiets.some((diet) => recipe.categories.diet.includes(diet))
       );
     }
     setFilteredRecipes(recipesToFilter);
-  };
+  }, [selectedOrigins, selectedDiets, recipes]);
 
-  // Add to cart function, if no meal plan, redirect to mealplan, else, add recipe to cart
+
+  // Add to cart function, if no meal plan, redirect to meal plan, else, add recipe to cart
   const handleAddToCart = (recipe) => {
     if (!mealPlan || !mealPlan.dishesPerWeek) {
       navigate("/mealplan");
@@ -74,67 +83,82 @@ function RecipesList() {
     }
   };
 
+  // Extract unique origins and diets for rendering filter buttons
+  const uniqueOrigins = [
+    ...new Set(recipes.flatMap((recipe) => recipe.categories.origin)),
+  ];
+  const uniqueDiets = [
+    ...new Set(recipes.flatMap((recipe) => recipe.categories.diet)),
+  ];
+
   return (
-    <div className="recipe-menu">
+    <>
+      {/* Render Origin Tags */}
+      <div className="filter-tags">
+        <h2>Filter by Origin</h2>
+        {uniqueOrigins.map((origin, index) => (
+          <button
+            key={index}
+            onClick={() => handleOriginClick(origin)}
+            className={selectedOrigins.includes(origin) ? "active" : ""}
+          >
+            {origin}
+          </button>
+        ))}
+      </div>
+
+      {/* Render Diet Tags */}
+      <div className="filter-tags">
+        <h2>Filter by Diet</h2>
+        {uniqueDiets.map((diet, index) => (
+          <button
+            key={index}
+            onClick={() => handleDietClick(diet)}
+            className={selectedDiets.includes(diet) ? "active" : ""}
+          >
+            {diet}
+          </button>
+        ))}
+      </div>
       {loading ? (
         <Loading />
       ) : (
-        recipes.map((recipe) => (
-          <div className="recipe-container" key={recipe._id}>
-            <Link to={`/recipes/${recipe._id}`}>
-              <img src={recipe.smallImageURL} alt={`${recipe.name}`} />
-              <p>{recipe.name}</p>
-              <div className="recipe-tags">
-                {recipes.map((recipe, index) =>
-                  recipe.categories.origin.map((origin, i) => (
-                    <button
-                      key={`${index}-${i}`}
-                      onClick={() => handleOriginClick(origin)}
-                    >
-                      {origin}
-                    </button>
-                  ))
-                )}
-                {recipes.map((recipe, index) =>
-                  recipe.categories.diet.map((diet, i) => (
-                    <button
-                      key={`${index}-${i}`}
-                      onClick={() => handleDietClick(diet)}
-                    >
-                      {diet}
-                    </button>
-                  ))
-                )}
-              </div>
-              <div className="recipe-info">
-                <p>
-                  <span className="pi pi-stopwatch" /> {recipe.cookingTime}'
-                </p>
-                <p>{recipe.nutritionalValuePerServing.calories}kcal</p>
-                <p>
-                  {recipe.rating} <span className="pi pi-star-fill" />
-                </p>
-              </div>
-            </Link>
-            {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
+        <div className="recipe-menu">
+          {filteredRecipes.map((recipe) => (
+            <div className="recipe-container" key={recipe._id}>
+              <Link to={`/recipes/${recipe._id}`}>
+                <img src={recipe.smallImageURL} alt={`${recipe.name}`} />
+                <p>{recipe.name}</p>
+                <div className="recipe-info">
+                  <p>
+                    <span className="pi pi-stopwatch" /> {recipe.cookingTime}'
+                  </p>
+                  <p>{recipe.nutritionalValuePerServing.calories}kcal</p>
+                  <p>
+                    {recipe.rating} <span className="pi pi-star-fill" />
+                  </p>
+                </div>
+              </Link>
+              {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
+                <button
+                  className="subscription-button"
+                  onClick={() => handleAddToCart(recipe)}
+                >
+                  Add to Subscription
+                </button>
+              ) : 
               <button
-                className="subscription-button"
-                onClick={() => handleAddToCart(recipe)}
-              >
-                Add to Subscription
-              </button>
-            ) : (
-              <button
-                className="subscription-button"
-                onClick={() => navigate("/mealplan")}
-              >
-                Start Subscription
-              </button>
-            )}
-          </div>
-        ))
+                    className="subscription-button"
+                    onClick={() => navigate("/mealplan")}
+                  >
+                    Start Subscription
+                  </button>
+}
+            </div>
+          ))}
+        </div>
       )}
-    </div>
+    </>
   );
 }
 

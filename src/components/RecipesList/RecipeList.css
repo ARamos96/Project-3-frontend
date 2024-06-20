@@ -5,6 +5,12 @@
     gap: 10px;
 }
 
+.filter-tags button.active {
+    background-color: #0056b3; /* Green background */
+    color: white; /* White text */
+    border: none; /* Remove border */
+  }
+
 .recipe-container {
     border: 1px solid black;
     border-radius: 15px;
