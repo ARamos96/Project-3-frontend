@@ -53,7 +53,9 @@ function HomePage() {
         </div>
 
         <Link to="/howitworks">
-          <button> See more! </button>
+          <button> See more! 
+          <span></span><span></span><span></span><span></span>
+          </button>
         </Link>
       </section>
 
@@ -61,7 +63,10 @@ function HomePage() {
         <h2>Dishes</h2>
         <DishesCarrousel />
         <Link to="/recipes">
-          <button> Take a look to our meals! </button>
+          <button> Take a look to our meals! 
+          <span></span><span></span><span></span><span></span>
+
+          </button>
         </Link>
       </section>
 
