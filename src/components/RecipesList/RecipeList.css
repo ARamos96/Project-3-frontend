@@ -5,6 +5,12 @@
     gap: 10px;
 }
 
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
 .filter-tags button.active {
     background-color: #0056b3; /* Green background */
     color: white; /* White text */

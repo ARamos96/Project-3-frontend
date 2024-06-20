@@ -38,23 +38,23 @@ function RecipesList() {
       });
   }, []);
 
- // Function to handle origin tag click
- const handleOriginClick = (origin) => {
-  setSelectedOrigins((prevOrigins) =>
-    prevOrigins.includes(origin)
-      ? prevOrigins.filter((item) => item !== origin)
-      : [...prevOrigins, origin]
-  );
-};
+  // Function to handle origin tag click
+  const handleOriginClick = (origin) => {
+    setSelectedOrigins((prevOrigins) =>
+      prevOrigins.includes(origin)
+        ? prevOrigins.filter((item) => item !== origin)
+        : [...prevOrigins, origin]
+    );
+  };
 
-// Function to handle diet tag click
-const handleDietClick = (diet) => {
-  setSelectedDiets((prevDiets) =>
-    prevDiets.includes(diet)
-      ? prevDiets.filter((item) => item !== diet)
-      : [...prevDiets, diet]
-  );
-};
+  // Function to handle diet tag click
+  const handleDietClick = (diet) => {
+    setSelectedDiets((prevDiets) =>
+      prevDiets.includes(diet)
+        ? prevDiets.filter((item) => item !== diet)
+        : [...prevDiets, diet]
+    );
+  };
 
   // Function to filter recipes based on selected origin and diet
   // Filter recipes based on selected origins and diets
@@ -62,7 +62,9 @@ const handleDietClick = (diet) => {
     let recipesToFilter = recipes;
     if (selectedOrigins.length > 0) {
       recipesToFilter = recipesToFilter.filter((recipe) =>
-        selectedOrigins.some((origin) => recipe.categories.origin.includes(origin))
+        selectedOrigins.some((origin) =>
+          recipe.categories.origin.includes(origin)
+        )
       );
     }
     if (selectedDiets.length > 0) {
@@ -72,7 +74,6 @@ const handleDietClick = (diet) => {
     }
     setFilteredRecipes(recipesToFilter);
   }, [selectedOrigins, selectedDiets, recipes]);
-
 
   // Add to cart function, if no meal plan, redirect to meal plan, else, add recipe to cart
   const handleAddToCart = (recipe) => {
@@ -95,30 +96,32 @@ const handleDietClick = (diet) => {
     <>
       {/* Render Origin Tags */}
       <div className="filter-tags">
-        <h2>Filter by Origin</h2>
-        {uniqueOrigins.map((origin, index) => (
-          <button
-            key={index}
-            onClick={() => handleOriginClick(origin)}
-            className={selectedOrigins.includes(origin) ? "active" : ""}
-          >
-            {origin}
-          </button>
-        ))}
-      </div>
+        <div className="origin-tags">
+          <h2>Filter by Origin</h2>
+          {uniqueOrigins.map((origin, index) => (
+            <button
+              key={index}
+              onClick={() => handleOriginClick(origin)}
+              className={selectedOrigins.includes(origin) ? "active" : ""}
+            >
+              {origin}
+            </button>
+          ))}
+        </div>
 
-      {/* Render Diet Tags */}
-      <div className="filter-tags">
-        <h2>Filter by Diet</h2>
-        {uniqueDiets.map((diet, index) => (
-          <button
-            key={index}
-            onClick={() => handleDietClick(diet)}
-            className={selectedDiets.includes(diet) ? "active" : ""}
-          >
-            {diet}
-          </button>
-        ))}
+        {/* Render Diet Tags */}
+        <div className="diet-tags">
+          <h2>Filter by Diet</h2>
+          {uniqueDiets.map((diet, index) => (
+            <button
+              key={index}
+              onClick={() => handleDietClick(diet)}
+              className={selectedDiets.includes(diet) ? "active" : ""}
+            >
+              {diet}
+            </button>
+          ))}
+        </div>
       </div>
       {loading ? (
         <Loading />
@@ -146,14 +149,14 @@ const handleDietClick = (diet) => {
                 >
                   Add to Subscription
                 </button>
-              ) : 
-              <button
-                    className="subscription-button"
-                    onClick={() => navigate("/mealplan")}
-                  >
-                    Start Subscription
-                  </button>
-}
+              ) : (
+                <button
+                  className="subscription-button"
+                  onClick={() => navigate("/mealplan")}
+                >
+                  Start Subscription
+                </button>
+              )}
             </div>
           ))}
         </div>
