@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
 import "./RecipeDetailsPage.css";
@@ -12,9 +12,11 @@ function RecipeDetailsPage() {
   // Subscribe to the AuthContext to gain access to
   // the values from AuthContext.Provider's `value` prop
   const { isLoggedIn } = useContext(AuthContext);
-  const { addToCart } = useContext(CartContext);
+  const { addToCart, mealPlan } = useContext(CartContext);
 
   const [recipe, setRecipe] = useState({});
+
+  const navigate = useNavigate();
 
 
   // Obtain Id from URL
@@ -29,8 +31,12 @@ function RecipeDetailsPage() {
   }, [recipeId]);
 
   // Handler function to add the current recipe to the cart
-  const handleAddToCart = () => {
-    addToCart(recipe);
+  const handleAddToCart = (recipe) => {
+    if (!mealPlan || !mealPlan.dishesPerWeek) {
+      navigate("/mealplan");
+    } else {
+      addToCart(recipe);
+    }
   };
 
   return (
@@ -43,9 +49,21 @@ function RecipeDetailsPage() {
           <p>Rating {recipe.rating} <span className="pi pi-star-fill" /></p>
           <p>Difficulty: {recipe.difficulty}</p>
         </div>
-        {isLoggedIn ? 
-            <button onClick={handleAddToCart}>Add to Subscription</button> 
-            : ""}
+        {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
+              <button
+                className="subscription-button"
+                onClick={() => handleAddToCart(recipe)}
+              >
+                Add to Subscription
+              </button>
+            ) 
+            : <button
+                className="subscription-button"
+                onClick={() => navigate("/mealplan")}
+              >
+                Start Subscription
+              </button>
+            }
       </div>
       <div className="recipe-tags">
         {recipe.categories && (
