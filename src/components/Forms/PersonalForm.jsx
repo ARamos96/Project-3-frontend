@@ -1,8 +1,5 @@
 import React from "react";
 import "./Forms.css";
-import ProfilePageFormFunctions from "../../utils/ProfilePageFormFunctions";
-
-const {getChangedFields, closeRelevantForm}= ProfilePageFormFunctions()
 
 const PersonalForm = ({
   formData,
@@ -44,19 +41,7 @@ const PersonalForm = ({
       <button className="button-profile" type="submit">
         Save
       </button>
-      <button
-        className="button-profile"
-        type="button"
-        onClick={() =>
-          handleGoBack(
-            userPersonalDetails,
-            "personalDetails",
-            getChangedFields,
-            setShowModal,
-            closeRelevantForm
-          )
-        }
-      >
+      <button className="button-profile" type="button" onClick={handleGoBack}>
         Go Back Without Saving
       </button>
     </div>

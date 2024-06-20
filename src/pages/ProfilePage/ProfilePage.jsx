@@ -8,6 +8,7 @@ import AddressForm from "../../components/Forms/AddressForm";
 import PaymentMethodForm from "../../components/Forms/PaymentMethodForm";
 import PasswordForm from "../../components/Forms/PasswordForm";
 import ProfilePageFormFunctions from "../../utils/ProfilePageFormFunctions";
+import FormFunctions from "../../utils/FormFunctions";
 
 function ProfilePage() {
   const { handleUserUpdate, user, setUser, setUserInStorage } =
@@ -29,7 +30,6 @@ function ProfilePage() {
   };
 
   const {
-    handleInputChange,
     handleEditFormClick,
     handleGoBack,
     handleConfirm,
@@ -41,6 +41,18 @@ function ProfilePage() {
     handlePasswordSubmit,
     alertIfOtherFormsOpen,
   } = ProfilePageFormFunctions();
+
+  const { handleInputChange } = FormFunctions();
+
+  const handleGoBackAction = (action) =>
+    closeRelevantForm(
+      action,
+      setIsEditingPersonalDetails,
+      setIsEditingPaymentMethod,
+      setIsEditingAddress,
+      setIsChangingPassword,
+      setConfirmAction
+    );
 
   // Subset of personalDetails in user context
   const userPersonalDetails = {
@@ -103,15 +115,7 @@ function ProfilePage() {
                   "personalDetails",
                   getChangedFields,
                   setShowModal,
-                  (action) =>
-                    closeRelevantForm(
-                      action,
-                      setIsEditingPersonalDetails,
-                      setIsEditingPaymentMethod,
-                      setIsEditingAddress,
-                      setIsChangingPassword,
-                      setConfirmAction
-                    ),
+                  handleGoBackAction,
                   userPersonalDetails,
                   userAddress,
                   userPaymentMethod
@@ -178,15 +182,7 @@ function ProfilePage() {
                   "address",
                   getChangedFields,
                   setShowModal,
-                  (action) =>
-                    closeRelevantForm(
-                      action,
-                      setIsEditingPersonalDetails,
-                      setIsEditingPaymentMethod,
-                      setIsEditingAddress,
-                      setIsChangingPassword,
-                      setConfirmAction
-                    ),
+                  handleGoBackAction,
                   userPersonalDetails,
                   userAddress,
                   userPaymentMethod
@@ -235,15 +231,7 @@ function ProfilePage() {
                   "paymentMethod",
                   getChangedFields,
                   setShowModal,
-                  (action) =>
-                    closeRelevantForm(
-                      action,
-                      setIsEditingPersonalDetails,
-                      setIsEditingPaymentMethod,
-                      setIsEditingAddress,
-                      setIsChangingPassword,
-                      setConfirmAction
-                    ),
+                  handleGoBackAction,
                   userPersonalDetails,
                   userAddress,
                   userPaymentMethod
@@ -290,15 +278,7 @@ function ProfilePage() {
                   "password",
                   getChangedFields,
                   setShowModal,
-                  (action) =>
-                    closeRelevantForm(
-                      action,
-                      setIsEditingPersonalDetails,
-                      setIsEditingPaymentMethod,
-                      setIsEditingAddress,
-                      setIsChangingPassword,
-                      setConfirmAction
-                    ),
+                  handleGoBackAction,
                   userPersonalDetails,
                   userAddress,
                   userPaymentMethod
@@ -479,16 +459,7 @@ function ProfilePage() {
         show={showModal}
         handleClose={() => setShowModal(false)}
         handleConfirm={() =>
-          handleConfirm(confirmAction, setShowModal, (action) =>
-            closeRelevantForm(
-              action,
-              setIsEditingPersonalDetails,
-              setIsEditingPaymentMethod,
-              setIsEditingAddress,
-              setIsChangingPassword,
-              setConfirmAction
-            )
-          )
+          handleConfirm(confirmAction, setShowModal, handleGoBackAction)
         }
         heading="Are you sure?"
         message="Your changes will be lost."

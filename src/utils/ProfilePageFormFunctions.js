@@ -1,8 +1,7 @@
+import FormFunctions from "./FormFunctions";
+
 function ProfilePageFormFunctions() {
-  const handleInputChange = (e, setFormData, formData) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const { handleInputChange } = FormFunctions();
 
   const alertIfOtherFormsOpen = (isEditingForms) => {
     const {

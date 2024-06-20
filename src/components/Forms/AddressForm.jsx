@@ -1,16 +1,11 @@
 import React from "react";
 import "./Forms.css";
-import ProfilePageFormFunctions from "../../utils/ProfilePageFormFunctions";
-
-const { getChangedFields, closeRelevantForm } = ProfilePageFormFunctions();
 
 const AddressForm = ({
   formData,
   handleInputChange,
   handleAddressSubmit,
   handleGoBack,
-  userAddress,
-  setShowModal,
 }) => (
   <form onSubmit={handleAddressSubmit}>
     <div className="profile-item">
@@ -71,19 +66,7 @@ const AddressForm = ({
       <button className="button-profile" type="submit">
         Save
       </button>
-      <button
-        className="button-profile"
-        type="button"
-        onClick={() =>
-          handleGoBack(
-            userAddress,
-            "address",
-            getChangedFields,
-            setShowModal,
-            closeRelevantForm
-          )
-        }
-      >
+      <button className="button-profile" type="button" onClick={handleGoBack}>
         Go Back Without Saving
       </button>
     </div>
