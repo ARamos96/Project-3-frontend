@@ -33,15 +33,61 @@ p{
   
 }
 
-button{
-  background-color: rgb(255, 165, 0);
-  color: white;
-  font-size: 20px;
-  font-family: "Lato";
-  padding: 10px;
-  border-radius: 10px;
-  border: 2px solid black;
+button {
+  --c: goldenrod;
+  color: var(--c);
+  font-size: 16px;
+  border: 0.3em solid var(--c);
+  border-radius: 0.5em;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-align: center;
+  line-height: 3em;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: 0.5s;
+  background: none;
+  cursor: pointer;
 }
+
+button span {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  background-color: var(--c);
+  transform: translateY(150%);
+  border-radius: 50%;
+  left: calc((var(--n) - 1) * 25%);
+  transition: 0.5s;
+  transition-delay: calc((var(--n) - 1) * 0.1s);
+  z-index: -1;
+}
+
+button:hover {
+  color: black;
+}
+
+button:hover span {
+  transform: translateY(0) scale(2);
+}
+
+button span:nth-child(2) {
+  --n: 1;
+}
+
+button span:nth-child(3) {
+  --n: 2;
+}
+
+button span:nth-child(4) {
+  --n: 3;
+}
+
+button span:nth-child(5) {
+  --n: 4;
+}
+
 
 h3{
   color : white;
