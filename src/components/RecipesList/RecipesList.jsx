@@ -19,7 +19,11 @@ function RecipesList() {
 
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState([]);
+  const [selectedOrigin, setSelectedOrigin] = useState(null);
+  const [selectedDiet, setSelectedDiet] = useState(null);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
 
+  // Retrieve all recipes from the server
   useEffect(() => {
     axios
       .get(MONGO_URI)
@@ -33,6 +37,35 @@ function RecipesList() {
       });
   }, []);
 
+  // Function to origin tag on click
+  const handleOriginClick = (origin) => {
+    setSelectedOrigin(origin);
+    filterRecipes(origin, selectedDiet);
+  };
+
+  // Function to diet tag on click
+  const handleDietClick = (diet) => {
+    setSelectedDiet(diet);
+    filterRecipes(selectedOrigin, diet);
+  };
+
+  // Function to filter recipes based on selected origin and diet
+  const filterRecipes = (origin, diet) => {
+    let recipesToFilter = recipes;
+    if (origin) {
+      recipesToFilter = recipesToFilter.filter((recipe) =>
+        recipe.categories.origin.includes(origin)
+      );
+    }
+    if (diet) {
+      recipesToFilter = recipesToFilter.filter((recipe) =>
+        recipe.categories.diet.includes(diet)
+      );
+    }
+    setFilteredRecipes(recipesToFilter);
+  };
+
+  // Add to cart function, if no meal plan, redirect to mealplan, else, add recipe to cart
   const handleAddToCart = (recipe) => {
     if (!mealPlan || !mealPlan.dishesPerWeek) {
       navigate("/mealplan");
@@ -51,6 +84,28 @@ function RecipesList() {
             <Link to={`/recipes/${recipe._id}`}>
               <img src={recipe.smallImageURL} alt={`${recipe.name}`} />
               <p>{recipe.name}</p>
+              <div className="recipe-tags">
+                {recipes.map((recipe, index) =>
+                  recipe.categories.origin.map((origin, i) => (
+                    <button
+                      key={`${index}-${i}`}
+                      onClick={() => handleOriginClick(origin)}
+                    >
+                      {origin}
+                    </button>
+                  ))
+                )}
+                {recipes.map((recipe, index) =>
+                  recipe.categories.diet.map((diet, i) => (
+                    <button
+                      key={`${index}-${i}`}
+                      onClick={() => handleDietClick(diet)}
+                    >
+                      {diet}
+                    </button>
+                  ))
+                )}
+              </div>
               <div className="recipe-info">
                 <p>
                   <span className="pi pi-stopwatch" /> {recipe.cookingTime}'
@@ -68,14 +123,14 @@ function RecipesList() {
               >
                 Add to Subscription
               </button>
-            ) 
-            : <button
+            ) : (
+              <button
                 className="subscription-button"
                 onClick={() => navigate("/mealplan")}
               >
                 Start Subscription
               </button>
-            }
+            )}
           </div>
         ))
       )}
