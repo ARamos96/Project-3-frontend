@@ -13,7 +13,7 @@ function HomePage() {
       <section>
         <h2>What is Savor Swift?</h2>
         <p>
-          SavourSwift is a meal subscription service that provides
+          SavorSwift is a meal subscription service that provides
           nutritionist-designed recipes, allowing you to mix and match meals to
           fit your lifestyle. We deliver quality ingredients right to your
           doorstep, making healthy eating easy and convenient.
