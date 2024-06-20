@@ -61,7 +61,7 @@ function HomePage() {
         <h2>Dishes</h2>
         <DishesCarrousel />
         <Link to="/recipes">
-          <button> Our Meals! </button>
+          <button> Take a look to our meals! </button>
         </Link>
       </section>
 
