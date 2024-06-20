@@ -13,13 +13,6 @@
     border: none; /* Remove border */
   }
 
-.filter-tags button.active {
-    background-color: #0056b3; /* Green background */
-    color: white; /* White text */
-    border: none; /* Remove border */
-  }
-
-
 .recipe-container a {
     text-decoration: none;
     color: inherit;
