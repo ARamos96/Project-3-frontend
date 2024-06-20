@@ -81,12 +81,8 @@ function RecipesList() {
 
   return (
     <div className="recipe-menu">
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          {/* Render Origin Tags */}
-          <div className="filter-tags">
+    {/* Render Origin Tags */}
+    <div className="filter-tags">
             <h2>Filter by Origin</h2>
             {uniqueOrigins.map((origin, index) => (
               <button
@@ -112,8 +108,9 @@ function RecipesList() {
               </button>
             ))}
           </div>
-
-          {/* Render Filtered Recipes */}
+      {loading ? (
+        <Loading />
+      ) : (
           <div className="recipes-list">
             {filteredRecipes.map((recipe) => (
               <div className="recipe-container" key={recipe._id}>
@@ -148,7 +145,6 @@ function RecipesList() {
               </div>
             ))}
           </div>
-        </>
       )}
     </div>
   );
