@@ -3,10 +3,12 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
+
 import "./RecipeList.css";
 import "primeicons/primeicons.css";
 
 import Loading from "../Loading/Loading";
+import SearchBar from "../SearchBar/SearchBar";
 
 const MONGO_URI = process.env.REACT_APP_SERVER_URL
   ? `${process.env.REACT_APP_SERVER_URL}/dishes`
@@ -21,9 +23,9 @@ function RecipesList() {
   const [recipes, setRecipes] = useState([]);
   const [selectedOrigins, setSelectedOrigins] = useState([]);
   const [selectedDiets, setSelectedDiets] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [filteredRecipes, setFilteredRecipes] = useState([]);
 
-  // Retrieve all recipes from the server
   useEffect(() => {
     axios
       .get(MONGO_URI)
@@ -38,7 +40,6 @@ function RecipesList() {
       });
   }, []);
 
-  // Function to handle origin tag click
   const handleOriginClick = (origin) => {
     setSelectedOrigins((prevOrigins) =>
       prevOrigins.includes(origin)
@@ -47,7 +48,6 @@ function RecipesList() {
     );
   };
 
-  // Function to handle diet tag click
   const handleDietClick = (diet) => {
     setSelectedDiets((prevDiets) =>
       prevDiets.includes(diet)
@@ -56,10 +56,9 @@ function RecipesList() {
     );
   };
 
-  // Function to filter recipes based on selected origin and diet
-  // Filter recipes based on selected origins and diets
   useEffect(() => {
     let recipesToFilter = recipes;
+
     if (selectedOrigins.length > 0) {
       recipesToFilter = recipesToFilter.filter((recipe) =>
         selectedOrigins.some((origin) =>
@@ -72,10 +71,15 @@ function RecipesList() {
         selectedDiets.some((diet) => recipe.categories.diet.includes(diet))
       );
     }
-    setFilteredRecipes(recipesToFilter);
-  }, [selectedOrigins, selectedDiets, recipes]);
+    if (searchTerm) {
+      recipesToFilter = recipesToFilter.filter((recipe) =>
+        recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
 
-  // Add to cart function, if no meal plan, redirect to meal plan, else, add recipe to cart
+    setFilteredRecipes(recipesToFilter);
+  }, [selectedOrigins, selectedDiets, searchTerm, recipes]);
+
   const handleAddToCart = (recipe) => {
     if (!mealPlan || !mealPlan.dishesPerWeek) {
       navigate("/mealplan");
@@ -84,7 +88,6 @@ function RecipesList() {
     }
   };
 
-  // Extract unique origins and diets for rendering filter buttons
   const uniqueOrigins = [
     ...new Set(recipes.flatMap((recipe) => recipe.categories.origin)),
   ];
@@ -94,33 +97,35 @@ function RecipesList() {
 
   return (
     <>
-      {/* Render Origin Tags */}
-      <div className="filter-tags">
-        <div className="origin-tags">
-          <h2>Filter by Origin</h2>
-          {uniqueOrigins.map((origin, index) => (
-            <button
-              key={index}
-              onClick={() => handleOriginClick(origin)}
-              className={selectedOrigins.includes(origin) ? "active" : ""}
-            >
-              {origin}
-            </button>
-          ))}
+      <div className="filter-and-search">
+        <div className="filter-tags">
+          <div className="origin-tags">
+            <h2>Filter by Origin</h2>
+            {uniqueOrigins.map((origin, index) => (
+              <button
+                key={index}
+                onClick={() => handleOriginClick(origin)}
+                className={selectedOrigins.includes(origin) ? "active" : ""}
+              >
+                {origin}
+              </button>
+            ))}
+          </div>
+          <div className="diet-tags">
+            <h2>Filter by Diet</h2>
+            {uniqueDiets.map((diet, index) => (
+              <button
+                key={index}
+                onClick={() => handleDietClick(diet)}
+                className={selectedDiets.includes(diet) ? "active" : ""}
+              >
+                {diet}
+              </button>
+            ))}
+          </div>
         </div>
-
-        {/* Render Diet Tags */}
-        <div className="diet-tags">
-          <h2>Filter by Diet</h2>
-          {uniqueDiets.map((diet, index) => (
-            <button
-              key={index}
-              onClick={() => handleDietClick(diet)}
-              className={selectedDiets.includes(diet) ? "active" : ""}
-            >
-              {diet}
-            </button>
-          ))}
+        <div className="search-bar-container">
+          <SearchBar onSearch={(term) => setSearchTerm(term)} />
         </div>
       </div>
       {loading ? (
