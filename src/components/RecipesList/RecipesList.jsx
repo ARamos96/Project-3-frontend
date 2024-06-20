@@ -81,72 +81,36 @@ function RecipesList() {
 
   return (
     <div className="recipe-menu">
-    {/* Render Origin Tags */}
-    <div className="filter-tags">
-            <h2>Filter by Origin</h2>
-            {uniqueOrigins.map((origin, index) => (
-              <button
-                key={index}
-                onClick={() => handleOriginClick(origin)}
-                className={selectedOrigin === origin ? "active" : ""}
-              >
-                {origin}
-              </button>
-            ))}
-          </div>
-
-          {/* Render Diet Tags */}
-          <div className="filter-tags">
-            <h2>Filter by Diet</h2>
-            {uniqueDiets.map((diet, index) => (
-              <button
-                key={index}
-                onClick={() => handleDietClick(diet)}
-                className={selectedDiet === diet ? "active" : ""}
-              >
-                {diet}
-              </button>
-            ))}
-          </div>
-      {loading ? (
-        <Loading />
-      ) : (
-          <div className="recipes-list">
-            {filteredRecipes.map((recipe) => (
-              <div className="recipe-container" key={recipe._id}>
-                <Link to={`/recipes/${recipe._id}`}>
-                  <img src={recipe.smallImageURL} alt={`${recipe.name}`} />
-                  <p>{recipe.name}</p>
-                  <div className="recipe-info">
-                    <p>
-                      <span className="pi pi-stopwatch" /> {recipe.cookingTime}'
-                    </p>
-                    <p>{recipe.nutritionalValuePerServing.calories}kcal</p>
-                    <p>
-                      {recipe.rating} <span className="pi pi-star-fill" />
-                    </p>
-                  </div>
-                </Link>
-                {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
-                  <button
-                    className="subscription-button"
-                    onClick={() => handleAddToCart(recipe)}
-                  >
-                    Add to Subscription
-                  </button>
-                ) : (
-                  <button
-                    className="subscription-button"
-                    onClick={() => navigate("/mealplan")}
-                  >
-                    Start Subscription
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-      )}
-    </div>
+    {loading ? (
+      <Loading />
+    ) : (
+      recipes.map((recipe) => (
+        <div className="recipe-container" key={recipe._id}>
+          <Link to={`/recipes/${recipe._id}`}>
+            <img src={recipe.smallImageURL} alt={`${recipe.name}`} />
+            <p>{recipe.name}</p>
+            <div className="recipe-info">
+              <p>
+                <span className="pi pi-stopwatch" /> {recipe.cookingTime}'
+              </p>
+              <p>{recipe.nutritionalValuePerServing.calories}kcal</p>
+              <p>
+                {recipe.rating} <span className="pi pi-star-fill" />
+              </p>
+            </div>
+          </Link>
+          {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
+            <button
+              className="subscription-button"
+              onClick={() => handleAddToCart(recipe)}
+            >
+              Add to Subscription
+            </button>
+          ) : null}
+        </div>
+      ))
+    )}
+  </div>
   );
 }
 
