@@ -26,6 +26,9 @@ function RecipesList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredRecipes, setFilteredRecipes] = useState([]);
 
+  const [ currentPage, setCurrentPage ] = useState(1);
+  const itemsPerPage = 10;
+
   useEffect(() => {
     axios
       .get(MONGO_URI)
@@ -78,6 +81,7 @@ function RecipesList() {
     }
 
     setFilteredRecipes(recipesToFilter);
+    setCurrentPage(1)
   }, [selectedOrigins, selectedDiets, searchTerm, recipes]);
 
   const handleAddToCart = (recipe) => {
@@ -94,6 +98,16 @@ function RecipesList() {
   const uniqueDiets = [
     ...new Set(recipes.flatMap((recipe) => recipe.categories.diet)),
   ];
+
+  const indexOfLastRecipe = currentPage * itemsPerPage;
+  const indexOfFirstRecipe = indexOfLastRecipe - itemsPerPage;
+  const currentRecipes = filteredRecipes.slice(indexOfFirstRecipe,indexOfLastRecipe);
+  const totalRecipes = Math.ceil(filteredRecipes.length/itemsPerPage);
+
+  const handlePage = (PageNum) => {
+    setCurrentPage(PageNum)
+  }
+
 
   return (
     <>
@@ -132,7 +146,7 @@ function RecipesList() {
         <Loading />
       ) : (
         <div className="recipe-menu">
-          {filteredRecipes.map((recipe) => (
+          {currentRecipes.map((recipe) => (
             <div className="recipe-container" key={recipe._id}>
               <Link to={`/recipes/${recipe._id}`}>
                 <img src={recipe.smallImageURL} alt={`${recipe.name}`} />
@@ -166,6 +180,17 @@ function RecipesList() {
           ))}
         </div>
       )}
+      <div className="pagination">
+      {[...Array(totalRecipes)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handlePage(index + 1)}
+            className={currentPage === index + 1 ? "active" : ""}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
     </>
   );
 }
