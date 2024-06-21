@@ -34,7 +34,7 @@
   }
   
   .button-profile {
-    background-color: #007bff;
+    background-color: #rgb(255, 165, 0);
     color: white;
     border: none;
     border-radius: 5px;
@@ -43,7 +43,7 @@
   }
   
   button:hover {
-    background-color: #0056b3;
+    background-color: #b9ac62;
   }
   
   form .profile-item {
@@ -69,4 +69,3 @@
   li {
     margin-bottom: 10px;
   }
-  
