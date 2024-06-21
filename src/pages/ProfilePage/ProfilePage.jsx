@@ -234,8 +234,8 @@ function ProfilePage() {
               }
             >
               {isDataEmptyStrings(userAddress)
-                ? "Add Personal Details"
-                : "Edit Personal Details"}{" "}
+                ? "Add Address Details"
+                : "Edit Address Details"}{" "}
             </button>
           )}
 
