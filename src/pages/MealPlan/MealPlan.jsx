@@ -93,7 +93,7 @@ function MealPlan() {
       <section>
         <h2>Choose your Meal Plan</h2>
         <h3>How many people?</h3>
-        <div>
+        <div className="people">
         {[1, 2, 3, 4].map((num) => (
             <button
               key={num}
@@ -108,7 +108,7 @@ function MealPlan() {
         </div>
 
         <h3>How many dishes per week?</h3>
-        <div>
+        <div className="dishesWeek">
           {[2, 3, 4, 5].map((num) => (
              <button
              key={num}
@@ -123,7 +123,7 @@ function MealPlan() {
         </div>
 
         <h3>Diet</h3>
-        <div>
+        <div className="diet-list">
           {[
             "Vegan",
             "Vegetarian",

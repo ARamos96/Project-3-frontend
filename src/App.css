@@ -49,6 +49,9 @@ button {
   transition: 0.5s;
   background: none;
   cursor: pointer;
+  padding: 10px 30px;
+  margin: 10px;
+
 }
 
 button span {
