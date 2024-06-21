@@ -187,11 +187,17 @@ function CheckOut() {
             </label>
           </div>
 
-          <button type="submit">Submit</button>
+          <button type="submit">Submit
+          <span></span><span></span><span></span><span></span>
+
+          </button>
         </form>
       </div>
 
-      <button>Check out!</button>
+      <button>Check out!
+      <span></span><span></span><span></span><span></span>
+
+      </button>
     </div>
   );
 }

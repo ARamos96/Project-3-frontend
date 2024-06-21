@@ -101,6 +101,8 @@ function MealPlan() {
               className={manyPeople === num ? "selected" : ""}
             >
               {num}
+              <span></span><span></span><span></span><span></span>
+
             </button>
           ))}
         </div>
@@ -114,6 +116,8 @@ function MealPlan() {
              className={manyDishes === num ? "selected" : ""}
            >
              {num}
+             <span></span><span></span><span></span><span></span>
+
            </button>
          ))}
         </div>
@@ -138,24 +142,32 @@ function MealPlan() {
               className={diet.includes(dietOption) ? "selected" : ""}
             >
               {dietOption}
+              <span></span><span></span><span></span><span></span>
+
             </button>
           ))}
         </div>
 
         <div>
           <h3>Price:</h3>
-          <p>{price}</p>
+          <p>{price} €</p>
         </div>
 
 
 
         {user ? (
           <div>
-            <button onClick={handleSubmit}>Submit!</button>
+            <button onClick={handleSubmit}>Submit!
+            <span></span><span></span><span></span><span></span>
+
+            </button>
           </div>
         ) : (
           <div>
-            <button onClick={handleLoginRedirect}>To get a meal Plan, please Log in!</button>
+            <button onClick={handleLoginRedirect}>To get a meal Plan, please Log in!
+            <span></span><span></span><span></span><span></span>
+
+            </button>
           </div>
         )}
 

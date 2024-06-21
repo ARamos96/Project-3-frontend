@@ -69,7 +69,10 @@ function SignupPage() {
         <label>Last Name:</label>
         <input type="text" name="Last name" value={lastName} onChange={handleLastName} />
 
-        <button type="submit">Sign Up</button>
+        <button type="submit">Sign Up
+        <span></span><span></span><span></span><span></span>
+
+        </button>
       </form>
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
