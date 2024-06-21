@@ -11,10 +11,11 @@ const MONGO_URI = `${process.env.REACT_APP_SERVER_URL}/dishes` || "http://localh
 function RecipeDetailsPage() {
   // Subscribe to the AuthContext to gain access to
   // the values from AuthContext.Provider's `value` prop
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, user } = useContext(AuthContext);
   const { addToCart, mealPlan } = useContext(CartContext);
 
   const [recipe, setRecipe] = useState({});
+  const [isFavourite, setIsFavourite] = useState(false)
 
   const navigate = useNavigate();
 
@@ -26,9 +27,32 @@ function RecipeDetailsPage() {
   useEffect(() => {
     axios
       .get(`${MONGO_URI}/${recipeId}`)
-      .then((res) => setRecipe(res.data))
+      .then((res) => {
+        setRecipe(res.data);
+        if (user) {
+          checkIsFavourite(res.data._id);
+        }
+      })
       .catch((err) => console.log(err));
-  }, [recipeId]);
+  }, [recipeId, user]);
+
+  //check if it's already favourite
+
+  const checkIsFavourite = (recipeId) => {
+    setIsFavourite(user?.favDishes?.includes(recipeId))
+  }
+
+  const handleFavourite = () => {
+    const url = `${MONGO_URI}/favourites/${user._id}`;
+    const method = isFavourite ? "delete" : "post";
+    const data = { recipeId: recipe._id };
+
+    axios({ method, url, data })
+      .then((res) => {
+        setIsFavourite(!isFavourite);
+      })
+      .catch((err) => console.log(err));
+  };
 
   // Handler function to add the current recipe to the cart
   const handleAddToCart = (recipe) => {
@@ -50,20 +74,31 @@ function RecipeDetailsPage() {
           <p>Difficulty: {recipe.difficulty}</p>
         </div>
         {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
-              <button
-                className="subscription-button"
-                onClick={() => handleAddToCart(recipe)}
-              >
-                Add to Subscription
-              </button>
-            ) 
-            : <button
-                className="subscription-button"
-                onClick={() => navigate("/mealplan")}
-              >
-                Start Subscription
-              </button>
-            }
+          <button
+            className="subscription-button"
+            onClick={() => handleAddToCart(recipe)}
+          >
+            Add to Subscription
+          </button>
+        )
+          : (<button
+            className="subscription-button"
+            onClick={() => navigate("/mealplan")}
+          >
+            Start Subscription
+          </button>
+          )}
+
+        {isLoggedIn && (
+        <button onClick={handleFavourite}>
+          {isFavourite ? "Unfavourite" : "Favourite"}
+        </button>
+        )}
+
+
+
+
+
       </div>
       <div className="recipe-tags">
         {recipe.categories && (
