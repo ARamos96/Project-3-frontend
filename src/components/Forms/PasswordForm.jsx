@@ -30,11 +30,7 @@ const PasswordForm = ({
       <button className="button-profile" type="submit">
         Change Password
       </button>
-      <button
-        className="button-profile"
-        type="button"
-        onClick={() => handleGoBack(undefined, "password")}
-      >
+      <button className="button-profile" type="button" onClick={handleGoBack}>
         Go Back Without Saving
       </button>
     </div>

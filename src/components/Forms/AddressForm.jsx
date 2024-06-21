@@ -6,6 +6,7 @@ const AddressForm = ({
   handleInputChange,
   handleAddressSubmit,
   handleGoBack,
+  userAddress,
 }) => (
   <form onSubmit={handleAddressSubmit}>
     <div className="profile-item">
@@ -66,7 +67,11 @@ const AddressForm = ({
       <button className="button-profile" type="submit">
         Save
       </button>
-      <button className="button-profile" type="button" onClick={handleGoBack}>
+      <button
+        className="button-profile"
+        type="button"
+        onClick={handleGoBack}
+      >
         Go Back Without Saving
       </button>
     </div>

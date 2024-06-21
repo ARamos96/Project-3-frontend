@@ -11,8 +11,7 @@ import ProfilePageFormFunctions from "../../utils/ProfilePageFormFunctions";
 import FormFunctions from "../../utils/FormFunctions";
 
 function ProfilePage() {
-  const { handleUserUpdate, user, setUser, setUserInStorage } =
-    useContext(AuthContext);
+  const { handleUserUpdate, user } = useContext(AuthContext);
 
   // Controls the editing of each element
   const [isEditingPersonalDetails, setIsEditingPersonalDetails] =
@@ -31,6 +30,7 @@ function ProfilePage() {
 
   const {
     handleEditFormClick,
+    isDataEmptyStrings,
     handleGoBack,
     handleConfirm,
     closeRelevantForm,
@@ -61,24 +61,49 @@ function ProfilePage() {
     email: user.email,
   };
 
-  const userAddress = {
-    address: user.address.address,
-    city: user.address.city,
-    region: user.address.region,
-    zipCode: user.address.zipCode,
-    country: user.address.country,
-    phone: user.address.phone,
+  const userAddress = user.address || {
+    address: "",
+    city: "",
+    region: "",
+    zipCode: "",
+    country: "",
+    phone: "",
   };
 
-  const userPaymentMethod = {
-    method: user.paymentMethod.method,
-    number: user.paymentMethod.number,
-    expiration: user.paymentMethod.expiration,
-    CVV: user.paymentMethod.CVV,
+  const userPaymentMethod = user.paymentMethod || {
+    method: "",
+    number: "",
+    expiration: "",
+    CVV: "",
   };
 
-  // Form data state
-  const [formData, setFormData] = useState({});
+  // Form data states
+  const [personalDetails, setPersonalDetails] = useState({
+    name: "",
+    lastName: "",
+    email: "",
+  });
+
+  const [addressDetails, setAddressDetails] = useState({
+    address: "",
+    city: "",
+    region: "",
+    zipCode: "",
+    country: "",
+    phone: "",
+  });
+
+  const [paymentMethodDetails, setPaymentMethodDetails] = useState({
+    method: "",
+    number: "",
+    expiration: "",
+    CVV: "",
+  });
+
+  const [passwordDetails, setPasswordDetails] = useState({
+    oldPassword: "",
+    newPassword: "",
+  });
 
   // Modal controls
   const [showModal, setShowModal] = useState(false);
@@ -90,14 +115,17 @@ function ProfilePage() {
   return (
     <div className="profile-page">
       <h1>Profile Page</h1>
-      <div className="profile-columns">
-        <div className="profile-column">
+      <div
+        className="profile-columns"
+        style={{ display: "flex", flexWrap: "wrap" }}
+      >
+        <div style={{ flex: "1 1 0%", minWidth: 300, padding: 10 }}>
           <h2>Personal Details</h2>
           {isEditingPersonalDetails ? (
             <PersonalForm
-              formData={formData}
+              formData={personalDetails}
               handleInputChange={(e) =>
-                handleInputChange(e, setFormData, formData)
+                handleInputChange(e, setPersonalDetails, personalDetails)
               }
               handlePersonalDetailsSubmit={(e) =>
                 handlePersonalDetailsSubmit(
@@ -106,12 +134,12 @@ function ProfilePage() {
                   userPersonalDetails,
                   handleUserUpdate,
                   setIsEditingPersonalDetails,
-                  formData
+                  personalDetails
                 )
               }
               handleGoBack={() =>
                 handleGoBack(
-                  formData,
+                  personalDetails,
                   "personalDetails",
                   getChangedFields,
                   setShowModal,
@@ -150,7 +178,7 @@ function ProfilePage() {
                     isEditingForms,
                     setIsEditingPersonalDetails,
                     setConfirmAction,
-                    setFormData,
+                    setPersonalDetails,
                     user,
                     "personalDetails"
                   )
@@ -162,9 +190,9 @@ function ProfilePage() {
           )}
           {isEditingAddress ? (
             <AddressForm
-              formData={formData}
+              formData={addressDetails}
               handleInputChange={(e) =>
-                handleInputChange(e, setFormData, formData)
+                handleInputChange(e, setAddressDetails, addressDetails)
               }
               handleAddressSubmit={(e) =>
                 handleAddressSubmit(
@@ -173,12 +201,12 @@ function ProfilePage() {
                   userAddress,
                   handleUserUpdate,
                   setIsEditingAddress,
-                  formData
+                  addressDetails
                 )
               }
               handleGoBack={() =>
                 handleGoBack(
-                  formData,
+                  addressDetails,
                   "address",
                   getChangedFields,
                   setShowModal,
@@ -199,21 +227,27 @@ function ProfilePage() {
                   isEditingForms,
                   setIsEditingAddress,
                   setConfirmAction,
-                  setFormData,
+                  setAddressDetails,
                   user,
                   "address"
                 )
               }
             >
-              Edit Address
+              {isDataEmptyStrings(userAddress)
+                ? "Add Personal Details"
+                : "Edit Personal Details"}{" "}
             </button>
           )}
 
           {isEditingPaymentMethod ? (
             <PaymentMethodForm
-              formData={formData}
+              formData={paymentMethodDetails}
               handleInputChange={(e) =>
-                handleInputChange(e, setFormData, formData)
+                handleInputChange(
+                  e,
+                  setPaymentMethodDetails,
+                  paymentMethodDetails
+                )
               }
               handlePaymentMethodSubmit={(e) =>
                 handlePaymentMethodSubmit(
@@ -222,12 +256,12 @@ function ProfilePage() {
                   userPaymentMethod,
                   handleUserUpdate,
                   setIsEditingPaymentMethod,
-                  formData
+                  paymentMethodDetails
                 )
               }
               handleGoBack={() =>
                 handleGoBack(
-                  formData,
+                  paymentMethodDetails,
                   "paymentMethod",
                   getChangedFields,
                   setShowModal,
@@ -248,20 +282,22 @@ function ProfilePage() {
                   isEditingForms,
                   setIsEditingPaymentMethod,
                   setConfirmAction,
-                  setFormData,
+                  setPaymentMethodDetails,
                   user,
                   "paymentMethod"
                 )
               }
             >
-              Edit Payment Method
+              {isDataEmptyStrings(userPaymentMethod)
+                ? "Add Payment Method"
+                : "Edit Payment Method"}{" "}
             </button>
           )}
           {isChangingPassword ? (
             <PasswordForm
-              formData={formData}
+              formData={passwordDetails}
               handleInputChange={(e) =>
-                handleInputChange(e, setFormData, formData)
+                handleInputChange(e, setPasswordDetails, passwordDetails)
               }
               handlePasswordSubmit={(e) =>
                 handlePasswordSubmit(
@@ -269,12 +305,12 @@ function ProfilePage() {
                   getChangedFields,
                   handleUserUpdate,
                   setIsChangingPassword,
-                  formData
+                  passwordDetails
                 )
               }
               handleGoBack={() =>
                 handleGoBack(
-                  formData,
+                  passwordDetails,
                   "password",
                   getChangedFields,
                   setShowModal,
@@ -294,7 +330,7 @@ function ProfilePage() {
                   isEditingForms,
                   setIsChangingPassword,
                   setConfirmAction,
-                  setFormData,
+                  setPasswordDetails,
                   user,
                   "password"
                 )
@@ -307,7 +343,7 @@ function ProfilePage() {
         {(user.activeSubscription ||
           user.favDishes.length ||
           user.previousSubscriptions.length) && (
-          <div className="profile-column">
+          <div style={{ flex: "1 1 0%", minWidth: 300, padding: 10 }}>
             <h2>Activity</h2>
             {user.activeSubscription && (
               <div className="profile-item">

@@ -7,7 +7,6 @@ const PersonalForm = ({
   handlePersonalDetailsSubmit,
   handleGoBack,
   userPersonalDetails,
-  setShowModal,
 }) => (
   <form onSubmit={handlePersonalDetailsSubmit}>
     <div className="profile-item">

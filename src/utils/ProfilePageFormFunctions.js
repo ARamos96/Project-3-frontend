@@ -1,7 +1,30 @@
 import FormFunctions from "./FormFunctions";
 
+const ADDRESS_FIELDS = 6;
+const PAYMENT_FIELDS = 4;
+const PASSWORD_FIELDS = 2;
+
 function ProfilePageFormFunctions() {
   const { handleInputChange } = FormFunctions();
+
+  const isDataEmptyStrings = (data) => {
+    return Object.values(data).every((value) => value === "");
+  };
+
+  const getChangedFields = (oldData, formData) => {
+    if (
+      Object.keys(oldData).includes("oldPassword") ||
+      isDataEmptyStrings(oldData)
+    )
+      return "isNewData";
+    const changedFields = {};
+    for (const key in oldData) {
+      if (oldData[key] !== formData[key]) {
+        changedFields[key] = formData[key];
+      }
+    }
+    return changedFields;
+  };
 
   const alertIfOtherFormsOpen = (isEditingForms) => {
     const {
@@ -28,7 +51,7 @@ function ProfilePageFormFunctions() {
     isEditingForms,
     setIsEditing,
     setConfirmAction,
-    setFormData,
+    setFormDataCallback,
     user,
     actionType
   ) => {
@@ -37,27 +60,35 @@ function ProfilePageFormFunctions() {
     setConfirmAction(actionType);
 
     if (actionType === "personalDetails") {
-      setFormData({
+      setFormDataCallback({
         name: user.name,
         lastName: user.lastName,
         email: user.email,
       });
     } else if (actionType === "address") {
-      setFormData({
-        address: user.address.address || "",
-        city: user.address.city || "",
-        region: user.address.region || "",
-        zipCode: user.address.zipCode || "",
-        country: user.address.country || "",
-        phone: user.address.phone || "",
-      });
+      if (!user.address) {
+        setFormDataCallback({});
+      } else {
+        setFormDataCallback({
+          address: user.address.address || "",
+          city: user.address.city || "",
+          region: user.address.region || "",
+          zipCode: user.address.zipCode || "",
+          country: user.address.country || "",
+          phone: user.address.phone || "",
+        });
+      }
     } else if (actionType === "paymentMethod") {
-      setFormData({
-        method: user.paymentMethod.method || "",
-        number: user.paymentMethod.number || "",
-        expiration: user.paymentMethod.expiration || "",
-        CVV: user.paymentMethod.CVV || "",
-      });
+      if (!user.paymentMethod) {
+        setFormDataCallback({});
+      } else {
+        setFormDataCallback({
+          method: user.paymentMethod.method || "",
+          number: user.paymentMethod.number || "",
+          expiration: user.paymentMethod.expiration || "",
+          CVV: user.paymentMethod.CVV || "",
+        });
+      }
     }
   };
 
@@ -124,17 +155,6 @@ function ProfilePageFormFunctions() {
     closeRelevantForm(confirmAction);
   };
 
-  const getChangedFields = (oldData, formData) => {
-    if (Object.keys(oldData).includes("oldPassword")) return { changed: true };
-    const changedFields = {};
-    for (const key in oldData) {
-      if (oldData[key] !== formData[key]) {
-        changedFields[key] = formData[key];
-      }
-    }
-    return changedFields;
-  };
-
   const handlePersonalDetailsSubmit = (
     e,
     getChangedFields,
@@ -163,12 +183,26 @@ function ProfilePageFormFunctions() {
   ) => {
     e.preventDefault();
 
-    const changedFields = getChangedFields(userAddress, formData);
+    let minimumFields = 0;
 
-    if (Object.keys(changedFields).length > 0) {
-      handleUserUpdate(changedFields, "address");
-      setIsEditingAddress(false);
+    let isPost = false;
+
+    let changedFields = getChangedFields(userAddress, formData);
+
+    if (changedFields === "isNewData") {
+      changedFields = formData;
+      minimumFields = ADDRESS_FIELDS;
+      isPost = true;
     }
+
+    validateAndSubmit(
+      changedFields,
+      isPost,
+      "address",
+      minimumFields,
+      handleUserUpdate,
+      setIsEditingAddress
+    );
   };
 
   const handlePaymentMethodSubmit = (
@@ -180,12 +214,27 @@ function ProfilePageFormFunctions() {
     formData
   ) => {
     e.preventDefault();
-    const changedFields = getChangedFields(userPaymentMethod, formData);
 
-    if (Object.keys(changedFields).length > 0) {
-      handleUserUpdate(changedFields, "paymentMethod");
-      setIsEditingPaymentMethod(false);
+    let minimumFields = 0;
+
+    let isPost = false;
+
+    let changedFields = getChangedFields(userPaymentMethod, formData);
+
+    if (changedFields === "isNewData") {
+      changedFields = formData;
+      minimumFields = PAYMENT_FIELDS;
+      isPost = true;
     }
+
+    validateAndSubmit(
+      changedFields,
+      isPost,
+      "paymentMethod",
+      minimumFields,
+      handleUserUpdate,
+      setIsEditingPaymentMethod
+    );
   };
 
   const handlePasswordSubmit = (
@@ -196,16 +245,45 @@ function ProfilePageFormFunctions() {
     formData
   ) => {
     e.preventDefault();
-    const changedFields = getChangedFields(formData, "password");
 
-    if (Object.keys(changedFields).length > 0) {
-      handleUserUpdate(formData, "password");
-      setIsChangingPassword(false);
+    let minimumFields = 0;
+
+    let changedFields = getChangedFields(formData, "password");
+
+    if (changedFields === "isNewData") {
+      changedFields = formData;
+      minimumFields = PASSWORD_FIELDS;
+    }
+
+    validateAndSubmit(
+      changedFields,
+      false,
+      "password",
+      minimumFields,
+      handleUserUpdate,
+      setIsChangingPassword
+    );
+  };
+
+  const validateAndSubmit = (
+    changedFields,
+    isPost,
+    updateType,
+    minimumFields,
+    handleUserUpdate,
+    setIsEditingCallback
+  ) => {
+    if (Object.keys(changedFields).length > minimumFields - 1) {
+      handleUserUpdate(changedFields, updateType, isPost);
+      setIsEditingCallback(false);
+    } else if (isPost) {
+      alert("Please fill out all the required fields");
+      return;
     }
   };
 
   return {
-    handleInputChange,
+    isDataEmptyStrings,
     alertIfOtherFormsOpen,
     handleEditFormClick,
     handleGoBack,

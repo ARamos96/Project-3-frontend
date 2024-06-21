@@ -80,31 +80,51 @@ function AuthProviderWrapper(props) {
     return JSON.parse(localStorage.getItem("user"));
   };
 
-  const handleUserUpdate = async (changedFields, updateType) => {
+  const handleUserPatch = async (changedFields, updateType) => {
+    let response;
+    if (updateType === "address") {
+      response = await authService.patchAddress(
+        changedFields,
+        user.address._id
+      );
+    } else if (updateType === "paymentMethod") {
+      response = await authService.patchPaymentMethod(
+        changedFields,
+        user.paymentMethod._id
+      );
+    } else if (updateType === "password") {
+      response = await authService.patchPassword(changedFields, user._id);
+    } else if (updateType === "personalDetails") {
+      response = await authService.patchPersonalDetails(
+        changedFields,
+        user._id
+      );
+    }
+
+    return response;
+  };
+
+  const handleUserPost = async (changedFields, updateType) => {
+    let response;
+    if (updateType === "address") {
+      response = await authService.postAddress(changedFields);
+    } else if (updateType === "paymentMethod") {
+      response = await authService.postPaymentMethod(changedFields);
+    } else if (updateType === "personalDetails") {
+      response = await authService.postPersonalDetails(changedFields);
+    }
+
+    return response;
+  };
+
+  const handleUserUpdate = async (changedFields, updateType, isPost) => {
     try {
       let response;
-      if (updateType === "address") {
-        response = await authService.patchAddress(
-          changedFields,
-          user.address._id
-        );
-      } else if (updateType === "paymentMethod") {
-        response = await authService.patchPaymentMethod(
-          changedFields,
-          user.paymentMethod._id
-        );
-      } else if (updateType === "password") {
-        response = await authService.patchPassword(
-          changedFields,
-          user._id
-        );
-      } else if (updateType === "personalDetails") {
-        response = await authService.patchPersonalDetails(
-          changedFields,
-          user._id
-        );
+      if (!isPost) {
+        response = await handleUserPatch(changedFields, updateType);
+      } else {
+        response = await handleUserPost(changedFields, updateType);
       }
-
       updateUserStateAndLocalStorage(response.data, updateType);
     } catch (error) {
       console.error(`Error updating ${updateType}:`, error);
@@ -113,7 +133,6 @@ function AuthProviderWrapper(props) {
 
   const updateUserStateAndLocalStorage = (updatedUserData, updateType) => {
     // Control for nested fields
-
     if (updateType === "address") {
       setUser((prevUser) => {
         const updatedUser = {

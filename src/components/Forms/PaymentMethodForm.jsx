@@ -49,11 +49,7 @@ const PaymentMethodForm = ({
       <button className="button-profile" type="submit">
         Save
       </button>
-      <button
-        className="button-profile"
-        type="button"
-        onClick={() => handleGoBack(userPaymentMethod, "paymentMethod")}
-      >
+      <button className="button-profile" type="button" onClick={handleGoBack}>
         Go Back Without Saving
       </button>
     </div>
