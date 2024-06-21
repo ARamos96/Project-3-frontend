@@ -5,8 +5,7 @@ const PAYMENT_FIELDS = 4;
 const PASSWORD_FIELDS = 2;
 
 function ProfilePageFormFunctions() {
-  const { handleInputChange } = FormFunctions();
-
+  
   const isDataEmptyStrings = (data) => {
     return Object.values(data).every((value) => value === "");
   };

@@ -340,9 +340,7 @@ function ProfilePage() {
             </button>
           )}
         </div>
-        {(user.activeSubscription ||
-          user.favDishes.length ||
-          user.previousSubscriptions.length) && (
+        {(user.activeSubscription) && (
           <div style={{ flex: "1 1 0%", minWidth: 300, padding: 10 }}>
             <h2>Activity</h2>
             {user.activeSubscription && (
@@ -398,7 +396,7 @@ function ProfilePage() {
                 </div>
               </div>
             )}
-            {user.favDishes.length > 0 && (
+            {user.favDishes && (
               <div className="profile-item">
                 <strong>Fav Dishes:</strong>
                 <ul>
@@ -423,7 +421,7 @@ function ProfilePage() {
                 </ul>
               </div>
             )}
-            {user.previousSubscriptions.length > 0 && (
+            {user.previousSubscriptions && (
               <div className="profile-item">
                 <strong>Previous Subscriptions:</strong>
                 {user.previousSubscriptions.map((subscription, index) => (
@@ -479,10 +477,6 @@ function ProfilePage() {
                     <div>
                       Created At:{" "}
                       {new Date(subscription.createdAt).toLocaleString()}
-                    </div>
-                    <div>
-                      Updated At:{" "}
-                      {new Date(subscription.updatedAt).toLocaleString()}
                     </div>
                   </div>
                 ))}
