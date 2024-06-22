@@ -89,8 +89,8 @@ function CheckOut() {
 
     try {
       const response = await authService.postSubscription(subscriptionData);
-      
-      updateUserStateAndLocalStorage(subscriptionData, "subscription")
+
+      updateUserStateAndLocalStorage(response.data, "subscription");
 
       setMessage("Successfully saved address and payment method!");
 
@@ -117,13 +117,11 @@ function CheckOut() {
 
       // callback for empty cart
 
-      emptyCart()
+      emptyCart();
 
       setTimeout(() => {
         navigate("/profile");
       }, 2000);
-
-      
     } catch (error) {
       console.error("Error saving the address or payment method:", error);
       setMessage("Failed to save address or payment method.");
@@ -319,7 +317,7 @@ function CheckOut() {
               </label>
             </div>
 
-            <button type="submit">
+            <button type="submit" onClick={() => handleSubmit}>
               Submit
               <span></span>
               <span></span>
@@ -327,7 +325,7 @@ function CheckOut() {
               <span></span>
             </button>
           </form>
-          {message && (<script>alert("Subscription completed!");</script>)}
+          {message && <script>alert("Subscription completed!");</script>}
         </div>
       )}
     </div>
