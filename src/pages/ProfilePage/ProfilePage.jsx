@@ -77,6 +77,11 @@ function ProfilePage() {
     CVV: "",
   };
 
+  const userPassword = user.password || {
+    oldPassword: "",
+    newPassword: "",
+  };
+
   // Form data states
   const [personalDetails, setPersonalDetails] = useState({
     name: "",
@@ -144,9 +149,7 @@ function ProfilePage() {
                   getChangedFields,
                   setShowModal,
                   handleGoBackAction,
-                  userPersonalDetails,
-                  userAddress,
-                  userPaymentMethod
+                  userPersonalDetails
                 )
               }
               userPersonalDetails={userPersonalDetails}
@@ -185,8 +188,10 @@ function ProfilePage() {
                 }
               >
                 Edit Personal Details
-                <span></span><span></span><span></span><span></span>
-
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
               </button>
             </>
           )}
@@ -213,9 +218,7 @@ function ProfilePage() {
                   getChangedFields,
                   setShowModal,
                   handleGoBackAction,
-                  userPersonalDetails,
-                  userAddress,
-                  userPaymentMethod
+                  userAddress
                 )
               }
               userAddress={userAddress}
@@ -238,8 +241,10 @@ function ProfilePage() {
               {isDataEmptyStrings(userAddress)
                 ? "Add Address Details"
                 : "Edit Address Details"}{" "}
-              <span></span><span></span><span></span><span></span>
-
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           )}
 
@@ -270,8 +275,6 @@ function ProfilePage() {
                   getChangedFields,
                   setShowModal,
                   handleGoBackAction,
-                  userPersonalDetails,
-                  userAddress,
                   userPaymentMethod
                 )
               }
@@ -295,8 +298,10 @@ function ProfilePage() {
               {isDataEmptyStrings(userPaymentMethod)
                 ? "Add Payment Method"
                 : "Edit Payment Method"}{" "}
-                          <span></span><span></span><span></span><span></span>
-
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           )}
           {isChangingPassword ? (
@@ -321,9 +326,7 @@ function ProfilePage() {
                   getChangedFields,
                   setShowModal,
                   handleGoBackAction,
-                  userPersonalDetails,
-                  userAddress,
-                  userPaymentMethod
+                  userPassword
                 )
               }
             />
@@ -343,12 +346,14 @@ function ProfilePage() {
               }
             >
               Change Password
-              <span></span><span></span><span></span><span></span>
-
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           )}
         </div>
-        {(user.activeSubscription) && (
+        {user.activeSubscription && (
           <div style={{ flex: "1 1 0%", minWidth: 300, padding: 10 }}>
             <h2>Activity</h2>
             {user.activeSubscription && (

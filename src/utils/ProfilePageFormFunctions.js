@@ -8,14 +8,15 @@ function ProfilePageFormFunctions() {
   };
 
   const getChangedFields = (oldData, formData) => {
-    if (
-      Object.keys(oldData).includes("oldPassword") ||
-      isDataEmptyStrings(oldData)
-    )
-      return "isNewData";
+    // If the form is being filled from scratch (add details)
+    if (isDataEmptyStrings(oldData)) return "isNewData";
+
     const changedFields = {};
+
+    // Ignore undefined values:
+    // only compare the formData with existing fields in oldData
     for (const key in oldData) {
-      if (oldData[key] !== formData[key]) {
+      if (oldData[key] !== formData[key] && formData[key] !== undefined) {
         changedFields[key] = formData[key];
       }
     }
@@ -61,6 +62,11 @@ function ProfilePageFormFunctions() {
         lastName: user.lastName,
         email: user.email,
       });
+    } else if (actionType === "password") {
+      setFormDataCallback({
+        oldPassword: "",
+        newPassword: "",
+      });
     } else if (actionType === "address") {
       if (!user.address) {
         setFormDataCallback({});
@@ -94,21 +100,11 @@ function ProfilePageFormFunctions() {
     getChangedFields,
     setShowModal,
     closeRelevantForm,
-    userPersonalDetails,
-    userAddress,
-    userPaymentMethod
+    userComparisonDetailsCallback
   ) => {
     let changesInFields = {};
 
-    if (action === "personalDetails") {
-      changesInFields = getChangedFields(userPersonalDetails, formData);
-    } else if (action === "address") {
-      changesInFields = getChangedFields(userAddress, formData);
-    } else if (action === "paymentMethod") {
-      changesInFields = getChangedFields(userPaymentMethod, formData);
-    } else if (action === "password") {
-      changesInFields = 1;
-    }
+    changesInFields = getChangedFields(userComparisonDetailsCallback, formData);
 
     // If there are changes in the fields,
     // OR the data in form is new to user object

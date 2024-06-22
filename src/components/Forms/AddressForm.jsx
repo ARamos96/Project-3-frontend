@@ -6,7 +6,6 @@ const AddressForm = ({
   handleInputChange,
   handleAddressSubmit,
   handleGoBack,
-  userAddress,
 }) => (
   <form onSubmit={handleAddressSubmit}>
     <div className="profile-item">
