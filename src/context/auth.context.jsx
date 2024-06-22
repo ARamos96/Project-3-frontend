@@ -137,6 +137,9 @@ function AuthProviderWrapper(props) {
   ) => {
     let updatedUser = {};
 
+
+    // Add updateTupe Subscription, subscriptionWithNewAddressAndPayment, etc.
+
     // If the update was a post, remove redundant fields and continue
     if (isPost) {
       delete updatedUserData._id;

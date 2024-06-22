@@ -67,6 +67,9 @@ class AuthService {
   postPaymentMethod = (requestBody, id) => {
     return this.api.post(`/user/${id}/payment`, requestBody);
   };
+  postSubscription = (requestBody) => {
+    return this.api.post(`/subscription`, requestBody);
+  }
 }
 
 // Create one instance (object) of the service
