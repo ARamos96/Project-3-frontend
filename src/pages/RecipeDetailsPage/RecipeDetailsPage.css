@@ -16,3 +16,8 @@
     padding: 10px;
 }
 
+.first-recipe-section img {
+    width: 350px;
+    height: 350px;
+    border-radius: 180px;
+}

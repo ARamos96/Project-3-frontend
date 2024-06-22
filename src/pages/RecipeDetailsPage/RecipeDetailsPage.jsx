@@ -67,7 +67,7 @@ function RecipeDetailsPage() {
     <div className="recipe-details">
       <h1>{recipe.name}</h1>
       <div className="first-recipe-section">
-        <img src={recipe.bigImageURL} alt={recipe.name}></img>
+        <img src={`/${recipe.name}.jpg`} alt={recipe.name}></img>
         <div className="recipe-basic-info">
           <p><span className="pi pi-stopwatch" /> Cooking Time {recipe.cookingTime}'</p>
           <p>Rating {recipe.rating} <span className="pi pi-star-fill" /></p>
