@@ -74,7 +74,13 @@
 }
 
 .recipe-container > * > p{
-  background: rgba(69, 68, 62, 0.381); /* Semi-transparent background for readability */
+  background: rgba(69, 68, 62, 0.466); /* Semi-transparent background for readability */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.recipe-info > p{
+  background: rgba(69, 68, 62, 0.466); /* Semi-transparent background for readability */
   padding: 10px;
   border-radius: 5px;
 }
