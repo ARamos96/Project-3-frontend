@@ -138,6 +138,11 @@ function CartProviderWrapper(props) {
     setMealPlan(mealPlan);
   };
 
+  const removeMealPlanFromStateAndStorage = () => {
+    localStorage.removeItem("mealPlan");
+    setMealPlan({});
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -153,6 +158,7 @@ function CartProviderWrapper(props) {
         getDishesAndQuantity,
         checkout,
         setMealPlanInStateAndStorage,
+        removeMealPlanFromStateAndStorage,
       }}
     >
       {props.children}
