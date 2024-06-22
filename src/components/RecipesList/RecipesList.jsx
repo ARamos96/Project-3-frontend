@@ -153,7 +153,7 @@ function RecipesList() {
           {currentRecipes.map((recipe) => (
             <div className="recipe-container" key={recipe._id}>
               <Link to={`/recipes/${recipe._id}`}>
-                <img src={recipe.smallImageURL} alt={`${recipe.name}`} />
+                <img src={`/${recipe.name}.jpg`} alt={`${recipe.name}`} />
                 <p>{recipe.name}</p>
                 <div className="recipe-info">
                   <p>
