@@ -6,7 +6,6 @@ const PaymentMethodForm = ({
   handleInputChange,
   handlePaymentMethodSubmit,
   handleGoBack,
-  userPaymentMethod,
 }) => (
   <form onSubmit={handlePaymentMethodSubmit}>
     <div className="profile-item">
