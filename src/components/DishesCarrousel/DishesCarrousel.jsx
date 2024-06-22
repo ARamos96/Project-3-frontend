@@ -26,8 +26,12 @@ function DishesCarrousel() {
       <section className="carrousel-main">
         {showRecipes &&
           showRecipes.map((recipe, index) => (
-            <div className="recipe-showcase-container" key={index}>
-              <img src={recipe.smallImageURL} alt={`${recipe.name}`}></img>
+            <div 
+            className="recipe-showcase-container"
+            key={index}
+            style={{ backgroundImage: `url(/${encodeURIComponent(recipe.name)}.jpg)`}}
+            >
+              {/* <img src={`/${recipe.name}.jpg`} alt={`${recipe.name}`}></img> */}
               <h4>{recipe.name}</h4>
             </div>
           ))}
