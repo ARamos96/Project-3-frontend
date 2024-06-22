@@ -200,6 +200,11 @@ function RecipesList() {
                   Start Subscription
                 </button>
               )}
+              <button
+              className="info-button"
+              onClick={() => navigate(`/recipes/${recipe._id}`)}>
+              + Info
+              </button>
             </div>
           ))}
         </div>
