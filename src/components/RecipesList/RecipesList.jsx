@@ -26,7 +26,7 @@ function RecipesList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredRecipes, setFilteredRecipes] = useState([]);
 
-  const [ currentPage, setCurrentPage ] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -44,6 +44,8 @@ function RecipesList() {
   }, []);
 
   const handleOriginClick = (origin) => {
+    // Update the selectedOrigins state based on the clicked origin.
+    // If the origin is already selected, remove it. Otherwise, add it.
     setSelectedOrigins((prevOrigins) =>
       prevOrigins.includes(origin)
         ? prevOrigins.filter((item) => item !== origin)
@@ -52,6 +54,8 @@ function RecipesList() {
   };
 
   const handleDietClick = (diet) => {
+    // Update the selectedDiets state based on the clicked diet.
+    // If the diet is already selected, remove it. Otherwise, add it.
     setSelectedDiets((prevDiets) =>
       prevDiets.includes(diet)
         ? prevDiets.filter((item) => item !== diet)
@@ -60,8 +64,10 @@ function RecipesList() {
   };
 
   useEffect(() => {
+    // Start with all recipes for filtering
     let recipesToFilter = recipes;
 
+    // If there are selected origins, filter recipes by these origins
     if (selectedOrigins.length > 0) {
       recipesToFilter = recipesToFilter.filter((recipe) =>
         selectedOrigins.some((origin) =>
@@ -69,45 +75,57 @@ function RecipesList() {
         )
       );
     }
+
+    // If there are selected diets, filter recipes by these diets
     if (selectedDiets.length > 0) {
       recipesToFilter = recipesToFilter.filter((recipe) =>
         selectedDiets.some((diet) => recipe.categories.diet.includes(diet))
       );
     }
+
+    // If there is a search term, filter recipes by the search term (case-insensitive)
     if (searchTerm) {
       recipesToFilter = recipesToFilter.filter((recipe) =>
         recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
+    // Update the filtered recipes state and reset the current page to 1
     setFilteredRecipes(recipesToFilter);
-    setCurrentPage(1)
-  }, [selectedOrigins, selectedDiets, searchTerm, recipes]);
+    setCurrentPage(1);
+  }, [selectedOrigins, selectedDiets, searchTerm, recipes]); // Dependencies for useEffect
 
   const handleAddToCart = (recipe) => {
+    // If mealPlan or dishesPerWeek is not set, navigate to the meal plan page
     if (!mealPlan || !mealPlan.dishesPerWeek) {
       navigate("/mealplan");
     } else {
+      // Otherwise, add the selected recipe to the cart
       addToCart(recipe);
     }
   };
 
+  // Extract unique origins from recipes to create the filter options
   const uniqueOrigins = [
     ...new Set(recipes.flatMap((recipe) => recipe.categories.origin)),
   ];
+
+  // Extract unique diets from recipes to create the filter options
   const uniqueDiets = [
     ...new Set(recipes.flatMap((recipe) => recipe.categories.diet)),
   ];
 
   const indexOfLastRecipe = currentPage * itemsPerPage;
   const indexOfFirstRecipe = indexOfLastRecipe - itemsPerPage;
-  const currentRecipes = filteredRecipes.slice(indexOfFirstRecipe,indexOfLastRecipe);
-  const totalRecipes = Math.ceil(filteredRecipes.length/itemsPerPage);
+  const currentRecipes = filteredRecipes.slice(
+    indexOfFirstRecipe,
+    indexOfLastRecipe
+  );
+  const totalRecipes = Math.ceil(filteredRecipes.length / itemsPerPage);
 
   const handlePage = (PageNum) => {
-    setCurrentPage(PageNum)
-  }
-
+    setCurrentPage(PageNum);
+  };
 
   return (
     <>
@@ -122,8 +140,6 @@ function RecipesList() {
                 className={selectedOrigins.includes(origin) ? "active" : ""}
               >
                 {origin}
-                <span></span><span></span><span></span><span></span>
-
               </button>
             ))}
           </div>
@@ -136,8 +152,6 @@ function RecipesList() {
                 className={selectedDiets.includes(diet) ? "active" : ""}
               >
                 {diet}
-                <span></span><span></span><span></span><span></span>
-
               </button>
             ))}
           </div>
@@ -152,9 +166,12 @@ function RecipesList() {
         <div className="recipe-menu">
           {currentRecipes.map((recipe) => (
             <div
-            className="recipe-container"
-            key={recipe._id}
-            style={{ backgroundImage: `url(/${encodeURIComponent(recipe.name)}.jpg)`}}>
+              className="recipe-container"
+              key={recipe._id}
+              style={{
+                backgroundImage: `url(/${encodeURIComponent(recipe.name)}.jpg)`,
+              }}
+            >
               <Link to={`/recipes/${recipe._id}`}>
                 {/* <img src={`/${recipe.name}.jpg`} alt={`${recipe.name}`} /> */}
                 <p>{recipe.name}</p>
@@ -174,8 +191,6 @@ function RecipesList() {
                   onClick={() => handleAddToCart(recipe)}
                 >
                   Add to Subscription
-                  <span></span><span></span><span></span><span></span>
-
                 </button>
               ) : (
                 <button
@@ -183,8 +198,6 @@ function RecipesList() {
                   onClick={() => navigate("/mealplan")}
                 >
                   Start Subscription
-                  <span></span><span></span><span></span><span></span>
-
                 </button>
               )}
             </div>
@@ -192,15 +205,13 @@ function RecipesList() {
         </div>
       )}
       <div className="pagination">
-      {[...Array(totalRecipes)].map((_, index) => (
+        {[...Array(totalRecipes)].map((_, index) => (
           <button
             key={index}
             onClick={() => handlePage(index + 1)}
             className={currentPage === index + 1 ? "active" : ""}
           >
             {index + 1}
-            <span></span><span></span><span></span><span></span>
-
           </button>
         ))}
       </div>
