@@ -1,111 +1,123 @@
 .filter-and-search {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-  
-  .search-bar-container {
-    justify-self: center; /* Center the SearchBar */
-  }
-  
-  .recipe-menu {
-    margin-top: 30px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  /* .filter-tags {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.search-bar-container {
+  justify-self: center; /* Center the SearchBar */
+}
+
+.recipe-menu {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* .filter-tags {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-evenly;
   } */
-  
-  .filter-tags button.active {
-    background-color: #0056b3; /* Green background */
-    color: white; /* White text */
-    border: none; /* Remove border */
-  }
-  
-  .recipe-container a {
-    text-decoration: none;
-    color: inherit;
-    width: 100%;
-  }
-  
-  .recipe-info {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    color: #e8e8e8;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  
-  .recipe-info p {
-    border: 1px solid grey;
-    padding: 10px;
-  }
-  
-  .recipe-container {
-    width: 25%;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    justify-content: center;
-    width: 320px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    padding: 32px;
-    overflow: hidden;
-    border-radius: 10px;
-    background: #212121;
-    border: 2px solid #313131;
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  
-  .content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-  }
-  
-  .content .heading {
-    font-weight: 700;
-    font-size: 32px;
-  }
-  
-  .content .para {
-    line-height: 1.5;
-  }
-  
-  .subscription-button {
-    color: #e8e8e8;
-    text-decoration: none;
-    padding: 10px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    background: black;
-    border-radius: 5px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  }
-  
-  .recipe-container:hover {
-    box-shadow: 0 0 20px rgb(255, 165, 0);
-    border-color: rgb(255, 165, 0);
-  }
-  
-  .subscription-button:hover {
-    outline: 2px solid #e8e8e8;
-    background: transparent;
-    color: #e8e8e8;
-  }
-  
-  .subscription-button:active {
-    box-shadow: none;
-  }
-  
+
+.filter-tags button.active {
+  background-color: #0056b3; /* Green background */
+  color: white; /* White text */
+  border: none; /* Remove border */
+}
+
+.recipe-container a {
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+}
+
+.recipe-container img {
+  width: 170px;
+  height: 150px;
+}
+
+.recipe-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  color: #e8e8e8;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.recipe-info p {
+  border: 1px solid grey;
+  padding: 10px;
+}
+
+.recipe-container {
+  width: 25%;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  justify-content: center;
+  width: 320px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  padding: 32px;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 2px solid #313131;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;  
+}
+
+.recipe-container > * > p{
+  background: rgba(69, 68, 62, 0.381); /* Semi-transparent background for readability */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.content .heading {
+  font-weight: 700;
+  font-size: 32px;
+}
+
+.content .para {
+  line-height: 1.5;
+}
+
+.subscription-button {
+  color: #e8e8e8;
+  text-decoration: none;
+  padding: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: black;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.recipe-container:hover {
+  box-shadow: 0 0 20px rgb(255, 165, 0);
+  border-color: rgb(255, 165, 0);
+}
+
+.subscription-button:hover {
+  outline: 2px solid #e8e8e8;
+  background: transparent;
+  color: #e8e8e8;
+}
+
+.subscription-button:active {
+  box-shadow: none;
+}
