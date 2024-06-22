@@ -43,7 +43,7 @@ function RecipeDetailsPage() {
   }
 
   const handleFavourite = () => {
-    const url = `${MONGO_URI}/favourites/${user._id}`;
+    const url = `${MONGO_URI}/user/${user._id}`;
     const method = isFavourite ? "delete" : "post";
     const data = { recipeId: recipe._id };
 
