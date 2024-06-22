@@ -130,6 +130,7 @@ function AuthProviderWrapper(props) {
     }
   };
 
+  // isPost can be boolean or a string indicating extra updates from checkout page
   const updateUserStateAndLocalStorage = (
     updatedUserData,
     updateType,
@@ -137,11 +138,9 @@ function AuthProviderWrapper(props) {
   ) => {
     let updatedUser = {};
 
-
-    // Add updateTupe Subscription, subscriptionWithNewAddressAndPayment, etc.
-
-    // If the update was a post, remove redundant fields and continue
-    if (isPost) {
+    // If the update was a post, remove redundant fields
+    // (for getChangedFields() in ProfilePage) and continue
+    if (isPost && typeof isPost === "boolean") {
       delete updatedUserData._id;
       delete updatedUserData.__v;
       delete updatedUserData.user;
@@ -169,6 +168,49 @@ function AuthProviderWrapper(props) {
           ...prevUser,
           ...updatedUserData,
         };
+      } else if (updateType === "subscription") {
+        updatedUser = {
+          ...prevUser,
+          activeSubscription: {
+            ...prevUser.activeSubscription,
+            ...updatedUserData,
+          },
+        };
+        // if user chooses to add address and/or payment method
+        if (isPost === "addAddressToUser" && typeof isPost === "string") {
+          updatedUser = {
+            ...prevUser,
+            address: {
+              ...prevUser.address,
+              ...updatedUserData.shippingAddress,
+            },
+          };
+        }
+        if (
+          isPost === "addAddressAndPaymentMethodToUser" &&
+          typeof isPost === "string"
+        ) {
+          updatedUser = {
+            ...prevUser,
+            address: {
+              ...prevUser.address,
+              ...updatedUserData.shippingAddress,
+            },
+            paymentMethod: {
+              ...prevUser.paymentMethod,
+              ...updatedUserData.paymentMethod,
+            },
+          };
+        }
+        if (isPost === "addPaymentMethodToUser" && typeof isPost === "string") {
+          updatedUser = {
+            ...prevUser,
+            paymentMethod: {
+              ...prevUser.paymentMethod,
+              ...updatedUserData.paymentMethod,
+            },
+          };
+        }
       }
 
       localStorage.setItem("user", JSON.stringify(updatedUser));
