@@ -184,11 +184,9 @@ function CheckOut() {
             <h4>Choose a delivery day</h4>
             <div>
               <select name="deliveryDay" value={deliveryDay} onChange={handleDeliveryDayChange} required>
-                <option value="Monday">Monday</option>
-                <option value="Tuesday">Tuesday</option>
-                <option value="Wednesday">Wednesday</option>
-                <option value="Thursday">Thursday</option>
-                <option value="Friday">Friday</option>
+                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map(day => (
+                  <option key={day} value={day}>{day}</option>
+                ))}
               </select>
             </div>
 
