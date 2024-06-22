@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context.jsx";
 import FormFunctions from "../../utils/FormFunctions";
 import authService from "../../services/auth.service.js";
+import { useNavigate } from "react-router-dom";
 
 const { handleInputChange } = FormFunctions();
 
@@ -13,6 +14,8 @@ const MONGO_URI = "http://localhost:5005/subscription";
 function CheckOut() {
   const { user, updateUserStateAndLocalStorage } = useContext(AuthContext);
   const { cart, mealPlan, emptyCart } = useContext(CartContext);
+
+  const navigate = useNavigate();
 
   // state for the address
 
@@ -115,6 +118,12 @@ function CheckOut() {
       // callback for empty cart
 
       emptyCart()
+
+      setTimeout(() => {
+        navigate("/profile");
+      }, 2000);
+
+      
     } catch (error) {
       console.error("Error saving the address or payment method:", error);
       setMessage("Failed to save address or payment method.");
@@ -318,7 +327,7 @@ function CheckOut() {
               <span></span>
             </button>
           </form>
-          {message && <p>{message}</p>}
+          {message && (<script>alert("Subscription completed!");</script>)}
         </div>
       )}
     </div>
