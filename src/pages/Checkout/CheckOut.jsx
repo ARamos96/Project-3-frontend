@@ -11,8 +11,8 @@ const { handleInputChange } = FormFunctions();
 const MONGO_URI = "http://localhost:5005/subscription";
 
 function CheckOut() {
-  const { user } = useContext(AuthContext);
-  const { cart, mealPlan } = useContext(CartContext);
+  const { user, updateUserStateAndLocalStorage } = useContext(AuthContext);
+  const { cart, mealPlan, emptyCart } = useContext(CartContext);
 
   // state for the address
 
@@ -30,7 +30,7 @@ function CheckOut() {
   //State for the PaymentData
 
   const [paymentData, setPaymentData] = useState({
-    method: user?.paymentMethod?.method || "",
+    method: "Credit Card",
     number: user?.paymentMethod?.number || "",
     expiration: user?.paymentMethod?.expiration || "",
     CVV: user?.paymentMethod?.CVV || "",
@@ -42,7 +42,7 @@ function CheckOut() {
 
   //State for delivery days
 
-  const [deliveryDay, setDeliveryDay] = useState([]);
+  const [deliveryDay, setDeliveryDay] = useState(["Monday"]);
 
   // function to handle the delivery
 
@@ -86,6 +86,8 @@ function CheckOut() {
 
     try {
       const response = await authService.postSubscription(subscriptionData);
+      
+      updateUserStateAndLocalStorage(subscriptionData, "subscription")
 
       setMessage("Successfully saved address and payment method!");
 
@@ -106,7 +108,13 @@ function CheckOut() {
         expiration: "",
         CVV: "",
       });
+
+      // setting delivery to initial state
       setDeliveryDay([]);
+
+      // callback for empty cart
+
+      emptyCart()
     } catch (error) {
       console.error("Error saving the address or payment method:", error);
       setMessage("Failed to save address or payment method.");
