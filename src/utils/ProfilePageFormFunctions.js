@@ -1,5 +1,3 @@
-import FormFunctions from "./FormFunctions";
-
 const ADDRESS_FIELDS = 6;
 const PAYMENT_FIELDS = 4;
 const PASSWORD_FIELDS = 2;
@@ -117,9 +115,9 @@ function ProfilePageFormFunctions() {
     // OR the user has made changes to formData
     //THEN alert user about losing changes
     if (
-      Object.keys(changesInFields).length !== 0 &&
-      changesInFields === "isNewData" &&
-      !isDataEmptyStrings(formData)
+      (Object.keys(changesInFields).length !== 0 &&
+        changesInFields !== "isNewData") ||
+      (changesInFields === "isNewData" && !isDataEmptyStrings(formData))
     ) {
       setShowModal(true);
     } else {
