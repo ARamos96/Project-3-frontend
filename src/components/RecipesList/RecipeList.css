@@ -1,7 +1,8 @@
 .filter-and-search {
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: column;
   align-items: center;
+  gap: 20px;
 }
 
 .search-bar-container {
