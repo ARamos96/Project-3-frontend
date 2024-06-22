@@ -121,10 +121,30 @@
 
 .subscription-button:hover {
   outline: 2px solid #e8e8e8;
-  background: transparent;
-  color: #e8e8e8;
+  background: rgba(255, 255, 255, 0.9);
+  color: black;
 }
 
 .subscription-button:active {
   box-shadow: none;
+}
+
+.info-button {
+  padding: 0;
+  color: #e8e8e8;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  height: 50px;
+  width: 75px;
+  text-align: center;
+  font-size: 12px;
+}
+.info-button:hover {
+  outline: 2px solid #e8e8e8;
+  background: rgba(255, 255, 255, 0.9);
+  color: black;
 }
