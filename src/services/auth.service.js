@@ -52,13 +52,21 @@ class AuthService {
 
   patchPaymentMethod = (data, id) => {
     return this.api.patch(`/payment/${id}`, data);
-  }
+  };
 
   postMealPlan = (requestBody) => {
     return this.api.post("/mealplan", requestBody);
     // same as
     // return axios.post("http://localhost:5005/auth/verify");
-  }
+  };
+
+  postAddress = (requestBody, id) => {
+    return this.api.post(`/user/${id}/address`, requestBody);
+  };
+
+  postPaymentMethod = (requestBody, id) => {
+    return this.api.post(`/user/${id}/payment`, requestBody);
+  };
 }
 
 // Create one instance (object) of the service

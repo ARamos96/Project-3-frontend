@@ -1,11 +1,8 @@
-import FormFunctions from "./FormFunctions";
-
 const ADDRESS_FIELDS = 6;
 const PAYMENT_FIELDS = 4;
 const PASSWORD_FIELDS = 2;
 
 function ProfilePageFormFunctions() {
-  
   const isDataEmptyStrings = (data) => {
     return Object.values(data).every((value) => value === "");
   };
@@ -105,18 +102,23 @@ function ProfilePageFormFunctions() {
 
     if (action === "personalDetails") {
       changesInFields = getChangedFields(userPersonalDetails, formData);
-    }
-    if (action === "address") {
+    } else if (action === "address") {
       changesInFields = getChangedFields(userAddress, formData);
-    }
-    if (action === "paymentMethod") {
+    } else if (action === "paymentMethod") {
       changesInFields = getChangedFields(userPaymentMethod, formData);
-    }
-    if (action === "password") {
+    } else if (action === "password") {
       changesInFields = 1;
     }
 
-    if (Object.keys(changesInFields).length !== 0) {
+    // If there are changes in the fields,
+    // OR the data in form is new to user object
+    // OR the user has made changes to formData
+    //THEN alert user about losing changes
+    if (
+      (Object.keys(changesInFields).length !== 0 &&
+        changesInFields !== "isNewData") ||
+      (changesInFields === "isNewData" && !isDataEmptyStrings(formData))
+    ) {
       setShowModal(true);
     } else {
       closeRelevantForm(action);

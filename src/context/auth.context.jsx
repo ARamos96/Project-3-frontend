@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import authService from "../services/auth.service";
+import { CartContext } from "./cart.context";
 
 const AuthContext = React.createContext();
 
@@ -66,7 +67,7 @@ function AuthProviderWrapper(props) {
   };
 
   const logOutUser = () => {
-    // Upon logout, remove the token and user from the localStorage
+    // Upon logout, remove the token, mealplan and user from the localStorage
     removeToken();
     localStorage.removeItem("user");
     authenticateUser();
@@ -107,11 +108,9 @@ function AuthProviderWrapper(props) {
   const handleUserPost = async (changedFields, updateType) => {
     let response;
     if (updateType === "address") {
-      response = await authService.postAddress(changedFields);
+      response = await authService.postAddress(changedFields, user._id);
     } else if (updateType === "paymentMethod") {
-      response = await authService.postPaymentMethod(changedFields);
-    } else if (updateType === "personalDetails") {
-      response = await authService.postPersonalDetails(changedFields);
+      response = await authService.postPaymentMethod(changedFields, user._id);
     }
 
     return response;
@@ -125,54 +124,54 @@ function AuthProviderWrapper(props) {
       } else {
         response = await handleUserPost(changedFields, updateType);
       }
-      updateUserStateAndLocalStorage(response.data, updateType);
+      updateUserStateAndLocalStorage(response.data, updateType, isPost);
     } catch (error) {
       console.error(`Error updating ${updateType}:`, error);
     }
   };
 
-  const updateUserStateAndLocalStorage = (updatedUserData, updateType) => {
-    // Control for nested fields
-    if (updateType === "address") {
-      setUser((prevUser) => {
-        const updatedUser = {
+  const updateUserStateAndLocalStorage = (
+    updatedUserData,
+    updateType,
+    isPost
+  ) => {
+    let updatedUser = {};
+
+    // If the update was a post, remove redundant fields and continue
+    if (isPost) {
+      delete updatedUserData._id;
+      delete updatedUserData.__v;
+      delete updatedUserData.user;
+    }
+
+    setUser((prevUser) => {
+      if (updateType === "address") {
+        updatedUser = {
           ...prevUser,
           address: {
             ...prevUser.address,
             ...updatedUserData,
           },
         };
-
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-
-        return updatedUser;
-      });
-    } else if (updateType === "paymentMethod") {
-      setUser((prevUser) => {
-        const updatedUser = {
+      } else if (updateType === "paymentMethod") {
+        updatedUser = {
           ...prevUser,
           paymentMethod: {
             ...prevUser.paymentMethod,
             ...updatedUserData,
           },
         };
-
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-
-        return updatedUser;
-      });
-    } else if (updateType === "personalDetails") {
-      setUser((prevUser) => {
-        const updatedUser = {
+      } else if (updateType === "personalDetails") {
+        updatedUser = {
           ...prevUser,
           ...updatedUserData,
         };
+      }
 
-        localStorage.setItem("user", JSON.stringify(updatedUser));
+      localStorage.setItem("user", JSON.stringify(updatedUser));
 
-        return updatedUser;
-      });
-    }
+      return updatedUser;
+    });
   };
 
   useEffect(() => {
