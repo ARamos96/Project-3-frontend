@@ -7,6 +7,9 @@ import FormFunctions from "../../utils/FormFunctions";
 
 const { handleInputChange } = FormFunctions();
 
+const MONGO_URI = "http://localhost:5005/subscription";
+
+
 
 function CheckOut() {
   const { user } = useContext(AuthContext);
@@ -83,7 +86,7 @@ function CheckOut() {
     };
 
     try {
-      const response = await axios.post('/subscription', subscriptionData);
+      const response = await axios.post(MONGO_URI, subscriptionData);
 
       setMessage('Successfully saved address and payment method!');
 
