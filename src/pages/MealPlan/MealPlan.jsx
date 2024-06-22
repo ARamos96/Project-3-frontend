@@ -93,7 +93,7 @@ function MealPlan() {
       <section>
         <h2>Choose your Meal Plan</h2>
         <h3>How many people?</h3>
-        <div>
+        <div className="people">
         {[1, 2, 3, 4].map((num) => (
             <button
               key={num}
@@ -101,12 +101,14 @@ function MealPlan() {
               className={manyPeople === num ? "selected" : ""}
             >
               {num}
+              <span></span><span></span><span></span><span></span>
+
             </button>
           ))}
         </div>
 
         <h3>How many dishes per week?</h3>
-        <div>
+        <div className="dishesWeek">
           {[2, 3, 4, 5].map((num) => (
              <button
              key={num}
@@ -114,12 +116,14 @@ function MealPlan() {
              className={manyDishes === num ? "selected" : ""}
            >
              {num}
+             <span></span><span></span><span></span><span></span>
+
            </button>
          ))}
         </div>
 
         <h3>Diet</h3>
-        <div>
+        <div className="diet-list">
           {[
             "Vegan",
             "Vegetarian",
@@ -138,24 +142,32 @@ function MealPlan() {
               className={diet.includes(dietOption) ? "selected" : ""}
             >
               {dietOption}
+              <span></span><span></span><span></span><span></span>
+
             </button>
           ))}
         </div>
 
         <div>
           <h3>Price:</h3>
-          <p>{price}</p>
+          <p>{price} €</p>
         </div>
 
 
 
         {user ? (
           <div>
-            <button onClick={handleSubmit}>Submit!</button>
+            <button onClick={handleSubmit}>Submit!
+            <span></span><span></span><span></span><span></span>
+
+            </button>
           </div>
         ) : (
           <div>
-            <button onClick={handleLoginRedirect}>To get a meal Plan, please Log in!</button>
+            <button onClick={handleLoginRedirect}>To get a meal Plan, please Log in!
+            <span></span><span></span><span></span><span></span>
+
+            </button>
           </div>
         )}
 

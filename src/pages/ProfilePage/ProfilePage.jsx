@@ -185,6 +185,8 @@ function ProfilePage() {
                 }
               >
                 Edit Personal Details
+                <span></span><span></span><span></span><span></span>
+
               </button>
             </>
           )}
@@ -236,6 +238,8 @@ function ProfilePage() {
               {isDataEmptyStrings(userAddress)
                 ? "Add Address Details"
                 : "Edit Address Details"}{" "}
+              <span></span><span></span><span></span><span></span>
+
             </button>
           )}
 
@@ -291,6 +295,8 @@ function ProfilePage() {
               {isDataEmptyStrings(userPaymentMethod)
                 ? "Add Payment Method"
                 : "Edit Payment Method"}{" "}
+                          <span></span><span></span><span></span><span></span>
+
             </button>
           )}
           {isChangingPassword ? (
@@ -337,6 +343,8 @@ function ProfilePage() {
               }
             >
               Change Password
+              <span></span><span></span><span></span><span></span>
+
             </button>
           )}
         </div>
