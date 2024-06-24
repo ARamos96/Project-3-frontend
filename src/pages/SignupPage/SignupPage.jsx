@@ -17,10 +17,18 @@ function SignupPage() {
   const handleName = (e) => setName(e.target.value);
   const handleLastName = (e) => setLastName(e.target.value);
 
-  const handleSignupSubmit = (e) => {
+  const handleSignupSubmit = async (e) => {
     e.preventDefault();
     // Create an object representing the request body
+    try {
     const requestBody = { email, password, name, lastName };
+
+    // add for auto logi un once signed up
+    
+    const response = await authService.signup(requestBody);
+    const authToken = response.data.token;
+    localStorage.setItem("authToken", authToken);
+    navigate("/mealplan");
 
     // Send a request to the server using axios
     /* 
@@ -34,18 +42,16 @@ function SignupPage() {
     */
 
     // Or using a service
-    authService
-      .signup(requestBody)
-      .then((response) => {
-        // If the POST request is successful redirect to the login page
-        navigate("/login");
-      })
-      .catch((error) => {
-        // If the request resolves with an error, set the error message in the state
-        const errorDescription = error.response.data.message;
-        setErrorMessage(errorDescription);
-      });
-  };
+} catch (error) {
+  // Handling errors
+  if (error.response && error.response.data && error.response.data.message) {
+    const errorDescription = error.response.data.message;
+    setErrorMessage(errorDescription);
+  } else {
+    setErrorMessage("Something went wrong. Please try again later.");
+  }
+}
+};
 
   return (
     <div className="SignupPage">
