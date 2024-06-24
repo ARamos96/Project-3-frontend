@@ -1,6 +1,32 @@
 import React from "react";
 import "./Forms.css";
 
+/*<PasswordForm
+        formData={passwordDetails}
+        handleInputChange={(e) =>
+          handleInputChange(e, setPasswordDetails, passwordDetails)
+        }
+        handlePasswordSubmit={(e) =>
+          handlePasswordSubmit(
+            e,
+            getChangedFields,
+            handleUserUpdate,
+            setIsChangingPassword,
+            passwordDetails
+          )
+        }
+        handleGoBack={() =>
+          handleGoBack(
+            passwordDetails,
+            "password",
+            getChangedFields,
+            setShowModal,
+            handleGoBackAction,
+            userPassword
+          )
+        }
+      />*/
+
 const PasswordForm = ({
   formData,
   handleInputChange,
