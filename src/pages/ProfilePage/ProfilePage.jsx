@@ -353,7 +353,9 @@ function ProfilePage() {
             </button>
           )}
         </div>
-        {user.activeSubscription && (
+        {(user.activeSubscription ||
+          user.favDishes ||
+          user.previousSubscriptions) && (
           <div style={{ flex: "1 1 0%", minWidth: 300, padding: 10 }}>
             <h2>Activity</h2>
             {user.activeSubscription && (
