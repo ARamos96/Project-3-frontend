@@ -7,6 +7,7 @@ import "./RecipeDetailsPage.css";
 import "primeicons/primeicons.css"
 
 const MONGO_URI = `${process.env.REACT_APP_SERVER_URL}/dishes` || "http://localhost:5005/dishes";
+const USERMONGO_URI = `${process.env.REACT_APP_SERVER_URL}/users`;
 
 function RecipeDetailsPage() {
   // Subscribe to the AuthContext to gain access to
@@ -15,10 +16,8 @@ function RecipeDetailsPage() {
   const { addToCart, mealPlan } = useContext(CartContext);
 
   const [recipe, setRecipe] = useState({});
-  const [isFavourite, setIsFavourite] = useState(false)
 
   const navigate = useNavigate();
-
 
   // Obtain Id from URL
   const { recipeId } = useParams();
@@ -29,30 +28,28 @@ function RecipeDetailsPage() {
       .get(`${MONGO_URI}/${recipeId}`)
       .then((res) => {
         setRecipe(res.data);
-        if (user) {
-          checkIsFavourite(res.data._id);
-        }
       })
       .catch((err) => console.log(err));
-  }, [recipeId, user]);
+  }, [recipeId]);
 
-  //check if it's already favourite
+  const handleAddToFavorites = async () => {
+    try {
+      const response = await axios.post(
+        `${USERMONGO_URI}/${user._id}/add-dishes`,
+        { dishIds: [recipeId] }
+      );
+      if (response.status === 201) {
+        alert("Recipe added to favorites!");
 
-  const checkIsFavourite = (recipeId) => {
-    setIsFavourite(user?.favDishes?.includes(recipeId))
-  }
+      }
+    } catch (error) {
+      console.error("Error adding recipe to favorites:", error);
 
-  const handleFavourite = () => {
-    const url = `${MONGO_URI}/user/${user._id}`;
-    const method = isFavourite ? "delete" : "post";
-    const data = { recipeId: recipe._id };
-
-    axios({ method, url, data })
-      .then((res) => {
-        setIsFavourite(!isFavourite);
-      })
-      .catch((err) => console.log(err));
+    }
   };
+
+
+
 
   // Handler function to add the current recipe to the cart
   const handleAddToCart = (recipe) => {
@@ -64,6 +61,7 @@ function RecipeDetailsPage() {
   };
 
   return (
+
     <div className="recipe-details">
       <h1>{recipe.name}</h1>
       <div className="first-recipe-section">
@@ -90,13 +88,13 @@ function RecipeDetailsPage() {
           )}
 
         {isLoggedIn && (
-        <button onClick={handleFavourite}>
-          {isFavourite ? "Unfavourite" : "Favourite"}
-        </button>
+          <button
+            className="favorite-button"
+            onClick={handleAddToFavorites}
+          >
+            Add to Favorites
+          </button>
         )}
-
-
-
 
 
       </div>
