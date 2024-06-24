@@ -9,6 +9,9 @@ function SignupPage() {
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
+  const [passwordsMatch, setPasswordsMatch] = useState(true)
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+
 
   const navigate = useNavigate();
 
@@ -16,9 +19,14 @@ function SignupPage() {
   const handlePassword = (e) => setPassword(e.target.value);
   const handleName = (e) => setName(e.target.value);
   const handleLastName = (e) => setLastName(e.target.value);
+  const handlePasswordConfirmation = (e) => setPasswordConfirmation(e.target.value);
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
+    if (password !== passwordConfirmation) {
+      setPasswordsMatch(false);
+      return;
+    }
     // Create an object representing the request body
     try {
     const requestBody = { email, password, name, lastName };
@@ -68,6 +76,16 @@ function SignupPage() {
           value={password}
           onChange={handlePassword}
         />
+         <label>Confirm Password:</label>
+        <input
+          type="password"
+          name="passwordConfirmation"
+          value={passwordConfirmation}
+          onChange={handlePasswordConfirmation}
+        />
+        {!passwordsMatch && (
+          <p className="error-message">Passwords do not match. Please try again.</p>
+        )}
 
         <label>Name:</label>
         <input type="text" name="name" value={name} onChange={handleName} />
