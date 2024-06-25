@@ -6,6 +6,10 @@ import "./MealPlan.css";
 import authService from "../../services/auth.service.js";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context.jsx";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
 
 const MONGO_URI = "http://localhost:5005/mealplan";
 
@@ -76,9 +80,34 @@ function MealPlan() {
         setPrice(0);
         setSubmitted(true); // Returns true to indicate that the form has been submitted
         navigate("/recipes");
+
+        //tast wit success submission
+
+        toast.success("Meal plan submitted successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+
       })
       .catch((error) => {
         console.error("Error creating meal plan:", error);
+
+        //tast wit error submission
+
+        toast.error("Error submitting meal plan. Please try again later.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       });
   };
 
@@ -90,11 +119,12 @@ function MealPlan() {
 
   return (
     <div>
+       <ToastContainer />
       <section>
         <h2>Choose your Meal Plan</h2>
         <h3>How many people?</h3>
         <div className="people">
-        {[1, 2, 3, 4].map((num) => (
+          {[1, 2, 3, 4].map((num) => (
             <button
               key={num}
               onClick={() => handlePeopleClick(num)}
@@ -110,16 +140,16 @@ function MealPlan() {
         <h3>How many dishes per week?</h3>
         <div className="dishesWeek">
           {[2, 3, 4, 5].map((num) => (
-             <button
-             key={num}
-             onClick={() => handleDishesClick(num)}
-             className={manyDishes === num ? "selected" : ""}
-           >
-             {num}
-             <span></span><span></span><span></span><span></span>
+            <button
+              key={num}
+              onClick={() => handleDishesClick(num)}
+              className={manyDishes === num ? "selected" : ""}
+            >
+              {num}
+              <span></span><span></span><span></span><span></span>
 
-           </button>
-         ))}
+            </button>
+          ))}
         </div>
 
         <h3>Diet</h3>
@@ -158,14 +188,14 @@ function MealPlan() {
         {user ? (
           <div>
             <button onClick={handleSubmit}>Submit!
-            <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
 
             </button>
           </div>
         ) : (
           <div>
             <button onClick={handleLoginRedirect}>To get a meal Plan, please Log in!
-            <span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span>
 
             </button>
           </div>
