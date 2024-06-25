@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./ProfilePage.css";
 import { AuthContext } from "../../context/auth.context";
 import Loading from "../../components/Loading/Loading";

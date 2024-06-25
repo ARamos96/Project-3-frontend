@@ -4,10 +4,12 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
 import "./RecipeDetailsPage.css";
-import "primeicons/primeicons.css"
+import "primeicons/primeicons.css";
 
-const MONGO_URI = `${process.env.REACT_APP_SERVER_URL}/dishes` || "http://localhost:5005/dishes";
-const USERMONGO_URI = `${process.env.REACT_APP_SERVER_URL}/users`;
+const MONGO_URI =
+  `${process.env.REACT_APP_SERVER_URL}/dishes` ||
+  "http://localhost:5005/dishes";
+const USERMONGO_URI = `${process.env.REACT_APP_SERVER_URL}/user`;
 
 function RecipeDetailsPage() {
   // Subscribe to the AuthContext to gain access to
@@ -34,22 +36,23 @@ function RecipeDetailsPage() {
 
   const handleAddToFavorites = async () => {
     try {
+      const token = localStorage.getItem("authToken");
       const response = await axios.post(
         `${USERMONGO_URI}/${user._id}/add-dishes`,
-        { dishIds: [recipeId] }
+        { dishIds: [recipeId] },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.status === 201) {
         alert("Recipe added to favorites!");
-
       }
     } catch (error) {
       console.error("Error adding recipe to favorites:", error);
-
     }
   };
-
-
-
 
   // Handler function to add the current recipe to the cart
   const handleAddToCart = (recipe) => {
@@ -61,14 +64,18 @@ function RecipeDetailsPage() {
   };
 
   return (
-
     <div className="recipe-details">
       <h1>{recipe.name}</h1>
       <div className="first-recipe-section">
         <img src={`/${recipe.name}.jpg`} alt={recipe.name}></img>
         <div className="recipe-basic-info">
-          <p><span className="pi pi-stopwatch" /> Cooking Time {recipe.cookingTime}'</p>
-          <p>Rating {recipe.rating} <span className="pi pi-star-fill" /></p>
+          <p>
+            <span className="pi pi-stopwatch" /> Cooking Time{" "}
+            {recipe.cookingTime}'
+          </p>
+          <p>
+            Rating {recipe.rating} <span className="pi pi-star-fill" />
+          </p>
           <p>Difficulty: {recipe.difficulty}</p>
         </div>
         {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
@@ -78,25 +85,20 @@ function RecipeDetailsPage() {
           >
             Add to Subscription
           </button>
-        )
-          : (<button
+        ) : (
+          <button
             className="subscription-button"
             onClick={() => navigate("/mealplan")}
           >
             Start Subscription
           </button>
-          )}
+        )}
 
         {isLoggedIn && (
-          <button
-            className="favorite-button"
-            onClick={handleAddToFavorites}
-          >
+          <button className="favorite-button" onClick={handleAddToFavorites}>
             Add to Favorites
           </button>
         )}
-
-
       </div>
       <div className="recipe-tags">
         {recipe.categories && (
