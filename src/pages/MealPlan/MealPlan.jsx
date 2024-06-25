@@ -6,7 +6,7 @@ import "./MealPlan.css";
 import authService from "../../services/auth.service.js";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context.jsx";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
@@ -119,7 +119,6 @@ function MealPlan() {
 
   return (
     <div>
-       <ToastContainer />
       <section>
         <h2>Choose your Meal Plan</h2>
         <h3>How many people?</h3>

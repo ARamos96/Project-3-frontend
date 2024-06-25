@@ -20,12 +20,16 @@ import CheckOut from "./pages/Checkout/CheckOut";
 import IsPrivate from "./components/IsPrivate/IsPrivate";
 import IsAnon from "./components/IsAnon/IsAnon";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   return (
     <div className="App">
       {/* <Navbar /> */}
       {/* <TailWindNavbar /> */}
       <PrimeReactNavbar />
+      <ToastContainer />
 
       <Routes>
         <Route path="/" element={<HomePage />} />
