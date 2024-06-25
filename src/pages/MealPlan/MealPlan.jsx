@@ -62,6 +62,46 @@ function MealPlan() {
   // Posting the mealplans to mealPlan route.
 
   const handleSubmit = () => {
+    // Display error toaster if number of people isn't selected
+    if (manyPeople === 0) {
+      toast.error("Please select the number of people.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return; // Prevent form submission
+    }
+
+    // Display error toaster if number of dishes isn't selected
+    if (manyDishes === 0) {
+      toast.error("Please select the number of dishes per week.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return; // Prevent form submission
+    }
+    // Display error toaster if diet isn't selected
+    if (diet.length === 0) {
+      toast.error("Please select at least one diet option.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return; 
+    } 
     const mealPlanData = {
       numberOfPeople: manyPeople,
       dishesPerWeek: manyDishes,
@@ -81,7 +121,7 @@ function MealPlan() {
         setSubmitted(true); // Returns true to indicate that the form has been submitted
         navigate("/recipes");
 
-        //tast wit success submission
+        //toast with success submission
 
         toast.success("Meal plan submitted successfully!", {
           position: "top-right",
