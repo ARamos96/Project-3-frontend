@@ -50,17 +50,93 @@ function CheckOut() {
 
   const [deliveryDay, setDeliveryDay] = useState(["Monday"]);
 
+  const allForms = {
+    addressForm,
+    paymentMethodForm,
+    deliveryDay,
+  };
+
   // function to handle the delivery
 
   const handleDeliveryDayChange = (e) => {
-    const { options } = e.target;
-    const selectedOptions = [];
-    for (let i = 0, l = options.length; i < l; i++) {
-      if (options[i].selected) {
-        selectedOptions.push(options[i].value);
-      }
+    const { value, checked } = e.target;
+    setDeliveryDay((prevDays) =>
+      checked ? [...prevDays, value] : prevDays.filter((day) => day !== value)
+    );
+  };
+
+  const validatePaymentMethod = (paymentMethodForm) => {
+    const { method, number, expiration, CVV } = paymentMethodForm;
+
+    // Check if all fields are filled
+    if (!method || !number || !expiration || !CVV) {
+      return { isValid: false, message: "All payment fields must be filled." };
     }
-    setDeliveryDay(selectedOptions);
+
+    // Check if card number contains only numbers and is 16 digits long
+    const cardNumberPattern = /^\d{16}$/;
+    if (!cardNumberPattern.test(number)) {
+      return {
+        isValid: false,
+        message: "Card number must be 16 digits long and contain only numbers.",
+      };
+    }
+
+    // Check if expiration date is in MM/YY format
+    const expirationPattern = /^(0[1-9]|1[0-2])\/\d{2}$/;
+    if (!expirationPattern.test(expiration)) {
+      return {
+        isValid: false,
+        message: "Expiration date must be in MM/YY format.",
+      };
+    }
+
+    // Check if CVV contains only numbers and is 3 digits long
+    const cvvPattern = /^\d{3}$/;
+    if (!cvvPattern.test(CVV)) {
+      return {
+        isValid: false,
+        message: "CVV must be 3 digits long and contain only numbers.",
+      };
+    }
+
+    return { isValid: true, message: "Payment method is valid." };
+  };
+
+  const validateAddress = (addressForm) => {
+    const { address, city, region, zipCode, country, phone } = addressForm;
+
+    // Check if all fields are filled
+    if (!address || !city || !region || !zipCode || !country || !phone) {
+      return { isValid: false, message: "All fields must be filled." };
+    }
+
+    // Check if zipCode contains only numbers
+    const zipCodePattern = /^\d+$/;
+    if (!zipCodePattern.test(zipCode)) {
+      return { isValid: false, message: "Zip Code must contain only numbers." };
+    }
+
+    // Check if phone contains only numbers
+    const phonePattern = /^\d+$/;
+    if (!phonePattern.test(phone)) {
+      return {
+        isValid: false,
+        message: "Phone number must contain only numbers.",
+      };
+    }
+
+    return { isValid: true, message: "Address is valid." };
+  };
+
+  const validateDeliveryDay = (data) => {
+    if (data.length === 0) {
+      return {
+        isValid: false,
+        message: "You must select at least one delivery day.",
+      };
+    }
+    return { isValid: true, message: "Delivery day is valid." };
   };
 
   //function to post the data necessary to the subscription: address, delivery day and payment
@@ -68,73 +144,147 @@ function CheckOut() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const subscriptionData = {
-      shippingAddress: {
-        address: addressForm.address,
-        city: addressForm.city,
-        region: addressForm.region,
-        zipCode: addressForm.zipCode,
-        country: addressForm.country,
-        phone: addressForm.phone,
-      },
+    // validate form data
 
-      renderedUser: addressForm.renderedUser,
-      mealPlan: mealPlan._id,
-      dishes: cart.map((item) => item._id),
-      deliveryDay,
-      paymentMethod: {
-        method: paymentMethodForm.method,
-        number: paymentMethodForm.number,
-        expiration: paymentMethodForm.expiration,
-        CVV: paymentMethodForm.CVV,
-      },
-    };
+    const addressValidation = validateAddress(allForms.addressForm);
+    const paymentValidation = validatePaymentMethod(allForms.paymentMethodForm);
+    const deliveryDayValidation = validateDeliveryDay(allForms.deliveryDay);
+    if (
+      !addressValidation.isValid &&
+      !paymentValidation.isValid &&
+      !deliveryDayValidation.isValid
+    ) {
+      showToast([
+        ...addressValidation.message,
+        ...paymentValidation.message,
+        ...deliveryDayValidation.message,
+      ]);
+      return;
+    } else if (!addressValidation.isValid) {
+      showToast(addressValidation.message);
+      return;
+    } else if (!paymentValidation.isValid) {
+      showToast(paymentValidation.message);
+      return;
+    } else if (!deliveryDayValidation.isValid) {
+      showToast(deliveryDayValidation.message);
+      return;
+    } else {
+      const subscriptionData = {
+        shippingAddress: {
+          address: addressForm.address,
+          city: addressForm.city,
+          region: addressForm.region,
+          zipCode: addressForm.zipCode,
+          country: addressForm.country,
+          phone: addressForm.phone,
+        },
 
-    try {
-      const response = await authService.postSubscription(subscriptionData);
+        renderedUser: addressForm.renderedUser,
+        mealPlan: mealPlan._id,
+        dishes: cart.map((item) => item._id),
+        deliveryDay,
+        paymentMethod: {
+          method: paymentMethodForm.method,
+          number: paymentMethodForm.number,
+          expiration: paymentMethodForm.expiration,
+          CVV: paymentMethodForm.CVV,
+        },
+      };
 
-      updateUserStateAndLocalStorage(response.data, "subscription");
+      try {
+        const response = await authService.postSubscription(subscriptionData);
 
-      setMessage("Successfully saved address and payment method!");
+        updateUserStateAndLocalStorage(response.data, "subscription");
 
-      // reset the values once submitted
+        setMessage("Successfully saved address and payment method!");
 
-      setAddressForm({
-        address: "",
-        city: "",
-        region: "",
-        zipCode: "",
-        country: "",
-        phone: "",
-        renderedUser: renderedUser ? renderedUser._id : null,
+        // reset the values once submitted
+
+        setAddressForm({
+          address: "",
+          city: "",
+          region: "",
+          zipCode: "",
+          country: "",
+          phone: "",
+          renderedUser: renderedUser ? renderedUser._id : null,
+        });
+        setPaymentMethodForm({
+          method: "",
+          number: "",
+          expiration: "",
+          CVV: "",
+        });
+
+        // setting delivery to initial state
+        setDeliveryDay([]);
+
+        // callback for empty cart
+
+        emptyCart();
+
+        setTimeout(() => {
+          navigate("/profile");
+        }, 2000);
+      } catch (error) {
+        console.error("Error saving the address or payment method:", error);
+        setMessage("Failed to save address or payment method.");
+      }
+    }
+  };
+
+  const showToast = (message) => {
+    if (typeof message === "string") {
+      toast.error(message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
       });
-      setPaymentMethodForm({
-        method: "",
-        number: "",
-        expiration: "",
-        CVV: "",
+    } else if (Array.isArray(message)) {
+      // for each message, show a toast
+      message.forEach((message) => {
+        toast.error(message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       });
-
-      // setting delivery to initial state
-      setDeliveryDay([]);
-
-      // callback for empty cart
-
-      emptyCart();
-
-      setTimeout(() => {
-        navigate("/profile");
-      }, 2000);
-    } catch (error) {
-      console.error("Error saving the address or payment method:", error);
-      setMessage("Failed to save address or payment method.");
+      /*
+      toast.error(message.join(", "), {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+      */
     }
   };
 
   //control just in case...
 
   if (!mealPlan) {
-    return <h1>Get a meal plan first!!!</h1>;
+    return toast.error("Please choose a Meal Plan first!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   }
 
   return (
@@ -161,7 +311,7 @@ function CheckOut() {
         ))}
       </div>
 
-      {renderedUser && (
+      {user && (
         <div>
           <h3>Your details</h3>
           <form onSubmit={handleSubmit}>
@@ -253,20 +403,22 @@ function CheckOut() {
 
             <h4>Choose a delivery day</h4>
             <div>
-              <select
-                name="deliveryDay"
-                value={deliveryDay}
-                onChange={handleDeliveryDayChange}
-                required
-              >
-                {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
-                  (day) => (
-                    <option key={day} value={day}>
+              {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
+                (day) => (
+                  <div key={day}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="deliveryDay"
+                        value={day}
+                        checked={deliveryDay.includes(day)}
+                        onChange={handleDeliveryDayChange}
+                      />
                       {day}
-                    </option>
-                  )
-                )}
-              </select>
+                    </label>
+                  </div>
+                )
+              )}
             </div>
 
             <h4>Payment method</h4>
@@ -351,7 +503,7 @@ function CheckOut() {
               </label>
             </div>
 
-            <button type="submit" onClick={() => handleSubmit}>
+            <button type="submit">
               Submit
               <span></span>
               <span></span>
@@ -359,7 +511,7 @@ function CheckOut() {
               <span></span>
             </button>
           </form>
-          {message && <script>alert("Subscription completed!");</script>}
+          {message && <div>{message}</div>}
         </div>
       )}
     </div>
