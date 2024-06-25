@@ -26,6 +26,13 @@ function ProfilePage() {
     isChangingPassword,
   };
 
+  const setIsEditingForms = {
+    setIsEditingPersonalDetails,
+    setIsEditingPaymentMethod,
+    setIsEditingAddress,
+    setIsChangingPassword,
+  };
+
   const {
     handleEditFormClick,
     isDataEmptyStrings,
@@ -111,6 +118,38 @@ function ProfilePage() {
   // Modal controls
   const [showModal, setShowModal] = useState(false);
 
+  const personalDetailsCardProps = {
+    user,
+    personalDetails,
+    setPersonalDetails,
+    handleInputChange,
+    handlePersonalDetailsSubmit,
+    handleGoBack,
+    userPersonalDetails,
+    handleEditFormClick,
+    alertIfOtherFormsOpen,
+    isEditingForms,
+    setConfirmAction,
+    setIsEditingForms,
+    addressDetails,
+    setAddressDetails,
+    handleAddressSubmit,
+    userAddress,
+    paymentMethodDetails,
+    setPaymentMethodDetails,
+    handlePaymentMethodSubmit,
+    userPaymentMethod,
+    passwordDetails,
+    setPasswordDetails,
+    handlePasswordSubmit,
+    isDataEmptyStrings,
+    setShowModal,
+    handleGoBackAction,
+    getChangedFields,
+    handleUserUpdate,
+    userPassword,
+  };
+
   if (!user) {
     return <Loading />;
   }
@@ -123,42 +162,7 @@ function ProfilePage() {
         style={{ display: "flex", flexWrap: "wrap" }}
       >
         <PersonalDetailsCard
-          user={user}
-          isEditingPersonalDetails={isEditingPersonalDetails}
-          personalDetails={personalDetails}
-          setPersonalDetails={setPersonalDetails}
-          handleInputChange={handleInputChange}
-          handlePersonalDetailsSubmit={handlePersonalDetailsSubmit}
-          handleGoBack={handleGoBack}
-          userPersonalDetails={userPersonalDetails}
-          handleEditFormClick={handleEditFormClick}
-          alertIfOtherFormsOpen={alertIfOtherFormsOpen}
-          isEditingForms={isEditingForms}
-          setIsEditingPersonalDetails={setIsEditingPersonalDetails}
-          setConfirmAction={setConfirmAction}
-          isEditingAddress={isEditingAddress}
-          addressDetails={addressDetails}
-          setAddressDetails={setAddressDetails}
-          handleAddressSubmit={handleAddressSubmit}
-          userAddress={userAddress}
-          setIsEditingAddress={setIsEditingAddress}
-          isEditingPaymentMethod={isEditingPaymentMethod}
-          paymentMethodDetails={paymentMethodDetails}
-          setPaymentMethodDetails={setPaymentMethodDetails}
-          handlePaymentMethodSubmit={handlePaymentMethodSubmit}
-          userPaymentMethod={userPaymentMethod}
-          setIsEditingPaymentMethod={setIsEditingPaymentMethod}
-          isChangingPassword={isChangingPassword}
-          passwordDetails={passwordDetails}
-          setPasswordDetails={setPasswordDetails}
-          handlePasswordSubmit={handlePasswordSubmit}
-          setIsChangingPassword={setIsChangingPassword}
-          isDataEmptyStrings={isDataEmptyStrings}
-          setShowModal={setShowModal}
-          handleGoBackAction={handleGoBackAction}
-          getChangedFields={getChangedFields}
-          handleUserUpdate={handleUserUpdate}
-          userPassword={userPassword}
+          personalDetailsCardProps={personalDetailsCardProps}
         />
         <ActivityCard user={user} />
       </div>
