@@ -92,13 +92,15 @@ function MealPlan() {
     // Display error toaster if diet isn't selected
     if (diet.length === 0) {
       toast.error("Please select at least one diet option.", {
-        position: "top-center",
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        theme: "dark",
+
       });
       return; 
     } 
@@ -124,13 +126,14 @@ function MealPlan() {
         //toast with success submission
 
         toast.success("Meal plan submitted successfully!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
         });
 
       })
