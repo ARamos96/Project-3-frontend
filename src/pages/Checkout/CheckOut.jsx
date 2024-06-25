@@ -6,10 +6,9 @@ import { CartContext } from "../../context/cart.context.jsx";
 import FormFunctions from "../../utils/FormFunctions";
 import authService from "../../services/auth.service.js";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const { handleInputChange } = FormFunctions();
-
-const MONGO_URI = "http://localhost:5005/subscription";
 
 function CheckOut() {
   const { user, updateUserStateAndLocalStorage } = useContext(AuthContext);
@@ -17,26 +16,30 @@ function CheckOut() {
 
   const navigate = useNavigate();
 
+  const renderedUser = user ? user : JSON.parse(localStorage.getItem("user"));
+
   // state for the address
 
-  const [formData, setFormData] = useState({
-    address: user?.address || "",
-    city: user?.address?.city || "",
-    region: user?.address?.region || "",
-    zipCode: user?.address?.zipCode || "",
-    country: user?.address?.country || "",
-    phone: user?.address?.phone || "",
-    user: user?._id || null,
-    subscription: user?.subscription || "",
-  });
+  const [addressForm, setAddressForm] = useState(
+    renderedUser && renderedUser.address
+      ? renderedUser.address
+      : {
+          address: "",
+          city: "",
+          region: "",
+          zipCode: "",
+          country: "",
+          phone: "",
+        }
+  );
 
   //State for the PaymentData
 
-  const [paymentData, setPaymentData] = useState({
+  const [paymentMethodForm, setPaymentMethodForm] = useState({
     method: "Credit Card",
-    number: user?.paymentMethod?.number || "",
-    expiration: user?.paymentMethod?.expiration || "",
-    CVV: user?.paymentMethod?.CVV || "",
+    number: renderedUser?.paymentMethod?.number || "",
+    expiration: renderedUser?.paymentMethod?.expiration || "",
+    CVV: renderedUser?.paymentMethod?.CVV || "",
   });
 
   //State for messages
@@ -67,23 +70,23 @@ function CheckOut() {
 
     const subscriptionData = {
       shippingAddress: {
-        address: formData.address,
-        city: formData.city,
-        region: formData.region,
-        zipCode: formData.zipCode,
-        country: formData.country,
-        phone: formData.phone,
+        address: addressForm.address,
+        city: addressForm.city,
+        region: addressForm.region,
+        zipCode: addressForm.zipCode,
+        country: addressForm.country,
+        phone: addressForm.phone,
       },
 
-      user: formData.user,
+      renderedUser: addressForm.renderedUser,
       mealPlan: mealPlan._id,
       dishes: cart.map((item) => item._id),
       deliveryDay,
       paymentMethod: {
-        method: paymentData.method,
-        number: paymentData.number,
-        expiration: paymentData.expiration,
-        CVV: paymentData.CVV,
+        method: paymentMethodForm.method,
+        number: paymentMethodForm.number,
+        expiration: paymentMethodForm.expiration,
+        CVV: paymentMethodForm.CVV,
       },
     };
 
@@ -96,16 +99,16 @@ function CheckOut() {
 
       // reset the values once submitted
 
-      setFormData({
+      setAddressForm({
         address: "",
         city: "",
         region: "",
         zipCode: "",
         country: "",
         phone: "",
-        user: user ? user._id : null,
+        renderedUser: renderedUser ? renderedUser._id : null,
       });
-      setPaymentData({
+      setPaymentMethodForm({
         method: "",
         number: "",
         expiration: "",
@@ -139,12 +142,15 @@ function CheckOut() {
       <h2>Subscription summary</h2>
 
       <h3>Your meal plan</h3>
-      <div>
-        <p>Number of People: {mealPlan.numberOfPeople}</p>
-        <p>Dishes per week: {mealPlan.dishesPerWeek}</p>
-        <p>Diet: {mealPlan.diet}</p>
-        <p>Price: {mealPlan.price}</p>
-      </div>
+
+      {mealPlan && (
+        <div>
+          <p>Number of People: {mealPlan.numberOfPeople}</p>
+          <p>Dishes per week: {mealPlan.dishesPerWeek}</p>
+          <p>Diet: {mealPlan.diet}</p>
+          <p>Price: {mealPlan.price}</p>
+        </div>
+      )}
 
       <h3>Your choices</h3>
       <div>
@@ -155,7 +161,7 @@ function CheckOut() {
         ))}
       </div>
 
-      {user && (
+      {renderedUser && (
         <div>
           <h3>Your details</h3>
           <form onSubmit={handleSubmit}>
@@ -166,8 +172,10 @@ function CheckOut() {
                 <input
                   type="text"
                   name="address"
-                  value={formData.address}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.address}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
@@ -178,8 +186,10 @@ function CheckOut() {
                 <input
                   type="text"
                   name="city"
-                  value={formData.city}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.city}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
@@ -190,8 +200,10 @@ function CheckOut() {
                 <input
                   type="text"
                   name="region"
-                  value={formData.region}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.region}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
@@ -202,8 +214,10 @@ function CheckOut() {
                 <input
                   type="text"
                   name="zipCode"
-                  value={formData.zipCode}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.zipCode}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
@@ -214,8 +228,10 @@ function CheckOut() {
                 <input
                   type="text"
                   name="country"
-                  value={formData.country}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.country}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
@@ -226,8 +242,10 @@ function CheckOut() {
                 <input
                   type="text"
                   name="phone"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.phone}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
@@ -257,9 +275,13 @@ function CheckOut() {
                 Payment Method:
                 <select
                   name="method"
-                  value={paymentData.method}
+                  value={paymentMethodForm.method}
                   onChange={(e) =>
-                    handleInputChange(e, setPaymentData, paymentData)
+                    handleInputChange(
+                      e,
+                      setPaymentMethodForm,
+                      paymentMethodForm
+                    )
                   }
                   required
                 >
@@ -274,9 +296,13 @@ function CheckOut() {
                 <input
                   type="text"
                   name="number"
-                  value={paymentData.number}
+                  value={paymentMethodForm.number}
                   onChange={(e) =>
-                    handleInputChange(e, setPaymentData, paymentData)
+                    handleInputChange(
+                      e,
+                      setPaymentMethodForm,
+                      paymentMethodForm
+                    )
                   }
                   required
                   minLength="16"
@@ -290,9 +316,13 @@ function CheckOut() {
                 <input
                   type="text"
                   name="expiration"
-                  value={paymentData.expiration}
+                  value={paymentMethodForm.expiration}
                   onChange={(e) =>
-                    handleInputChange(e, setPaymentData, paymentData)
+                    handleInputChange(
+                      e,
+                      setPaymentMethodForm,
+                      paymentMethodForm
+                    )
                   }
                   required
                   minLength="5"
@@ -306,9 +336,13 @@ function CheckOut() {
                 <input
                   type="text"
                   name="CVV"
-                  value={paymentData.CVV}
+                  value={paymentMethodForm.CVV}
                   onChange={(e) =>
-                    handleInputChange(e, setPaymentData, paymentData)
+                    handleInputChange(
+                      e,
+                      setPaymentMethodForm,
+                      paymentMethodForm
+                    )
                   }
                   required
                   minLength="3"
