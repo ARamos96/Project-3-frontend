@@ -5,6 +5,8 @@ import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
 import "./RecipeDetailsPage.css";
 import "primeicons/primeicons.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MONGO_URI =
   `${process.env.REACT_APP_SERVER_URL}/dishes` ||
@@ -47,7 +49,16 @@ function RecipeDetailsPage() {
         }
       );
       if (response.status === 201) {
-        alert("Recipe added to favorites!");
+        toast.success('Dish added as favorite!', {
+          position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });
       }
     } catch (error) {
       console.error("Error adding recipe to favorites:", error);
@@ -60,11 +71,24 @@ function RecipeDetailsPage() {
       navigate("/mealplan");
     } else {
       addToCart(recipe);
+
+      toast.success('Dish added to the cart!', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   };
 
   return (
     <div className="recipe-details">
+      <ToastContainer />
+
       <h1>{recipe.name}</h1>
       <div className="first-recipe-section">
         <img src={`/${recipe.name}.jpg`} alt={recipe.name}></img>
@@ -83,7 +107,7 @@ function RecipeDetailsPage() {
             className="subscription-button"
             onClick={() => handleAddToCart(recipe)}
           >
-            Add to Subscription
+            Add to cart
           </button>
         ) : (
           <button
