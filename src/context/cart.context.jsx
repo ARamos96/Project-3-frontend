@@ -18,6 +18,11 @@ function CartProviderWrapper(props) {
     if (storedCart) {
       setCart(JSON.parse(storedCart));
     }
+    // Load mealPlan from localStorage if it exists
+    const storedmealPlan = localStorage.getItem("mealPlan");
+    if (storedmealPlan) {
+      setMealPlan(JSON.parse(storedmealPlan));
+    }
   }, []);
 
   // Add dish object, including duplicates
