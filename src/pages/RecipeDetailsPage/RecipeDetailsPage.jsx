@@ -11,22 +11,15 @@ import "react-toastify/dist/ReactToastify.css";
 const MONGO_URI =
   `${process.env.REACT_APP_SERVER_URL}/dishes` ||
   "http://localhost:5005/dishes";
-const USERMONGO_URI = `${process.env.REACT_APP_SERVER_URL}/user`;
 
 function RecipeDetailsPage() {
-  // Subscribe to the AuthContext to gain access to
-  // the values from AuthContext.Provider's `value` prop
-  const { isLoggedIn, user } = useContext(AuthContext);
+  const { isLoggedIn, user, addFavDish, removeFavDish, favdishes } = useContext(AuthContext);
   const { addToCart, mealPlan } = useContext(CartContext);
 
   const [recipe, setRecipe] = useState({});
-
   const navigate = useNavigate();
-
-  // Obtain Id from URL
   const { recipeId } = useParams();
 
-  // Get single recipe details
   useEffect(() => {
     axios
       .get(`${MONGO_URI}/${recipeId}`)
@@ -36,21 +29,15 @@ function RecipeDetailsPage() {
       .catch((err) => console.log(err));
   }, [recipeId]);
 
-  const handleAddToFavorites = async () => {
-    try {
-      const token = localStorage.getItem("authToken");
-      const response = await axios.post(
-        `${USERMONGO_URI}/${user._id}/add-dishes`,
-        { dishIds: [recipeId] },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 201) {
-        toast.success('Dish added as favorite!', {
-          position: "top-right",
+  const isInFavorites = () => {
+    return favdishes.some((dish) => dish.id === recipe.id);
+  };
+
+  const handleToggleFavorite = () => {
+    if (isInFavorites()) {
+      removeFavDish(recipe.id);
+      toast.success("Dish removed from favorites", {
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -58,21 +45,28 @@ function RecipeDetailsPage() {
         draggable: true,
         progress: undefined,
         theme: "dark",
-        });
-      }
-    } catch (error) {
-      console.error("Error adding recipe to favorites:", error);
+      });
+    } else {
+      addFavDish(recipe);
+      toast.success("Dish added in favorites!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   };
 
-  // Handler function to add the current recipe to the cart
   const handleAddToCart = (recipe) => {
     if (!mealPlan || !mealPlan.dishesPerWeek) {
       navigate("/mealplan");
     } else {
       addToCart(recipe);
-
-      toast.success('Dish added to the cart!', {
+      toast.success("Dish added to the cart!", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -119,8 +113,8 @@ function RecipeDetailsPage() {
         )}
 
         {isLoggedIn && (
-          <button className="favorite-button" onClick={handleAddToFavorites}>
-            Add to Favorites
+          <button className="favorite-button" onClick={handleToggleFavorite}>
+            {isInFavorites() ? "Remove from Favorites" : "Add to Favorites"}
           </button>
         )}
       </div>
@@ -145,7 +139,6 @@ function RecipeDetailsPage() {
             ))}
         </ul>
       </div>
-      {/* Obtain Nutritional Information from Object */}
       {recipe.nutritionalValuePerServing && (
         <div className="nutritional-information-table">
           <h2>Nutritional Information</h2>
