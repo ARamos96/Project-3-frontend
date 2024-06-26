@@ -37,6 +37,10 @@ class AuthService {
     // return axios.post("http://localhost:5005/auth/verify");
   };
 
+  getUser = (id) =>{
+    return this.api.get(`/user/${id}`);
+  }
+
   patchPersonalDetails = (data, id) => {
     return this.api.patch(`/user/${id}`, data);
     // same as
