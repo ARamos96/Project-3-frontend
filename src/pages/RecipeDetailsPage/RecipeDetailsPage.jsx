@@ -7,6 +7,9 @@ import "./RecipeDetailsPage.css";
 import "primeicons/primeicons.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Button, IconButton, Container, Grid, Typography, Card, CardMedia, CardContent, CardActions } from "@mui/material";
+import { Favorite, FavoriteBorder, Info, ShoppingCart, Bookmark, BookmarkBorder } from "@mui/icons-material";
+
 
 const MONGO_URI =
   `${process.env.REACT_APP_SERVER_URL}/dishes` ||
@@ -113,9 +116,10 @@ function RecipeDetailsPage() {
         )}
 
         {isLoggedIn && (
-          <button className="favorite-button" onClick={handleToggleFavorite}>
-            {isInFavorites() ? "Remove from Favorites" : "Add to Favorites"}
-          </button>
+          <IconButton
+          className="favorite-button" onClick={handleToggleFavorite}>
+            {isInFavorites(recipe.id) ? <Bookmark /> : <BookmarkBorder />}
+            </IconButton>
         )}
       </div>
       <div className="recipe-tags">
