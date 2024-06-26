@@ -1,40 +1,30 @@
 import React, { useState, useEffect, useContext } from "react";
 import authService from "../services/auth.service";
+import axios from "axios";
 import { CartContext } from "./cart.context";
 
 const AuthContext = React.createContext();
+const USERMONGO_URI = `${process.env.REACT_APP_SERVER_URL}/user`;
 
 function AuthProviderWrapper(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [favdishes, setFavdishes] = useState(
+    JSON.parse(localStorage.getItem("favdishes")) || []
+  );
 
   const storeToken = (token) => {
     localStorage.setItem("authToken", token);
   };
 
   const authenticateUser = () => {
-    // Get the stored token from the localStorage
     const storedToken = localStorage.getItem("authToken");
-
-    // If the token exists in the localStorage
     if (storedToken) {
-      // Send a request to the server using axios
-      /* 
-        axios.get(
-          `${process.env.REACT_APP_SERVER_URL}/auth/verify`,
-          { headers: { Authorization: `Bearer ${storedToken}` } }
-        )
-        .then((response) => {})
-        */
-
-      // Or using a service
       authService
         .verify()
         .then((response) => {
-          // If the server verifies that JWT token is valid  ✅
           const user = response.data;
-          // Update state variables
           setIsLoggedIn(true);
           setIsLoading(false);
           if (!localStorage.getItem("user")) {
@@ -47,15 +37,12 @@ function AuthProviderWrapper(props) {
             }));
           }
         })
-        .catch((error) => {
-          // If the server sends an error response (invalid token) ❌
-          // Update state variables
+        .catch(() => {
           setIsLoggedIn(false);
           setIsLoading(false);
           setUser(null);
         });
     } else {
-      // If the token is not available
       setIsLoggedIn(false);
       setIsLoading(false);
       setUser(null);
@@ -67,7 +54,6 @@ function AuthProviderWrapper(props) {
   };
 
   const logOutUser = () => {
-    // Upon logout, remove the token, mealplan and user from the localStorage
     removeToken();
     localStorage.removeItem("user");
     authenticateUser();
@@ -130,16 +116,12 @@ function AuthProviderWrapper(props) {
     }
   };
 
-  // isPost can be boolean or a string indicating extra updates from checkout page
   const updateUserStateAndLocalStorage = (
     updatedUserData,
     updateType,
     isPost
   ) => {
     let updatedUser = {};
-
-    // If the update was a post, remove redundant fields
-    // (for getChangedFields() in ProfilePage) and continue
     if (isPost && typeof isPost === "boolean") {
       delete updatedUserData._id;
       delete updatedUserData.__v;
@@ -176,7 +158,6 @@ function AuthProviderWrapper(props) {
             ...updatedUserData,
           },
         };
-        // if user chooses to add address and/or payment method
         if (isPost === "addAddressToUser" && typeof isPost === "string") {
           updatedUser = {
             ...prevUser,
@@ -214,16 +195,57 @@ function AuthProviderWrapper(props) {
       }
 
       localStorage.setItem("user", JSON.stringify(updatedUser));
-
       return updatedUser;
     });
   };
 
+  const addFavDish = (dish) => {
+    setFavdishes((prevFavdishes) => {
+      const updatedFavdishes = [...prevFavdishes, dish];
+      localStorage.setItem("favdishes", JSON.stringify(updatedFavdishes));
+      return updatedFavdishes;
+    });
+  };
+
+  const removeFavDish = (dishId) => {
+    setFavdishes((prevFavdishes) => {
+      const updatedFavdishes = prevFavdishes.filter(
+        (dish) => dish.id !== dishId
+      );
+      localStorage.setItem("favdishes", JSON.stringify(updatedFavdishes));
+      return updatedFavdishes;
+    });
+  };
+
   useEffect(() => {
-    // Run this code once the AuthProviderWrapper component in the App loads for the first time.
-    // This effect runs when the application and the AuthProviderWrapper component load for the first time.
     authenticateUser();
   }, []);
+
+  useEffect(() => {
+    const addFavoriteToDB = async () => {
+      const token = localStorage.getItem("authToken");
+      if (isLoggedIn && user && favdishes.length > 0) {
+        try {
+          await axios.post(
+            `${USERMONGO_URI}/${user._id}/sync-favdishes`,
+            { favdishes },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        } catch (error) {
+          console.error("Error adding favorites to database:", error);
+        }
+      }
+    };
+
+    window.addEventListener("beforeunload", addFavoriteToDB);
+    return () => {
+      window.removeEventListener("beforeunload", addFavoriteToDB);
+    };
+  }, [favdishes, isLoggedIn, user]);
 
   return (
     <AuthContext.Provider
@@ -239,6 +261,9 @@ function AuthProviderWrapper(props) {
         authenticateUser,
         logOutUser,
         updateUserStateAndLocalStorage,
+        favdishes,
+        addFavDish,
+        removeFavDish,
       }}
     >
       {props.children}
