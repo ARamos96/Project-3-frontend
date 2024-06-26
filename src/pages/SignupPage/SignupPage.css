@@ -1,0 +1,40 @@
+.SignupPage {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.SignupPage form {
+  display: flex;
+  flex-direction: column;
+}
+
+.SignupPage label {
+  margin-bottom: 8px;
+  width: 100px;
+}
+
+.password-input-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.password-toggle-checkbox {
+  margin-left: 8px;
+}
+
+.password-toggle-label {
+  margin-left: 4px;
+  font-size: 14px;
+}
+
+.SignupPage input {
+  padding: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}

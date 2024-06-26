@@ -23,6 +23,7 @@ function RecipesList() {
   const [recipes, setRecipes] = useState([]);
   const [selectedOrigins, setSelectedOrigins] = useState([]);
   const [selectedDiets, setSelectedDiets] = useState([]);
+  const [initialSelectedDiets, setInitialSelectedDiets] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredRecipes, setFilteredRecipes] = useState([]);
 
@@ -43,25 +44,22 @@ function RecipesList() {
       });
   }, []);
 
-  const handleOriginClick = (origin) => {
-    // Update the selectedOrigins state based on the clicked origin.
-    // If the origin is already selected, remove it. Otherwise, add it.
-    setSelectedOrigins((prevOrigins) =>
-      prevOrigins.includes(origin)
-        ? prevOrigins.filter((item) => item !== origin)
-        : [...prevOrigins, origin]
-    );
-  };
+  useEffect(() => {
+    // Extract unique diets from recipes to initialize initialSelectedDiets
+    const uniqueDiets = [
+      ...new Set(recipes.flatMap((recipe) => recipe.categories.diet)),
+    ];
+    setInitialSelectedDiets(uniqueDiets);
 
-  const handleDietClick = (diet) => {
-    // Update the selectedDiets state based on the clicked diet.
-    // If the diet is already selected, remove it. Otherwise, add it.
-    setSelectedDiets((prevDiets) =>
-      prevDiets.includes(diet)
-        ? prevDiets.filter((item) => item !== diet)
-        : [...prevDiets, diet]
-    );
-  };
+    // If there are selected diets in mealPlan, set them as selectedDiets
+    if (mealPlan && mealPlan.diet && mealPlan.diet.length > 0) {
+      setSelectedDiets(mealPlan.diet);
+    } else {
+      setSelectedDiets(initialSelectedDiets);
+    }
+
+
+  }, [recipes, mealPlan]);
 
   useEffect(() => {
     // Start with all recipes for filtering
@@ -83,7 +81,7 @@ function RecipesList() {
       );
     }
 
-    // If there is a search term, filter recipes by the search term (case-insensitive)
+    // If there is a search term, filter recipes by the search term
     if (searchTerm) {
       recipesToFilter = recipesToFilter.filter((recipe) =>
         recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -93,7 +91,27 @@ function RecipesList() {
     // Update the filtered recipes state and reset the current page to 1
     setFilteredRecipes(recipesToFilter);
     setCurrentPage(1);
-  }, [selectedOrigins, selectedDiets, searchTerm, recipes]); // Dependencies for useEffect
+  }, [selectedOrigins, selectedDiets, searchTerm, recipes]);
+
+  const handleOriginClick = (origin) => {
+    // Update the selectedOrigins state based on the clicked origin.
+    // If the origin is already selected, remove it. Otherwise, add it.
+    setSelectedOrigins((prevOrigins) =>
+      prevOrigins.includes(origin)
+        ? prevOrigins.filter((item) => item !== origin)
+        : [...prevOrigins, origin]
+    );
+  };
+
+  const handleDietClick = (diet) => {
+    // Update the selectedDiets state based on the clicked diet.
+    // If the diet is already selected, remove it. Otherwise, add it.
+    setSelectedDiets((prevDiets) =>
+      prevDiets.includes(diet)
+        ? prevDiets.filter((item) => item !== diet)
+        : [...prevDiets, diet]
+    );
+  };
 
   const handleAddToCart = (recipe) => {
     // If mealPlan or dishesPerWeek is not set, navigate to the meal plan page
@@ -201,9 +219,10 @@ function RecipesList() {
                 </button>
               )}
               <button
-              className="info-button"
-              onClick={() => navigate(`/recipes/${recipe._id}`)}>
-              + Info
+                className="info-button"
+                onClick={() => navigate(`/recipes/${recipe._id}`)}
+              >
+                + Info
               </button>
             </div>
           ))}

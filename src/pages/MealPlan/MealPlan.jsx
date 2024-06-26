@@ -1,6 +1,5 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
 import "./MealPlan.css";
 import authService from "../../services/auth.service.js";
@@ -9,10 +8,6 @@ import { CartContext } from "../../context/cart.context.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
-
-const MONGO_URI = "http://localhost:5005/mealplan";
-
 function MealPlan() {
   //add the states
 
@@ -20,10 +15,30 @@ function MealPlan() {
   const [manyDishes, setManyDishes] = useState(0);
   const [diet, setDiet] = useState([]);
   const [price, setPrice] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
   const { user } = useContext(AuthContext);
-  const { setMealPlanInStateAndStorage } = useContext(CartContext);
+  const { setMealPlanInStateAndStorage, mealPlan } = useContext(CartContext);
   const navigate = useNavigate();
+
+  // If there is an existing meal plan, fill out the fields and alert the user
+  useEffect(() => {
+    if (Object.keys(mealPlan).length > 0) {
+      setManyPeople(mealPlan.numberOfPeople);
+      setManyDishes(mealPlan.dishesPerWeek);
+      setDiet(mealPlan.diet);
+      setPrice(mealPlan.price);
+
+      toast.info("You already have a meal plan saved", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  }, [mealPlan]);
 
   // function to handle how many people are going to be selected
 
@@ -57,6 +72,20 @@ function MealPlan() {
     const basePrice = 5;
     const calculatedPrice = basePrice * people * dishes;
     setPrice(calculatedPrice);
+  };
+
+  // Check if there are any changed fields between stored meal plan and form data
+  const getChangedFields = (oldData, formData) => {
+    const changedFields = {};
+
+    // Ignore undefined values:
+    // only compare the formData with existing fields in oldData
+    for (const key in oldData) {
+      if (oldData[key] !== formData[key] && formData[key] !== undefined) {
+        changedFields[key] = formData[key];
+      }
+    }
+    return changedFields;
   };
 
   // Posting the mealplans to mealPlan route.
@@ -100,10 +129,9 @@ function MealPlan() {
         draggable: true,
         progress: undefined,
         theme: "dark",
-
       });
-      return; 
-    } 
+      return;
+    }
     const mealPlanData = {
       numberOfPeople: manyPeople,
       dishesPerWeek: manyDishes,
@@ -111,6 +139,10 @@ function MealPlan() {
       price: price,
       user: user._id,
     };
+
+    const changes = getChangedFields(mealPlan, mealPlanData);
+    // If there are any changed fields between stored meal plan and form data, navigate
+    if (Object.keys(changes).length === 0) navigate("/recipes");
 
     authService
       .postMealPlan(mealPlanData)
@@ -120,22 +152,20 @@ function MealPlan() {
         setManyDishes(0);
         setDiet([]);
         setPrice(0);
-        setSubmitted(true); // Returns true to indicate that the form has been submitted
         navigate("/recipes");
 
         //toast with success submission
 
         toast.success("Meal plan submitted successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
         });
-
       })
       .catch((error) => {
         console.error("Error creating meal plan:", error);
@@ -173,8 +203,10 @@ function MealPlan() {
               className={manyPeople === num ? "selected" : ""}
             >
               {num}
-              <span></span><span></span><span></span><span></span>
-
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           ))}
         </div>
@@ -188,8 +220,10 @@ function MealPlan() {
               className={manyDishes === num ? "selected" : ""}
             >
               {num}
-              <span></span><span></span><span></span><span></span>
-
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           ))}
         </div>
@@ -214,8 +248,10 @@ function MealPlan() {
               className={diet.includes(dietOption) ? "selected" : ""}
             >
               {dietOption}
-              <span></span><span></span><span></span><span></span>
-
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           ))}
         </div>
@@ -225,20 +261,24 @@ function MealPlan() {
           <p>{price} €</p>
         </div>
 
-
-
         {user ? (
           <div>
-            <button onClick={handleSubmit}>Submit!
-              <span></span><span></span><span></span><span></span>
-
+            <button onClick={handleSubmit}>
+              Submit!
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           </div>
         ) : (
           <div>
-            <button onClick={handleLoginRedirect}>To get a meal Plan, please Log in!
-              <span></span><span></span><span></span><span></span>
-
+            <button onClick={handleLoginRedirect}>
+              To get a meal Plan, please Log in!
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           </div>
         )}

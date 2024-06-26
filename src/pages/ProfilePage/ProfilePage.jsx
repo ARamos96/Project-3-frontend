@@ -7,9 +7,16 @@ import ProfilePageFormFunctions from "../../utils/ProfilePageFormFunctions";
 import FormFunctions from "../../utils/FormFunctions";
 import PersonalDetailsCard from "../../components/ProfilePageDashboard/PersonalDetailsCard/PersonalDetailsCard";
 import ActivityCard from "../../components/ProfilePageDashboard/ActivityCard/ActivityCard";
+import authService from "../../services/auth.service";
 
 function ProfilePage() {
-  const { handleUserUpdate, user } = useContext(AuthContext);
+  const {
+    handleUserUpdate,
+    isUserLoaded,
+    user,
+    updateUserStateAndLocalStorage,
+    setIsUserLoaded,
+  } = useContext(AuthContext);
 
   // Controls the editing of each element
   const [isEditingPersonalDetails, setIsEditingPersonalDetails] =
@@ -150,7 +157,21 @@ function ProfilePage() {
     userPassword,
   };
 
-  if (!user) {
+  useEffect(() => {
+    if (!isUserLoaded) {
+      authService
+        .getUser(user._id)
+        .then((response) => {
+          updateUserStateAndLocalStorage(response.data, undefined, undefined);
+          setIsUserLoaded(true);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, );
+
+  if (!user || !isUserLoaded) {
     return <Loading />;
   }
 

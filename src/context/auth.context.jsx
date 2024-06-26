@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import authService from "../services/auth.service";
 import axios from "axios";
 import { CartContext } from "./cart.context";
@@ -9,6 +9,7 @@ const USERMONGO_URI = `${process.env.REACT_APP_SERVER_URL}/user`;
 function AuthProviderWrapper(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUserLoaded, setIsUserLoaded] = useState(false);
   const [user, setUser] = useState(null);
   const [favdishes, setFavdishes] = useState(
     JSON.parse(localStorage.getItem("favdishes")) || []
@@ -27,14 +28,17 @@ function AuthProviderWrapper(props) {
           const user = response.data;
           setIsLoggedIn(true);
           setIsLoading(false);
+          // If user is not in local storage, initialize user with JWT payload
           if (!localStorage.getItem("user")) {
             setUser(user);
             localStorage.setItem("user", JSON.stringify(user));
           } else {
+            // Otherwise, update user state with localStorage
             setUser((prevUser) => ({
               ...prevUser,
               ...JSON.parse(localStorage.getItem("user")),
             }));
+            setIsUserLoaded(true);
           }
         })
         .catch(() => {
@@ -57,6 +61,7 @@ function AuthProviderWrapper(props) {
     removeToken();
     localStorage.removeItem("user");
     authenticateUser();
+    setIsUserLoaded(false);
   };
 
   const setUserInStorage = (user) => {
@@ -129,7 +134,12 @@ function AuthProviderWrapper(props) {
     }
 
     setUser((prevUser) => {
-      if (updateType === "address") {
+      if (updateType === undefined) {
+        updatedUser = {
+          ...prevUser,
+          ...updatedUserData,
+        };
+      } else if (updateType === "address") {
         updatedUser = {
           ...prevUser,
           address: {
@@ -253,6 +263,8 @@ function AuthProviderWrapper(props) {
         isLoggedIn,
         isLoading,
         user,
+        isUserLoaded,
+        setIsUserLoaded,
         setUser,
         setUserInStorage,
         handleUserUpdate,

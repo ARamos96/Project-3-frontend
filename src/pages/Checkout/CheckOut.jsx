@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./CheckOut.css";
 import axios from "axios";
 import { AuthContext } from "../../context/auth.context";
@@ -6,87 +6,209 @@ import { CartContext } from "../../context/cart.context.jsx";
 import FormFunctions from "../../utils/FormFunctions";
 import authService from "../../services/auth.service.js";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
+import Loading from "../../components/Loading/Loading.jsx";
+import DishInCart from "../../components/DishInCart/DishInCart.jsx";
+import Modal from "../../components/Modal/Modal.jsx";
 const { handleInputChange } = FormFunctions();
-
-const MONGO_URI = "http://localhost:5005/subscription";
 
 function CheckOut() {
   const { user, updateUserStateAndLocalStorage } = useContext(AuthContext);
   const { cart, mealPlan, emptyCart } = useContext(CartContext);
-
   const navigate = useNavigate();
 
-  // state for the address
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [subscriptionData, setSubscriptionData] = useState(null);
 
-  const [formData, setFormData] = useState({
-    address: user?.address || "",
-    city: user?.address?.city || "",
-    region: user?.address?.region || "",
-    zipCode: user?.address?.zipCode || "",
-    country: user?.address?.country || "",
-    phone: user?.address?.phone || "",
-    user: user?._id || null,
-    subscription: user?.subscription || "",
+  const [addressForm, setAddressForm] = useState({
+    address: "",
+    city: "",
+    region: "",
+    zipCode: "",
+    country: "",
+    phone: "",
   });
 
-  //State for the PaymentData
-
-  const [paymentData, setPaymentData] = useState({
+  const [paymentMethodForm, setPaymentMethodForm] = useState({
     method: "Credit Card",
-    number: user?.paymentMethod?.number || "",
-    expiration: user?.paymentMethod?.expiration || "",
-    CVV: user?.paymentMethod?.CVV || "",
+    number: "",
+    expiration: "",
+    CVV: "",
   });
-
-  //State for messages
 
   const [message, setMessage] = useState("");
-
-  //State for delivery days
-
   const [deliveryDay, setDeliveryDay] = useState(["Monday"]);
 
-  // function to handle the delivery
+  const allForms = { addressForm, paymentMethodForm, deliveryDay };
 
   const handleDeliveryDayChange = (e) => {
-    const { options } = e.target;
-    const selectedOptions = [];
-    for (let i = 0, l = options.length; i < l; i++) {
-      if (options[i].selected) {
-        selectedOptions.push(options[i].value);
-      }
-    }
-    setDeliveryDay(selectedOptions);
+    const { value, checked } = e.target;
+    setDeliveryDay((prevDays) =>
+      checked ? [...prevDays, value] : prevDays.filter((day) => day !== value)
+    );
   };
 
-  //function to post the data necessary to the subscription: address, delivery day and payment
+  const validatePaymentMethod = (paymentMethodForm) => {
+    const { method, number, expiration, CVV } = paymentMethodForm;
+
+    if (!method || !number || !expiration || !CVV) {
+      return { isValid: false, message: "All payment fields must be filled." };
+    }
+
+    const cardNumberPattern = /^\d{16}$/;
+    if (!cardNumberPattern.test(number)) {
+      return {
+        isValid: false,
+        message: "Card number must be 16 digits long and contain only numbers.",
+      };
+    }
+
+    const expirationPattern = /^(0[1-9]|1[0-2])\/\d{2}$/;
+    if (!expirationPattern.test(expiration)) {
+      return {
+        isValid: false,
+        message: "Expiration date must be in MM/YY format.",
+      };
+    }
+
+    const cvvPattern = /^\d{3}$/;
+    if (!cvvPattern.test(CVV)) {
+      return {
+        isValid: false,
+        message: "CVV must be 3 digits long and contain only numbers.",
+      };
+    }
+
+    return { isValid: true, message: "Payment method is valid." };
+  };
+
+  const validateAddress = (addressForm) => {
+    const { address, city, region, zipCode, country, phone } = addressForm;
+
+    if (!address || !city || !region || !zipCode || !country || !phone) {
+      return { isValid: false, message: "All fields must be filled." };
+    }
+
+    const zipCodePattern = /^\d+$/;
+    if (!zipCodePattern.test(zipCode)) {
+      return { isValid: false, message: "Zip Code must contain only numbers." };
+    }
+
+    const phonePattern = /^\d+$/;
+    if (!phonePattern.test(phone)) {
+      return {
+        isValid: false,
+        message: "Phone number must contain only numbers.",
+      };
+    }
+
+    return { isValid: true, message: "Address is valid." };
+  };
+
+  const validateDeliveryDay = (data) => {
+    if (data.length === 0) {
+      return {
+        isValid: false,
+        message: "You must select at least one delivery day.",
+      };
+    }
+    return { isValid: true, message: "Delivery day is valid." };
+  };
+
+  const showToast = (message) => {
+    if (typeof message === "string") {
+      toast.error(message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (Array.isArray(message)) {
+      message.forEach((message) => {
+        toast.error(message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      setAddressForm(user.address || addressForm);
+      setPaymentMethodForm({
+        method: "Credit Card",
+        number: user?.paymentMethod?.number || "",
+        expiration: user?.paymentMethod?.expiration || "",
+        CVV: user?.paymentMethod?.CVV || "",
+      });
+      setLoading(false);
+    }
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const addressValidation = validateAddress(allForms.addressForm);
+    const paymentValidation = validatePaymentMethod(allForms.paymentMethodForm);
+    const deliveryDayValidation = validateDeliveryDay(allForms.deliveryDay);
+    if (
+      !addressValidation.isValid &&
+      !paymentValidation.isValid &&
+      !deliveryDayValidation.isValid
+    ) {
+      showToast([
+        ...addressValidation.message,
+        ...paymentValidation.message,
+        ...deliveryDayValidation.message,
+      ]);
+      return;
+    } else if (!addressValidation.isValid) {
+      showToast(addressValidation.message);
+      return;
+    } else if (!paymentValidation.isValid) {
+      showToast(paymentValidation.message);
+      return;
+    } else if (!deliveryDayValidation.isValid) {
+      showToast(deliveryDayValidation.message);
+      return;
+    }
+
     const subscriptionData = {
       shippingAddress: {
-        address: formData.address,
-        city: formData.city,
-        region: formData.region,
-        zipCode: formData.zipCode,
-        country: formData.country,
-        phone: formData.phone,
+        address: addressForm.address,
+        city: addressForm.city,
+        region: addressForm.region,
+        zipCode: addressForm.zipCode,
+        country: addressForm.country,
+        phone: addressForm.phone,
       },
-
-      user: formData.user,
       mealPlan: mealPlan._id,
       dishes: cart.map((item) => item._id),
       deliveryDay,
       paymentMethod: {
-        method: paymentData.method,
-        number: paymentData.number,
-        expiration: paymentData.expiration,
-        CVV: paymentData.CVV,
+        method: paymentMethodForm.method,
+        number: paymentMethodForm.number,
+        expiration: paymentMethodForm.expiration,
+        CVV: paymentMethodForm.CVV,
       },
     };
 
+    setSubscriptionData(subscriptionData);
+    setShowModal(true);
+  };
+
+  const handleConfirmPurchase = async () => {
+    setShowModal(false);
     try {
       const response = await authService.postSubscription(subscriptionData);
 
@@ -94,9 +216,7 @@ function CheckOut() {
 
       setMessage("Successfully saved address and payment method!");
 
-      // reset the values once submitted
-
-      setFormData({
+      setAddressForm({
         address: "",
         city: "",
         region: "",
@@ -105,18 +225,14 @@ function CheckOut() {
         phone: "",
         user: user ? user._id : null,
       });
-      setPaymentData({
+      setPaymentMethodForm({
         method: "",
         number: "",
         expiration: "",
         CVV: "",
       });
 
-      // setting delivery to initial state
       setDeliveryDay([]);
-
-      // callback for empty cart
-
       emptyCart();
 
       setTimeout(() => {
@@ -128,24 +244,37 @@ function CheckOut() {
     }
   };
 
-  //control just in case...
+  if (loading) {
+    return <Loading />;
+  }
 
   if (!mealPlan) {
-    return <h1>Get a meal plan first!!!</h1>;
+    return toast.error("Please choose a Meal Plan first!", {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   }
 
   return (
     <div>
       <h2>Subscription summary</h2>
-
+  
       <h3>Your meal plan</h3>
-      <div>
-        <p>Number of People: {mealPlan.numberOfPeople}</p>
-        <p>Dishes per week: {mealPlan.dishesPerWeek}</p>
-        <p>Diet: {mealPlan.diet}</p>
-        <p>Price: {mealPlan.price}</p>
-      </div>
-
+  
+      {mealPlan && (
+        <div>
+          <p>Number of People: {mealPlan.numberOfPeople}</p>
+          <p>Dishes per week: {mealPlan.dishesPerWeek}</p>
+          <p>Diet: {mealPlan.diet}</p>
+          <p>Price: {mealPlan.price}</p>
+        </div>
+      )}
+  
       <h3>Your choices</h3>
       <div>
         {cart.map((item) => (
@@ -154,7 +283,7 @@ function CheckOut() {
           </div>
         ))}
       </div>
-
+  
       {user && (
         <div>
           <h3>Your details</h3>
@@ -166,8 +295,8 @@ function CheckOut() {
                 <input
                   type="text"
                   name="address"
-                  value={formData.address}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.address}
+                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
                   required
                 />
               </label>
@@ -178,8 +307,8 @@ function CheckOut() {
                 <input
                   type="text"
                   name="city"
-                  value={formData.city}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.city}
+                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
                   required
                 />
               </label>
@@ -190,8 +319,8 @@ function CheckOut() {
                 <input
                   type="text"
                   name="region"
-                  value={formData.region}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.region}
+                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
                   required
                 />
               </label>
@@ -202,8 +331,8 @@ function CheckOut() {
                 <input
                   type="text"
                   name="zipCode"
-                  value={formData.zipCode}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.zipCode}
+                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
                   required
                 />
               </label>
@@ -214,8 +343,8 @@ function CheckOut() {
                 <input
                   type="text"
                   name="country"
-                  value={formData.country}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.country}
+                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
                   required
                 />
               </label>
@@ -226,41 +355,41 @@ function CheckOut() {
                 <input
                   type="text"
                   name="phone"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange(e, setFormData, formData)}
+                  value={addressForm.phone}
+                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
                   required
                 />
               </label>
             </div>
-
+  
             <h4>Choose a delivery day</h4>
             <div>
-              <select
-                name="deliveryDay"
-                value={deliveryDay}
-                onChange={handleDeliveryDayChange}
-                required
-              >
-                {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
-                  (day) => (
-                    <option key={day} value={day}>
+              {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
+                (day) => (
+                  <div key={day}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="deliveryDay"
+                        value={day}
+                        checked={deliveryDay.includes(day)}
+                        onChange={handleDeliveryDayChange}
+                      />
                       {day}
-                    </option>
-                  )
-                )}
-              </select>
+                    </label>
+                  </div>
+                )
+              )}
             </div>
-
+  
             <h4>Payment method</h4>
             <div>
               <label>
                 Payment Method:
                 <select
                   name="method"
-                  value={paymentData.method}
-                  onChange={(e) =>
-                    handleInputChange(e, setPaymentData, paymentData)
-                  }
+                  value={paymentMethodForm.method}
+                  onChange={(e) => handleInputChange(e, setPaymentMethodForm, paymentMethodForm)}
                   required
                 >
                   <option value="Credit Card">Credit Card</option>
@@ -274,10 +403,8 @@ function CheckOut() {
                 <input
                   type="text"
                   name="number"
-                  value={paymentData.number}
-                  onChange={(e) =>
-                    handleInputChange(e, setPaymentData, paymentData)
-                  }
+                  value={paymentMethodForm.number}
+                  onChange={(e) => handleInputChange(e, setPaymentMethodForm, paymentMethodForm)}
                   required
                   minLength="16"
                   maxLength="16"
@@ -290,10 +417,8 @@ function CheckOut() {
                 <input
                   type="text"
                   name="expiration"
-                  value={paymentData.expiration}
-                  onChange={(e) =>
-                    handleInputChange(e, setPaymentData, paymentData)
-                  }
+                  value={paymentMethodForm.expiration}
+                  onChange={(e) => handleInputChange(e, setPaymentMethodForm, paymentMethodForm)}
                   required
                   minLength="5"
                   maxLength="5"
@@ -306,18 +431,16 @@ function CheckOut() {
                 <input
                   type="text"
                   name="CVV"
-                  value={paymentData.CVV}
-                  onChange={(e) =>
-                    handleInputChange(e, setPaymentData, paymentData)
-                  }
+                  value={paymentMethodForm.CVV}
+                  onChange={(e) => handleInputChange(e, setPaymentMethodForm, paymentMethodForm)}
                   required
                   minLength="3"
                   maxLength="3"
                 />
               </label>
             </div>
-
-            <button type="submit" onClick={() => handleSubmit}>
+  
+            <button type="submit">
               Submit
               <span></span>
               <span></span>
@@ -325,11 +448,30 @@ function CheckOut() {
               <span></span>
             </button>
           </form>
-          {message && <script>alert("Subscription completed!");</script>}
+          {message && <div>{message}</div>}
         </div>
       )}
+  
+      <Modal
+        show={showModal}
+        handleClose={() => setShowModal(false)}
+        handleConfirm={handleConfirmPurchase}
+        heading="Please confirm your purchase"
+        message={`Meal Plan Details:
+          Number of People: ${mealPlan.numberOfPeople}
+          Dishes per week: ${mealPlan.dishesPerWeek}
+          Diet: ${mealPlan.diet}
+          Price: ${mealPlan.price}
+          Address: ${addressForm.address}, ${addressForm.city}, ${addressForm.region}, ${addressForm.zipCode}, ${addressForm.country}
+          Phone: ${addressForm.phone}
+          Payment Method: ${paymentMethodForm.method} ending in ${paymentMethodForm.number.slice(-4)}
+          Delivery Days: ${deliveryDay.join(", ")}`}
+        confirmMessage="Confirm"
+        closeMessage="Cancel"
+      />
     </div>
   );
+  
 }
 
 export default CheckOut;
