@@ -169,7 +169,7 @@ function ProfilePage() {
           console.log(error);
         });
     }
-  }, [[isUserLoaded, user._id, updateUserStateAndLocalStorage, setIsUserLoaded]]);
+  }, );
 
   if (!user || !isUserLoaded) {
     return <Loading />;
