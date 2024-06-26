@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
+import { Button, IconButton, Container, Grid, Typography, Card, CardMedia, CardContent, CardActions } from "@mui/material";
+import { Favorite, FavoriteBorder, Info, ShoppingCart, Bookmark, BookmarkBorder } from "@mui/icons-material";
 
 import "./RecipeList.css";
 import "primeicons/primeicons.css";
@@ -15,7 +17,7 @@ const MONGO_URI = process.env.REACT_APP_SERVER_URL
   : "http://localhost:5005/dishes";
 
 function RecipesList() {
-  const { isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, favdishes, addFavDish, removeFavDish } = useContext(AuthContext);
   const { addToCart, mealPlan } = useContext(CartContext);
   const navigate = useNavigate();
 
@@ -123,6 +125,20 @@ function RecipesList() {
     }
   };
 
+  // check if the dish is in favorites
+  const isInFavorites = (recipeId) => {
+    return favdishes.some((dish) => dish.id === recipeId);
+  };
+
+  // handling favorites
+  const handleToggleFavorite = (recipe) => {
+    if (isInFavorites(recipe.id)) {
+      removeFavDish(recipe.id);
+    } else {
+      addFavDish(recipe);
+    }
+  };
+
   // Extract unique origins from recipes to create the filter options
   const uniqueOrigins = [
     ...new Set(recipes.flatMap((recipe) => recipe.categories.origin)),
@@ -203,12 +219,20 @@ function RecipesList() {
                   </p>
                 </div>
               </Link>
+              {isLoggedIn && (
+                <IconButton
+                  onClick={() => handleToggleFavorite(recipe)}
+                  color="secondary"
+                >
+                  {isInFavorites(recipe.id) ? <Bookmark /> : <BookmarkBorder />}
+                </IconButton>
+              )}
               {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
                 <button
                   className="subscription-button"
                   onClick={() => handleAddToCart(recipe)}
                 >
-                  Add to Subscription
+                  Add to cart
                 </button>
               ) : (
                 <button
