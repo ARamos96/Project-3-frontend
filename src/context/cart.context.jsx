@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CartContext = React.createContext();
 
@@ -31,7 +33,15 @@ function CartProviderWrapper(props) {
     console.log("This is the product: ", JSON.stringify(dish));
 
     if (isCartFull()) {
-      alert("You have reached the maximum number of dishes per week");
+      toast.warning("You have reached the maximum number of dishes per week", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return;
     } else {
       // Update the cart state with the new dish
