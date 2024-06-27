@@ -139,6 +139,11 @@ function AuthProviderWrapper(props) {
           ...prevUser,
           ...updatedUserData,
         };
+      } else if (updateType === "favDishes") {
+        updatedUser = {
+          ...prevUser,
+          favDishes: [...prevUser.favDishes, ...updatedUserData],
+        };
       } else if (updateType === "address") {
         updatedUser = {
           ...prevUser,
@@ -227,35 +232,16 @@ function AuthProviderWrapper(props) {
     });
   };
 
+  const addFavoriteToDB = async (dishes) => {
+    const response = await authService.postFavDishes(dishes, user._id);
+    updateUserStateAndLocalStorage(response.data, "favdishes");
+  };
+
   useEffect(() => {
     authenticateUser();
   }, []);
 
-  useEffect(() => {
-    const addFavoriteToDB = async () => {
-      const token = localStorage.getItem("authToken");
-      if (isLoggedIn && user && favdishes.length > 0) {
-        try {
-          await axios.post(
-            `${USERMONGO_URI}/${user._id}/sync-favdishes`,
-            { favdishes },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-        } catch (error) {
-          console.error("Error adding favorites to database:", error);
-        }
-      }
-    };
-
-    window.addEventListener("beforeunload", addFavoriteToDB);
-    return () => {
-      window.removeEventListener("beforeunload", addFavoriteToDB);
-    };
-  }, [favdishes, isLoggedIn, user]);
+  useEffect(() => {}, [favdishes, isLoggedIn, user]);
 
   return (
     <AuthContext.Provider
@@ -274,6 +260,7 @@ function AuthProviderWrapper(props) {
         logOutUser,
         updateUserStateAndLocalStorage,
         favdishes,
+        addFavoriteToDB,
         addFavDish,
         removeFavDish,
       }}

@@ -7,16 +7,39 @@ import "./RecipeDetailsPage.css";
 import "primeicons/primeicons.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Button, IconButton, Container, Grid, Typography, Card, CardMedia, CardContent, CardActions } from "@mui/material";
-import { Favorite, FavoriteBorder, Info, ShoppingCart, Bookmark, BookmarkBorder } from "@mui/icons-material";
-
+import {
+  Button,
+  IconButton,
+  Container,
+  Grid,
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+} from "@mui/material";
+import {
+  Favorite,
+  FavoriteBorder,
+  Info,
+  ShoppingCart,
+  Bookmark,
+  BookmarkBorder,
+} from "@mui/icons-material";
 
 const MONGO_URI =
   `${process.env.REACT_APP_SERVER_URL}/dishes` ||
   "http://localhost:5005/dishes";
 
 function RecipeDetailsPage() {
-  const { isLoggedIn, user, addFavDish, removeFavDish, favdishes } = useContext(AuthContext);
+  const {
+    isLoggedIn,
+    user,
+    addFavDish,
+    removeFavDish,
+    favdishes,
+    addFavoriteToDB,
+  } = useContext(AuthContext);
   const { addToCart, mealPlan } = useContext(CartContext);
 
   const [recipe, setRecipe] = useState({});
@@ -30,6 +53,10 @@ function RecipeDetailsPage() {
         setRecipe(res.data);
       })
       .catch((err) => console.log(err));
+    
+    return () => {
+      const response = addFavoriteToDB(favdishes);
+    };
   }, [recipeId]);
 
   const isInFavorites = () => {
@@ -117,9 +144,11 @@ function RecipeDetailsPage() {
 
         {isLoggedIn && (
           <IconButton
-          className="favorite-button" onClick={handleToggleFavorite}>
+            className="favorite-button"
+            onClick={handleToggleFavorite}
+          >
             {isInFavorites(recipe.id) ? <Bookmark /> : <BookmarkBorder />}
-            </IconButton>
+          </IconButton>
         )}
       </div>
       <div className="recipe-tags">
