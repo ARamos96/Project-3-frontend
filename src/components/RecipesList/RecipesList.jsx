@@ -127,13 +127,13 @@ function RecipesList() {
 
   // check if the dish is in favorites
   const isInFavorites = (recipeId) => {
-    return favdishes.some((dish) => dish.id === recipeId);
+    return favdishes.some((dish) => dish._id === recipeId);
   };
 
   // handling favorites
   const handleToggleFavorite = (recipe) => {
-    if (isInFavorites(recipe.id)) {
-      removeFavDish(recipe.id);
+    if (isInFavorites(recipe._id)) {
+      removeFavDish(recipe._id);
     } else {
       addFavDish(recipe);
     }
@@ -224,7 +224,7 @@ function RecipesList() {
                   onClick={() => handleToggleFavorite(recipe)}
                   color="secondary"
                 >
-                  {isInFavorites(recipe.id) ? <Bookmark /> : <BookmarkBorder />}
+                  {isInFavorites(recipe._id) ? <Bookmark /> : <BookmarkBorder />}
                 </IconButton>
               )}
               {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
