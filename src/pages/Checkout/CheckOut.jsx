@@ -193,6 +193,7 @@ function CheckOut() {
         phone: addressForm.phone,
       },
       mealPlan: mealPlan._id,
+      user: user._id,
       dishes: cart.map((item) => item._id),
       deliveryDay,
       paymentMethod: {
