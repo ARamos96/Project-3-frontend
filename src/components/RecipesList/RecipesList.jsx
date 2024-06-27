@@ -34,7 +34,7 @@ const MONGO_URI = process.env.REACT_APP_SERVER_URL
   : "http://localhost:5005/dishes";
 
 function RecipesList() {
-  const { isLoggedIn, favdishes, addFavDish, removeFavDish, addFavoriteToDB } =
+  const { isLoggedIn, favdishes, addFavDish, removeFavDish, addFavoriteToDB, user } =
     useContext(AuthContext);
   const { addToCart, mealPlan } = useContext(CartContext);
   const navigate = useNavigate();
@@ -64,7 +64,9 @@ function RecipesList() {
       });
 
     return () => {
-      const response = addFavoriteToDB(favdishes);
+      if (isLoggedIn && user) {
+        const response = addFavoriteToDB(favdishes);
+      }
     };
   }, []);
 

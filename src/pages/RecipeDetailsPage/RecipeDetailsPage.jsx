@@ -54,9 +54,11 @@ function RecipeDetailsPage() {
       })
       .catch((err) => console.log(err));
     
-    return () => {
-      const response = addFavoriteToDB(favdishes);
-    };
+      return () => {
+        if (isLoggedIn && user) {
+          const response = addFavoriteToDB(favdishes);
+        }
+      };
   }, [recipeId]);
 
   const isInFavorites = () => {
