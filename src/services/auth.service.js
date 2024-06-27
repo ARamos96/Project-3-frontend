@@ -74,6 +74,9 @@ class AuthService {
   postSubscription = (requestBody) => {
     return this.api.post(`/subscription`, requestBody);
   }
+  postFavDishes = (requestBody, id) => {
+    return this.api.post(`/user/${id}/add-dishes`, {dishIds: requestBody});
+  }
 }
 
 // Create one instance (object) of the service

@@ -3,8 +3,25 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
-import { Button, IconButton, Container, Grid, Typography, Card, CardMedia, CardContent, CardActions } from "@mui/material";
-import { Favorite, FavoriteBorder, Info, ShoppingCart, Bookmark, BookmarkBorder } from "@mui/icons-material";
+import {
+  Button,
+  IconButton,
+  Container,
+  Grid,
+  Typography,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+} from "@mui/material";
+import {
+  Favorite,
+  FavoriteBorder,
+  Info,
+  ShoppingCart,
+  Bookmark,
+  BookmarkBorder,
+} from "@mui/icons-material";
 
 import "./RecipeList.css";
 import "primeicons/primeicons.css";
@@ -17,7 +34,8 @@ const MONGO_URI = process.env.REACT_APP_SERVER_URL
   : "http://localhost:5005/dishes";
 
 function RecipesList() {
-  const { isLoggedIn, favdishes, addFavDish, removeFavDish } = useContext(AuthContext);
+  const { isLoggedIn, favdishes, addFavDish, removeFavDish, addFavoriteToDB } =
+    useContext(AuthContext);
   const { addToCart, mealPlan } = useContext(CartContext);
   const navigate = useNavigate();
 
@@ -44,6 +62,10 @@ function RecipesList() {
         console.error("Error getting the recipes:", err);
         setLoading(false);
       });
+
+    return () => {
+      const response = addFavoriteToDB(favdishes);
+    };
   }, []);
 
   useEffect(() => {
@@ -59,8 +81,6 @@ function RecipesList() {
     } else {
       setSelectedDiets(initialSelectedDiets);
     }
-
-
   }, [recipes, mealPlan]);
 
   useEffect(() => {
@@ -224,7 +244,11 @@ function RecipesList() {
                   onClick={() => handleToggleFavorite(recipe)}
                   color="secondary"
                 >
-                  {isInFavorites(recipe._id) ? <Bookmark /> : <BookmarkBorder />}
+                  {isInFavorites(recipe._id) ? (
+                    <Bookmark />
+                  ) : (
+                    <BookmarkBorder />
+                  )}
                 </IconButton>
               )}
               {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
