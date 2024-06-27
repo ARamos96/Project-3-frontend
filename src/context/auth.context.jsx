@@ -220,7 +220,7 @@ function AuthProviderWrapper(props) {
   const removeFavDish = (dishId) => {
     setFavdishes((prevFavdishes) => {
       const updatedFavdishes = prevFavdishes.filter(
-        (dish) => dish.id !== dishId
+        (dish) => dish._id !== dishId
       );
       localStorage.setItem("favdishes", JSON.stringify(updatedFavdishes));
       return updatedFavdishes;
