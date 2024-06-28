@@ -55,7 +55,7 @@ function RecipeDetailsPage() {
       .catch((err) => console.log(err));
     
       return () => {
-        if (isLoggedIn && user) {
+        if (isLoggedIn && user && favdishes.length > 0) {
           const response = addFavoriteToDB(favdishes);
         }
       };

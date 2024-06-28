@@ -142,7 +142,24 @@ function CheckOut() {
   };
 
   useEffect(() => {
-    if (user) {
+    // if user.activeSubscription exists, show modal
+    if (user?.activeSubscription && user.activeSubscription != null) {
+      toast.error("You already have an active subscription", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      //setTimeout(() => {
+        navigate("/profile");
+      //}, 500);
+      return;
+    }
+    // When user is loaded, populate forms with user data if available
+    else if (user) {
       setAddressForm(user.address || addressForm);
       setPaymentMethodForm({
         method: "Credit Card",
@@ -214,8 +231,7 @@ function CheckOut() {
 
       updateUserStateAndLocalStorage(response.data, "subscription");
 
-
-      toast.success("Successfully saved address and payment method!", {
+      toast.success("Your subscription has been confirmed!", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -225,7 +241,6 @@ function CheckOut() {
         progress: undefined,
         theme: "dark",
       });
-
 
       // Reset forms
       setAddressForm({
@@ -255,15 +270,18 @@ function CheckOut() {
       }, 2000);
     } catch (error) {
       console.error("Error saving the address or payment method:", error);
-      toast.error(`Error saving the address or payment method: ${error.message}`, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      toast.error(
+        `Error saving the address or payment method: ${error.message}`,
+        {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
     }
   };
 
@@ -286,9 +304,9 @@ function CheckOut() {
   return (
     <div>
       <h2>Subscription summary</h2>
-  
+
       <h3>Your meal plan</h3>
-  
+
       {mealPlan && (
         <div>
           <p>Number of People: {mealPlan.numberOfPeople}</p>
@@ -297,7 +315,7 @@ function CheckOut() {
           <p>Price: {mealPlan.price}</p>
         </div>
       )}
-  
+
       <h3>Your choices</h3>
       <div>
         {cart.map((item) => (
@@ -306,7 +324,7 @@ function CheckOut() {
           </div>
         ))}
       </div>
-  
+
       {user && (
         <div>
           <h3>Your details</h3>
@@ -319,7 +337,9 @@ function CheckOut() {
                   type="text"
                   name="address"
                   value={addressForm.address}
-                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
@@ -331,7 +351,9 @@ function CheckOut() {
                   type="text"
                   name="city"
                   value={addressForm.city}
-                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
@@ -343,7 +365,9 @@ function CheckOut() {
                   type="text"
                   name="region"
                   value={addressForm.region}
-                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
@@ -355,7 +379,9 @@ function CheckOut() {
                   type="text"
                   name="zipCode"
                   value={addressForm.zipCode}
-                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
@@ -367,7 +393,9 @@ function CheckOut() {
                   type="text"
                   name="country"
                   value={addressForm.country}
-                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
@@ -379,12 +407,14 @@ function CheckOut() {
                   type="text"
                   name="phone"
                   value={addressForm.phone}
-                  onChange={(e) => handleInputChange(e, setAddressForm, addressForm)}
+                  onChange={(e) =>
+                    handleInputChange(e, setAddressForm, addressForm)
+                  }
                   required
                 />
               </label>
             </div>
-  
+
             <h4>Choose a delivery day</h4>
             <div>
               {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
@@ -404,7 +434,7 @@ function CheckOut() {
                 )
               )}
             </div>
-  
+
             <h4>Payment method</h4>
             <div>
               <label>
@@ -412,7 +442,13 @@ function CheckOut() {
                 <select
                   name="method"
                   value={paymentMethodForm.method}
-                  onChange={(e) => handleInputChange(e, setPaymentMethodForm, paymentMethodForm)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      e,
+                      setPaymentMethodForm,
+                      paymentMethodForm
+                    )
+                  }
                   required
                 >
                   <option value="Credit Card">Credit Card</option>
@@ -427,7 +463,13 @@ function CheckOut() {
                   type="text"
                   name="number"
                   value={paymentMethodForm.number}
-                  onChange={(e) => handleInputChange(e, setPaymentMethodForm, paymentMethodForm)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      e,
+                      setPaymentMethodForm,
+                      paymentMethodForm
+                    )
+                  }
                   required
                   minLength="16"
                   maxLength="16"
@@ -441,7 +483,13 @@ function CheckOut() {
                   type="text"
                   name="expiration"
                   value={paymentMethodForm.expiration}
-                  onChange={(e) => handleInputChange(e, setPaymentMethodForm, paymentMethodForm)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      e,
+                      setPaymentMethodForm,
+                      paymentMethodForm
+                    )
+                  }
                   required
                   minLength="5"
                   maxLength="5"
@@ -455,14 +503,20 @@ function CheckOut() {
                   type="text"
                   name="CVV"
                   value={paymentMethodForm.CVV}
-                  onChange={(e) => handleInputChange(e, setPaymentMethodForm, paymentMethodForm)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      e,
+                      setPaymentMethodForm,
+                      paymentMethodForm
+                    )
+                  }
                   required
                   minLength="3"
                   maxLength="3"
                 />
               </label>
             </div>
-  
+
             <button type="submit">
               Submit
               <span></span>
@@ -473,7 +527,7 @@ function CheckOut() {
           </form>
         </div>
       )}
-  
+
       <Modal
         show={showModal}
         handleClose={() => setShowModal(false)}
@@ -484,16 +538,19 @@ function CheckOut() {
           Dishes per week: ${mealPlan.dishesPerWeek}
           Diet: ${mealPlan.diet}
           Price: ${mealPlan.price}
-          Address: ${addressForm.address}, ${addressForm.city}, ${addressForm.region}, ${addressForm.zipCode}, ${addressForm.country}
+          Address: ${addressForm.address}, ${addressForm.city}, ${
+          addressForm.region
+        }, ${addressForm.zipCode}, ${addressForm.country}
           Phone: ${addressForm.phone}
-          Payment Method: ${paymentMethodForm.method} ending in ${paymentMethodForm.number.slice(-4)}
+          Payment Method: ${
+            paymentMethodForm.method
+          } ending in ${paymentMethodForm.number.slice(-4)}
           Delivery Days: ${deliveryDay.join(", ")}`}
         confirmMessage="Confirm"
         closeMessage="Cancel"
       />
     </div>
   );
-  
 }
 
 export default CheckOut;
