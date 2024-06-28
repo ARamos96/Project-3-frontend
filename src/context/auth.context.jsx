@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import authService from "../services/auth.service";
-import axios from "axios";
-import { CartContext } from "./cart.context";
-
+import moment from "moment";
 const AuthContext = React.createContext();
-const USERMONGO_URI = `${process.env.REACT_APP_SERVER_URL}/user`;
 
 function AuthProviderWrapper(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -245,6 +242,24 @@ function AuthProviderWrapper(props) {
     return user?.activeSubscription && user.activeSubscription != null;
   };
 
+  const getSubscriptionReorderDate = (createdAt) => {
+    // Parse the createdAt date using moment
+    const createdDate = moment(createdAt);
+
+    // Check if the date is valid
+    if (!createdDate.isValid()) {
+      return "Invalid date";
+    }
+
+    // Add 7 days to the created date
+    const reorderDate = createdDate.add(7, "days");
+
+    // Format the date to include the day of the week, day of the month, and month name
+    const formattedDate = reorderDate.format("dddd [the] Do [of] MMMM");
+
+    return formattedDate;
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -266,6 +281,7 @@ function AuthProviderWrapper(props) {
         addFavDish,
         removeFavDish,
         isActiveSubscriptionInUser,
+        getSubscriptionReorderDate,
       }}
     >
       {props.children}
