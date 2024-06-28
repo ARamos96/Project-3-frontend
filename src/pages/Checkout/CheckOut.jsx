@@ -10,10 +10,11 @@ import { toast } from "react-toastify";
 import Loading from "../../components/Loading/Loading.jsx";
 import DishInCart from "../../components/DishInCart/DishInCart.jsx";
 import Modal from "../../components/Modal/Modal.jsx";
+import moment from 'moment';
 const { handleInputChange } = FormFunctions();
 
 function CheckOut() {
-  const { user, updateUserStateAndLocalStorage } = useContext(AuthContext);
+  const { user, updateUserStateAndLocalStorage,isActiveSubscriptionInUser } = useContext(AuthContext);
   const { cart, mealPlan, emptyCart, deleteMealPlan } = useContext(CartContext);
   const navigate = useNavigate();
 
@@ -141,10 +142,31 @@ function CheckOut() {
     }
   };
 
+  const getReorderDate = (createdAt) => {
+    // Parse the createdAt date using moment
+    const createdDate = moment(createdAt);
+  
+    // Check if the date is valid
+    if (!createdDate.isValid()) {
+      return 'Invalid date';
+    }
+  
+    // Add 7 days to the created date
+    const reorderDate = createdDate.add(7, 'days');
+  
+    // Format the date to include the day of the week, day of the month, and month name
+    const formattedDate = reorderDate.format('dddd [the] Do [of] MMMM');
+  
+    return formattedDate;
+  };
+
   useEffect(() => {
     // if user.activeSubscription exists, show modal
-    if (user?.activeSubscription && user.activeSubscription != null) {
-      toast.error("You already have an active subscription", {
+    if (isActiveSubscriptionInUser()) {
+
+      const reorderDate = getReorderDate(user.activeSubscription.createdAt);
+
+      toast.error(`You already have an active subscription. You can start a new one on ${reorderDate} `, {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,

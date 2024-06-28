@@ -241,7 +241,9 @@ function AuthProviderWrapper(props) {
     authenticateUser();
   }, []);
 
-  useEffect(() => {}, [favdishes, isLoggedIn, user]);
+  const isActiveSubscriptionInUser = () => {
+    return user?.activeSubscription && user.activeSubscription != null;
+  };
 
   return (
     <AuthContext.Provider
@@ -263,6 +265,7 @@ function AuthProviderWrapper(props) {
         addFavoriteToDB,
         addFavDish,
         removeFavDish,
+        isActiveSubscriptionInUser,
       }}
     >
       {props.children}
