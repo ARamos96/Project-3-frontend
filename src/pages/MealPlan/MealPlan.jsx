@@ -15,12 +15,38 @@ function MealPlan() {
   const [manyDishes, setManyDishes] = useState(0);
   const [diet, setDiet] = useState([]);
   const [price, setPrice] = useState(0);
-  const { user } = useContext(AuthContext);
+  const { user, isActiveSubscriptionInUser, getSubscriptionReorderDate } =
+    useContext(AuthContext);
   const { setMealPlanInStateAndStorage, mealPlan } = useContext(CartContext);
   const navigate = useNavigate();
 
   // If there is an existing meal plan, fill out the fields and alert the user
   useEffect(() => {
+    if (isActiveSubscriptionInUser()) {
+      const reorderDate = getSubscriptionReorderDate(
+        user.activeSubscription.createdAt
+      );
+
+      toast.error(
+        `You already have an active subscription. You can start a new one on ${reorderDate} `,
+        {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+
+      // set timeout of 2 seconds
+      setTimeout(() => {
+        navigate("/profile");
+      }, 2000);
+
+      return;
+    }
     if (Object.keys(mealPlan).length > 0) {
       setManyPeople(mealPlan.numberOfPeople);
       setManyDishes(mealPlan.dishesPerWeek);
@@ -141,50 +167,37 @@ function MealPlan() {
     };
 
     const changes = getChangedFields(mealPlan, mealPlanData);
-    // If there are any changed fields between stored meal plan and form data, navigate
-    if (Object.keys(changes).length === 0) navigate("/recipes");
 
-    authService
-      .postMealPlan(mealPlanData)
-      .then((response) => {
-        setMealPlanInStateAndStorage(response.data);
-        setManyPeople(0);
-        setManyDishes(0);
-        setDiet([]);
-        setPrice(0);
-        navigate("/recipes");
+    // If there are no changed fields between stored meal plan and form data, navigate and skip aving
+    if (Object.keys(changes).length === 0) {
+      navigate("/recipes");
+      return;
+    }
 
-        //toast with success submission
+    // Otherwise, save meal plan in state and storage
 
-        toast.success("Meal plan submitted successfully!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      })
-      .catch((error) => {
-        console.error("Error creating meal plan:", error);
+    setMealPlanInStateAndStorage(mealPlanData);
+    setManyPeople(0);
+    setManyDishes(0);
+    setDiet([]);
+    setPrice(0);
+    navigate("/recipes");
 
-        //tast wit error submission
+    //toast with success submission
 
-        toast.error("Error submitting meal plan. Please try again later.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      });
+    toast.success("Meal plan submitted successfully!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
   };
 
-  // Added for the conditional rendering when the user is not logged.
+  // Added for the conditional rendering when the user i  s not logged.
 
   const handleLoginRedirect = () => {
     navigate("/login");
