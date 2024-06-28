@@ -14,7 +14,7 @@ const { handleInputChange } = FormFunctions();
 
 function CheckOut() {
   const { user, updateUserStateAndLocalStorage } = useContext(AuthContext);
-  const { cart, mealPlan, emptyCart } = useContext(CartContext);
+  const { cart, mealPlan, emptyCart, deleteMealPlan } = useContext(CartContext);
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
@@ -37,7 +37,6 @@ function CheckOut() {
     CVV: "",
   });
 
-  const [message, setMessage] = useState("");
   const [deliveryDay, setDeliveryDay] = useState(["Monday"]);
 
   const allForms = { addressForm, paymentMethodForm, deliveryDay };
@@ -215,8 +214,20 @@ function CheckOut() {
 
       updateUserStateAndLocalStorage(response.data, "subscription");
 
-      setMessage("Successfully saved address and payment method!");
 
+      toast.success("Successfully saved address and payment method!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+
+
+      // Reset forms
       setAddressForm({
         address: "",
         city: "",
@@ -234,14 +245,25 @@ function CheckOut() {
       });
 
       setDeliveryDay([]);
+
+      // Empty cart and delete meal plan
       emptyCart();
+      deleteMealPlan();
 
       setTimeout(() => {
         navigate("/profile");
       }, 2000);
     } catch (error) {
       console.error("Error saving the address or payment method:", error);
-      setMessage("Failed to save address or payment method.");
+      toast.error(`Error saving the address or payment method: ${error.message}`, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -449,7 +471,6 @@ function CheckOut() {
               <span></span>
             </button>
           </form>
-          {message && <div>{message}</div>}
         </div>
       )}
   

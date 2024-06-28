@@ -106,6 +106,12 @@ function CartProviderWrapper(props) {
     updateBadge(0);
   };
 
+  // Delete the mealplan in state, localStorage
+  const deleteMealPlan = () => {
+    setMealPlan({});
+    localStorage.removeItem("mealPlan");
+  }
+
   // Update count on badge, after adding or removing a dish
   const updateBadge = (count) => {
     setBadge(count);
@@ -164,6 +170,7 @@ function CartProviderWrapper(props) {
         isCartFull,
         removeFromCart,
         emptyCart,
+        deleteMealPlan,
         updateBadge,
         getDishesAndQuantity,
         checkout,
