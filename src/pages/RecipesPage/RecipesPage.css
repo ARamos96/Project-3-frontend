@@ -1,4 +1,7 @@
 .recipe-page {
     display: flex;
-    flex-direction: column;    
+    flex-direction: column;  
+    padding: 20px;
+        max-width: 2000px;
+        margin: 0 auto;  
 }

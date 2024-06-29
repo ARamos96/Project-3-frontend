@@ -3,6 +3,7 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  margin:40px;
 }
 
 .search-bar-container {
@@ -10,24 +11,26 @@
 }
 
 .recipe-menu {
-  margin-top: 30px;
+  margin-top: 50px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
 }
 
-/* .filter-tags {
+ .filter-tags {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-evenly;
-  } */
+      gap:50px;
+      margin:50px;
+  } 
 
 .filter-tags button.active {
-  background-color: #0056b3; /* Green background */
-  color: white; /* White text */
-  border: none; /* Remove border */
+  background-color: rgb(255, 165, 0); 
+  color: white; 
+  border: none; 
 }
+
+
 
 .recipe-container a {
   text-decoration: none;
@@ -75,13 +78,15 @@
 }
 
 .recipe-container > * > p{
-  background: rgba(69, 68, 62, 0.466); /* Semi-transparent background for readability */
+  background: rgba(69, 68, 62, 0.8)
+  ; /* Semi-transparent background for readability */
   padding: 10px;
   border-radius: 5px;
 }
 
 .recipe-info > p{
-  background: rgba(69, 68, 62, 0.466); /* Semi-transparent background for readability */
+  background: rgba(69, 68, 62, 0.8)
+  ; /* Semi-transparent background for readability */
   padding: 10px;
   border-radius: 5px;
 }
@@ -121,7 +126,7 @@
 
 .subscription-button:hover {
   outline: 2px solid #e8e8e8;
-  background: rgba(255, 255, 255, 0.9);
+  background: black;
   color: black;
 }
 
@@ -145,6 +150,11 @@
 }
 .info-button:hover {
   outline: 2px solid #e8e8e8;
-  background: rgba(255, 255, 255, 0.9);
+  background: black;
   color: black;
 }
+
+.pagination{
+  margin: 30px;
+}
+

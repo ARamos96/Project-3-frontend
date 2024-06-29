@@ -1,3 +1,9 @@
+.HomePage-container{
+    padding: 20px;
+        max-width: 2000px;
+        margin: 0 auto;
+}
+
 .HowItWorksstepper{
     display: flex;
     justify-content: space-evenly;
@@ -5,8 +11,58 @@
 
 }
 
+.HowItWorksstepper h5 {
+    padding:15px ;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    
+}
+
 .HowItWorksstepper span {
     font-style: italic;
     
 }
 
+.HowItWorksstepper p{
+    padding: 50px 0px;
+}
+
+
+.what-is-container  h2{
+    padding:20px ;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.what-is-container p{
+    text-align: center;
+    padding: 50px 0px;
+}
+
+.howitworks-container h2{
+    padding:20px ;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+
+.dishes-container h2{
+    padding:20px ;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.dishes-container h3{
+    padding:12px ;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.dishes-container button{
+    margin-top: 80px;
+    margin-bottom: 20px;
+}
+
+.carrousel-main{
+    margin-top: 80px;
+}

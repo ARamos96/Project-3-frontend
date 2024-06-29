@@ -30,7 +30,8 @@
   font-weight: 700;
   font-size: 20px;
   font-family: "Lato";
-  background: rgba(69, 68, 62, 0.466); /* Semi-transparent background for readability */
+  background: rgba(69, 68, 62, 0.8)
+  ; /* Semi-transparent background for readability */
   padding: 10px;
   border-radius: 5px;
 }

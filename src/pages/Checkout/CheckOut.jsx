@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { Link } from "react-router-dom"
 import "./CheckOut.css";
 import axios from "axios";
 import { AuthContext } from "../../context/auth.context";
@@ -325,10 +326,28 @@ function CheckOut() {
       )}
 
       <h3>Your choices</h3>
-      <div>
+      <div className="item-menu">
         {cart.map((item) => (
-          <div key={item._id} className="cart-item">
-            <p>Name: {item.name}</p>
+          <div
+              className="item-container"
+              key={item._id}
+              style={{
+                backgroundImage: `url(/${encodeURIComponent(item.name)}.jpg)`,
+              }}
+            >
+              <Link to={`/recipes/${item._id}`}>
+                {/* <img src={`/${item.name}.jpg`} alt={`${item.name}`} /> */}
+                <p>{item.name}</p>
+                <div className="item-info">
+                  <p>
+                    <span className="pi pi-stopwatch" /> {item.cookingTime}'
+                  </p>
+                  <p>{item.nutritionalValuePerServing.calories}kcal</p>
+                  <p>
+                    {item.rating} <span className="pi pi-star-fill" />
+                  </p>
+                </div>
+              </Link>
           </div>
         ))}
       </div>

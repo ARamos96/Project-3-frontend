@@ -204,9 +204,10 @@ function MealPlan() {
   };
 
   return (
-    <div>
+    <div className="mealPlan-container">
       <section>
-        <h2>Choose your Meal Plan</h2>
+        <h1>Meal Plan</h1>
+        <h2>Set your meal plan</h2>
         <h3>How many people?</h3>
         <div className="people">
           {[1, 2, 3, 4].map((num) => (

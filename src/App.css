@@ -14,7 +14,7 @@ body{
 h1{
   color: white;
   text-align: center;
-  font-size: 40px;
+  font-size: 90px;
   font-family: "Kalam";
 }
 
@@ -23,7 +23,9 @@ h2{
   text-align: center;
   font-size: 30px;
   font-family: "Kalam";
-  background: linear-gradient(109.6deg, rgb(255, 194, 48) 11.2%, rgb(255, 124, 0) 100.2%);}
+  background: linear-gradient(109.6deg, rgb(255, 194, 48) 11.2%, rgb(255, 124, 0) 100.2%);
+  border-radius: 10px
+}
 
 h3{
   color : white;
@@ -31,6 +33,7 @@ h3{
   font-size: 20px;
   font-family: "Kalam";
   background: linear-gradient(109.6deg, rgb(255, 194, 48) 11.2%, rgb(255, 124, 0) 100.2%);
+  border-radius: 10px
 }
 
 h4{
@@ -40,7 +43,7 @@ h4{
   font-size: 20px;
   font-family: "Kalam";
   background-color: rgb(255, 165, 0) ;
-
+  border-radius: 10px
 }
 
 h5{
@@ -122,7 +125,7 @@ button span:nth-child(5) {
 
 
 .selected {
-  background-color: #b9ac62;
+  background-color: rgb(255, 165, 0);
   color: white;
 }
 

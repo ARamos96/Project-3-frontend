@@ -63,11 +63,11 @@ function RecipeDetailsPage() {
         <img src={`/${recipe.name}.jpg`} alt={recipe.name}></img>
         <div className="recipe-basic-info">
           <p>
-            <span className="pi pi-stopwatch" /> Cooking Time{" "}
+            <span className="pi pi-stopwatch" /> Cooking Time :{" "}
             {recipe.cookingTime}'
           </p>
           <p>
-            Rating {recipe.rating} <span className="pi pi-star-fill" />
+            Rating : {recipe.rating} <span className="pi pi-star-fill" />
           </p>
           <p>Difficulty: {recipe.difficulty}</p>
         </div>
@@ -84,6 +84,13 @@ function RecipeDetailsPage() {
             onClick={() => navigate("/mealplan")}
           >
             Start Subscription
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span><span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
         )}
 
@@ -108,44 +115,46 @@ function RecipeDetailsPage() {
           </>
         )}
       </div>
-      <div className="recipe-ingredients-container">
-        <h2>Ingredients</h2>
-        <ul className="ingredients-list">
-          {recipe.ingredients &&
-            recipe.ingredients.map((ingredient, index) => (
-              <li key={`ingredient-${index}`}>{ingredient}</li>
-            ))}
-        </ul>
-      </div>
-      {recipe.nutritionalValuePerServing && (
-        <div className="nutritional-information-table">
-          <h2>Nutritional Information</h2>
-          <table>
-            <tbody>
-              <tr>
-                <th>Calories</th>
-                <td>{recipe.nutritionalValuePerServing.calories}kcal</td>
-              </tr>
-              <tr>
-                <th>Protein</th>
-                <td>{recipe.nutritionalValuePerServing.protein}g</td>
-              </tr>
-              <tr>
-                <th>Carbohydrates</th>
-                <td>{recipe.nutritionalValuePerServing.carbohydrates}g</td>
-              </tr>
-              <tr>
-                <th>Fat</th>
-                <td>{recipe.nutritionalValuePerServing.fat}g</td>
-              </tr>
-              <tr>
-                <th>Fiber</th>
-                <td>{recipe.nutritionalValuePerServing.fiber}g</td>
-              </tr>
-            </tbody>
-          </table>
+      <div className="mid-container">
+        <div className="recipe-ingredients-container">
+          <h2>Ingredients</h2>
+          <ul className="ingredients-list">
+            {recipe.ingredients &&
+              recipe.ingredients.map((ingredient, index) => (
+                <li key={`ingredient-${index}`}>{ingredient}</li>
+              ))}
+          </ul>
         </div>
-      )}
+        {recipe.nutritionalValuePerServing && (
+          <div className="nutritional-information-table">
+            <h2>Nutritional Information</h2>
+            <table>
+              <tbody>
+                <tr>
+                  <th>Calories</th>
+                  <td>{recipe.nutritionalValuePerServing.calories}kcal</td>
+                </tr>
+                <tr>
+                  <th>Protein</th>
+                  <td>{recipe.nutritionalValuePerServing.protein}g</td>
+                </tr>
+                <tr>
+                  <th>Carbohydrates</th>
+                  <td>{recipe.nutritionalValuePerServing.carbohydrates}g</td>
+                </tr>
+                <tr>
+                  <th>Fat</th>
+                  <td>{recipe.nutritionalValuePerServing.fat}g</td>
+                </tr>
+                <tr>
+                  <th>Fiber</th>
+                  <td>{recipe.nutritionalValuePerServing.fiber}g</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
       {recipe.steps && (
         <div className="recipe-steps-container">
           <h2>Step-by-step</h2>
@@ -153,7 +162,7 @@ function RecipeDetailsPage() {
             {recipe.steps.map((step, index) => (
               <li key={`step-${index}`}>
                 <span>
-                  <b>Step {index + 1}</b> {step}
+                  <b> {index + 1}</b> {step}
                 </span>
               </li>
             ))}
