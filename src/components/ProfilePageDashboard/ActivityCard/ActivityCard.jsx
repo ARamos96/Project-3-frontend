@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from 'react-router-dom'
+import './ActivityCard.css'
 
 const ActivityCard = ({ user }) =>
   (user.activeSubscription || user.favDishes || user.previousSubscriptions) && (
@@ -54,28 +56,23 @@ const ActivityCard = ({ user }) =>
           </div>
         </div>
       )}
-      {user.favDishes.length > 0 && (
-        <div className="profile-item">
           <strong>Fav Dishes:</strong>
-          <ul>
+      {user.favDishes.length > 0 && (
+        <div className="profile-fav-dishes">
             {user.favDishes.map((dish) => (
-              <li key={dish._id}>
-                <strong>{dish.name}</strong> - {dish.price}$
-                <div>
-                  {dish.categories.origin.join(", ")},{" "}
-                  {dish.categories.diet.join(", ")}, Cooking time:{" "}
-                  {dish.cookingTime} minutes
-                </div>
-                <div>
-                  Nutritional Value: {dish.nutritionalValuePerServing.calories}{" "}
-                  calories, {dish.nutritionalValuePerServing.fat}g fat,{" "}
-                  {dish.nutritionalValuePerServing.protein}g protein,{" "}
-                  {dish.nutritionalValuePerServing.carbohydrates}g carbs,{" "}
-                  {dish.nutritionalValuePerServing.fiber}g fiber
-                </div>
-              </li>
+              <div
+              className="profile-item-container"
+              key={dish._id}
+              style={{
+                backgroundImage: `url(/${encodeURIComponent(dish.name)}.jpg)`,
+              }}
+            >
+              <Link to={`/recipes/${dish._id}`}>
+                {/* <img src={`/${item.name}.jpg`} alt={`${item.name}`} /> */}
+                <p>{dish.name}</p>
+              </Link>
+          </div>
             ))}
-          </ul>
         </div>
       )}
       {user.previousSubscriptions.length > 0 && (
