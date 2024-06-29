@@ -193,138 +193,140 @@ function RecipesList() {
 
   return (
     <>
-      <div className="filter-and-search">
-        <div className="filter-tags">
-          <div className="origin-tags">
-            <h2>Filter by Origin</h2>
-            {uniqueOrigins.map((origin, index) => (
-              <button
-                key={index}
-                onClick={() => handleOriginClick(origin)}
-                className={selectedOrigins.includes(origin) ? "active" : ""}
-              >
-                {origin}
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </button>
-            ))}
-          </div>
-          <div className="diet-tags">
-            <h2>Filter by Diet</h2>
-            {uniqueDiets.map((diet, index) => (
-              <button
-                key={index}
-                onClick={() => handleDietClick(diet)}
-                className={selectedDiets.includes(diet) ? "active" : ""}
-              >
-                {diet}
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="search-bar-container">
-          <SearchBar onSearch={(term) => setSearchTerm(term)} />
-        </div>
-      </div>
-      {loading ? (
+      {loading ? ( 
         <Loading />
       ) : (
-        <div className="recipe-menu">
-          {currentRecipes.map((recipe) => (
-            <div
-              className="recipe-container"
-              key={recipe._id}
-              style={{
-                backgroundImage: `url(/${encodeURIComponent(recipe.name)}.jpg)`,
-              }}
-            >
-              <Link to={`/recipes/${recipe._id}`}>
-                {/* <img src={`/${recipe.name}.jpg`} alt={`${recipe.name}`} /> */}
-                <p>{recipe.name}</p>
-                <div className="recipe-info">
-                  <p>
-                    <span className="pi pi-stopwatch" /> {recipe.cookingTime}'
-                  </p>
-                  <p>{recipe.nutritionalValuePerServing.calories}kcal</p>
-                  <p>
-                    {recipe.rating} <span className="pi pi-star-fill" />
-                  </p>
-                </div>
-              </Link>
-              {isLoggedIn && (
-                <IconButton
-                  onClick={() => handleToggleFavorite(recipe)}
-                  color="secondary"
-                >
-                  {isInFavorites(recipe._id) ? (
-                    <Bookmark />
-                  ) : (
-                    <BookmarkBorder />
-                  )}
-                </IconButton>
-              )}
-              {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
-                <button
-                  className="subscription-button"
-                  onClick={() => handleAddToCart(recipe)}
-                >
-                  Add to cart
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </button>
-              ) : (
-                <button
-                  className="subscription-button"
-                  onClick={() => navigate("/mealplan")}
-                >
-                  Start Subscription
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </button>
-              )}
-              <button
-                className="info-button"
-                onClick={() => navigate(`/recipes/${recipe._id}`)}
+        <>
+          <div className="filter-and-search">
+            <div className="filter-tags">
+              <div className="origin-tags">
+                <h2>Filter by Origin</h2>
+                {uniqueOrigins.map((origin, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleOriginClick(origin)}
+                    className={selectedOrigins.includes(origin) ? "active" : ""}
+                  >
+                    {origin}
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </button>
+                ))}
+              </div>
+              <div className="diet-tags">
+                <h2>Filter by Diet</h2>
+                {uniqueDiets.map((diet, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleDietClick(diet)}
+                    className={selectedDiets.includes(diet) ? "active" : ""}
+                  >
+                    {diet}
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="search-bar-container">
+              <SearchBar onSearch={(term) => setSearchTerm(term)} />
+            </div>
+          </div>
+          <div className="recipe-menu">
+            {currentRecipes.map((recipe) => (
+              <div
+                className="recipe-container"
+                key={recipe._id}
+                style={{
+                  backgroundImage: `url(/${encodeURIComponent(recipe.name)}.jpg)`,
+                }}
               >
-                + Info
+                <Link to={`/recipes/${recipe._id}`}>
+                  {/* <img src={`/${recipe.name}.jpg`} alt={`${recipe.name}`} /> */}
+                  <p>{recipe.name}</p>
+                  <div className="recipe-info">
+                    <p>
+                      <span className="pi pi-stopwatch" /> {recipe.cookingTime}'
+                    </p>
+                    <p>{recipe.nutritionalValuePerServing.calories}kcal</p>
+                    <p>
+                      {recipe.rating} <span className="pi pi-star-fill" />
+                    </p>
+                  </div>
+                </Link>
+                {isLoggedIn && (
+                  <IconButton
+                    onClick={() => handleToggleFavorite(recipe)}
+                    color="secondary"
+                  >
+                    {isInFavorites(recipe._id) ? (
+                      <Bookmark />
+                    ) : (
+                      <BookmarkBorder />
+                    )}
+                  </IconButton>
+                )}
+                {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
+                  <button
+                    className="subscription-button"
+                    onClick={() => handleAddToCart(recipe)}
+                  >
+                    Add to cart
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </button>
+                ) : (
+                  <button
+                    className="subscription-button"
+                    onClick={() => navigate("/mealplan")}
+                  >
+                    Start Subscription
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </button>
+                )}
+                <button
+                  className="info-button"
+                  onClick={() => navigate(`/recipes/${recipe._id}`)}
+                >
+                  + Info
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className="pagination">
+            {[...Array(totalRecipes)].map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handlePage(index + 1)}
+                className={currentPage === index + 1 ? "active" : ""}
+              >
+                {index + 1}
                 <span></span>
                 <span></span>
                 <span></span>
                 <span></span>
               </button>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </>
       )}
-      <div className="pagination">
-        {[...Array(totalRecipes)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePage(index + 1)}
-            className={currentPage === index + 1 ? "active" : ""}
-          >
-            {index + 1}
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-        ))}
-      </div>
     </>
   );
 }
