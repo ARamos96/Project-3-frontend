@@ -1,70 +1,93 @@
-# Getting Started with Create React App
+# SavorSwift
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+SavorSwift is a meal subscription service that provides nutritionist-designed recipes, allowing you to mix and match meals to fit your lifestyle. We deliver quality ingredients right to your doorstep, making healthy eating easy and convenient. This project is a student project from the Ironhack Academy's Full Stack Web Development course.
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+- [SavorSwift](#savorswift)
+  - [Demo](#demo)
+  - [Features](#features)
+  - [Structure](#Structure)
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Installation Steps](#installation-steps)
+  - [Usage](#usage)
+  - [Project Structure](#project-structure)
+  - [Collaborators](#Collaborators)
+  - [Collaborators](#collaborators)
+  - [Backend Repository](#backend-repository)
 
-### `npm start`
+## Demo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Check out the live application: [SavorSwift](https://savorswift.netlify.app/)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Features
 
-### `npm test`
+- User-friendly interface with responsive design
+- Custom components using PrimeReact
+- Tailwind CSS for flexible and modern styling
+- Material-UI for additional UI components
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Structure
 
-### `npm run build`
+- HomePage: Overview of the service
+- MealPlan: Create your meal plan
+- Recipes: Show available recipes, add to cart and add favorites.
+- RecipeDetails: Detailed view of each recipe
+- Login: User authentication
+- Signup: New user registration
+- Checkout: Finalize your subscription, delivery and payment
+- HowItWorks: Explanation of the service workflow
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To get a local copy up and running, follow these simple steps.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Prerequisites
 
-### `npm run eject`
+Ensure you have the latest version of npm installed.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```sh
+npm install npm@latest -g
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Installation Steps
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Clone the repository
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+git clone https://github.com/your_username/SavorSwift.git
 
-## Learn More
+2. Navigate to the project directory
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+cd SavorSwift
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. Install NPM packages
 
-### Code Splitting
+npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Usage
 
-### Analyzing the Bundle Size
+To start the development server, run:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+npm run start
 
-### Making a Progressive Web App
+-This will start the project at http://localhost:3000.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Technologies Used
 
-### Advanced Configuration
+React: A JavaScript library for building user interfaces.
+PrimeReact: A rich set of open source UI components for React.
+Tailwind CSS: A utility-first CSS framework for rapid UI development.
+Material-UI: A popular React UI framework.
+IronLauncher: Initialized with the IronLauncher npm package IronLauncher.
+MongoDB: Database using MongoDB Atlas and Compass.
+Postman: Used to create and send the API requests.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Collaborators
 
-### Deployment
+guzegui
+ARamos96
+AbrahamAgTi
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Backend Repository
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The backend for this project is available at: https://github.com/ARamos96/project-3-backend, and it is deployed using Adaptable. The backend uses Node.js and Express.
