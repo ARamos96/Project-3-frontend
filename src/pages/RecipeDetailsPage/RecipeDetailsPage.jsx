@@ -7,91 +7,34 @@ import "./RecipeDetailsPage.css";
 import "primeicons/primeicons.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  Button,
-  IconButton,
-  Container,
-  Grid,
-  Typography,
-  Card,
-  CardMedia,
-  CardContent,
-  CardActions,
-} from "@mui/material";
-import {
-  Favorite,
-  FavoriteBorder,
-  Info,
-  ShoppingCart,
-  Bookmark,
-  BookmarkBorder,
-} from "@mui/icons-material";
-
-const MONGO_URI =
-  `${process.env.REACT_APP_SERVER_URL}/dishes` ||
-  "http://localhost:5005/dishes";
+import { IconButton } from "@mui/material";
+import { Bookmark, BookmarkBorder } from "@mui/icons-material";
 
 function RecipeDetailsPage() {
   const {
     isLoggedIn,
     user,
-    addFavDish,
-    removeFavDish,
-    favdishes,
-    addFavoriteToDB,
+    loadAllUserData,
+    isInFavorites,
+    handleToggleFavorite,
+    isFavDishUpdating,
   } = useContext(AuthContext);
-  const { addToCart, mealPlan } = useContext(CartContext);
+  const { addToCart, mealPlan, recipes } = useContext(CartContext);
 
   const [recipe, setRecipe] = useState({});
   const navigate = useNavigate();
   const { recipeId } = useParams();
 
   useEffect(() => {
-    axios
-      .get(`${MONGO_URI}/${recipeId}`)
-      .then((res) => {
-        setRecipe(res.data);
-      })
-      .catch((err) => console.log(err));
-    
-      return () => {
-        if (isLoggedIn && user && favdishes.length > 0) {
-          const response = addFavoriteToDB(favdishes);
-        }
-      };
+    if (user && Object.keys(user).length === 6) loadAllUserData();
+    // find dish in dishes array by id
+    const dish = recipes.find((dish) => dish._id === recipeId);
+    setRecipe(dish);
+
+    return () => {
+      isFavDishUpdating();
+    };
   }, [recipeId]);
-
-  const isInFavorites = () => {
-    return favdishes.some((dish) => dish.id === recipe.id);
-  };
-
-  const handleToggleFavorite = () => {
-    if (isInFavorites()) {
-      removeFavDish(recipe.id);
-      toast.success("Dish removed from favorites", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    } else {
-      addFavDish(recipe);
-      toast.success("Dish added in favorites!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
-  };
 
   const handleAddToCart = (recipe) => {
     if (!mealPlan || !mealPlan.dishesPerWeek) {

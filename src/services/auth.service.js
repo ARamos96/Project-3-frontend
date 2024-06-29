@@ -41,6 +41,10 @@ class AuthService {
     return this.api.get(`/user/${id}`);
   }
 
+  getDishes = (id) =>{
+    return this.api.get(`/dishes`);
+  }
+
   patchPersonalDetails = (data, id) => {
     return this.api.patch(`/user/${id}`, data);
     // same as
@@ -75,7 +79,7 @@ class AuthService {
     return this.api.post(`/subscription`, requestBody);
   }
   postFavDishes = (requestBody, id) => {
-    return this.api.post(`/user/${id}/add-dishes`, {dishIds: requestBody});
+    return this.api.post(`/user/${id}/update-dishes`, {dishes: requestBody});
   }
 }
 

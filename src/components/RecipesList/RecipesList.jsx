@@ -1,27 +1,10 @@
 import { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
-import {
-  Button,
-  IconButton,
-  Container,
-  Grid,
-  Typography,
-  Card,
-  CardMedia,
-  CardContent,
-  CardActions,
-} from "@mui/material";
-import {
-  Favorite,
-  FavoriteBorder,
-  Info,
-  ShoppingCart,
-  Bookmark,
-  BookmarkBorder,
-} from "@mui/icons-material";
+import { IconButton } from "@mui/material";
+import { Bookmark, BookmarkBorder } from "@mui/icons-material";
+import authService from "../../services/auth.service";
 
 import "./RecipeList.css";
 import "primeicons/primeicons.css";
@@ -34,41 +17,55 @@ const MONGO_URI = process.env.REACT_APP_SERVER_URL
   : "http://localhost:5005/dishes";
 
 function RecipesList() {
-  const { isLoggedIn, favdishes, addFavDish, removeFavDish, addFavoriteToDB, user } =
-    useContext(AuthContext);
-  const { addToCart, mealPlan } = useContext(CartContext);
+  const {
+    isLoggedIn,
+    user,
+    loadAllUserData,
+    isInFavorites,
+    handleToggleFavorite,
+    isFavDishUpdating,
+  } = useContext(AuthContext);
+  const {
+    addToCart,
+    mealPlan,
+    recipes,
+    setRecipes,
+    filteredRecipes,
+    setFilteredRecipes,
+  } = useContext(CartContext);
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
-  const [recipes, setRecipes] = useState([]);
   const [selectedOrigins, setSelectedOrigins] = useState([]);
+  const [hasFetchedRecipes, setHasFetchedRecipes] = useState(false);
   const [selectedDiets, setSelectedDiets] = useState([]);
   const [initialSelectedDiets, setInitialSelectedDiets] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredRecipes, setFilteredRecipes] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+  const fetchRecipes = async () => {
+    try {
+      const response = await authService.getDishes();
+      setRecipes(response.data);
+      setFilteredRecipes(response.data); // Set initial filtered recipes to all recipes
+      setHasFetchedRecipes(true);
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get(MONGO_URI)
-      .then((res) => {
-        setRecipes(res.data);
-        setFilteredRecipes(res.data); // Set initial filtered recipes to all recipes
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error getting the recipes:", err);
-        setLoading(false);
-      });
+    if (user && Object.keys(user).length === 6) loadAllUserData();
+
+    if (recipes.length === 0 && !hasFetchedRecipes) {
+      fetchRecipes();
+    }
 
     return () => {
-      if (isLoggedIn && user && favdishes.length > 0) {
-        const response = addFavoriteToDB(favdishes);
-      }
+      isFavDishUpdating();
     };
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     // Extract unique diets from recipes to initialize initialSelectedDiets
@@ -147,20 +144,6 @@ function RecipesList() {
     }
   };
 
-  // check if the dish is in favorites
-  const isInFavorites = (recipeId) => {
-    return favdishes.some((dish) => dish._id === recipeId);
-  };
-
-  // handling favorites
-  const handleToggleFavorite = (recipe) => {
-    if (isInFavorites(recipe._id)) {
-      removeFavDish(recipe._id);
-    } else {
-      addFavDish(recipe);
-    }
-  };
-
   // Extract unique origins from recipes to create the filter options
   const uniqueOrigins = [
     ...new Set(recipes.flatMap((recipe) => recipe.categories.origin)),
@@ -216,7 +199,7 @@ function RecipesList() {
           <SearchBar onSearch={(term) => setSearchTerm(term)} />
         </div>
       </div>
-      {loading ? (
+      {!recipes && !filteredRecipes ? (
         <Loading />
       ) : (
         <div className="recipe-menu">

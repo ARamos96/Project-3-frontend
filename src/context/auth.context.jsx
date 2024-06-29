@@ -8,9 +8,7 @@ function AuthProviderWrapper(props) {
   const [isLoading, setIsLoading] = useState(true);
   const [isUserLoaded, setIsUserLoaded] = useState(false);
   const [user, setUser] = useState(null);
-  const [favdishes, setFavdishes] = useState(
-    JSON.parse(localStorage.getItem("favdishes")) || []
-  );
+  const [newFavDishes, setNewFavDishes] = useState([]);
 
   const storeToken = (token) => {
     localStorage.setItem("authToken", token);
@@ -39,6 +37,7 @@ function AuthProviderWrapper(props) {
           }
         })
         .catch(() => {
+          // if token is expired, remover user from local storage
           setIsLoggedIn(false);
           setIsLoading(false);
           setUser(null);
@@ -57,6 +56,7 @@ function AuthProviderWrapper(props) {
   const logOutUser = () => {
     removeToken();
     localStorage.removeItem("user");
+    localStorage.removeItem("newFavDishes");
     authenticateUser();
     setIsUserLoaded(false);
   };
@@ -67,6 +67,10 @@ function AuthProviderWrapper(props) {
 
   const getUserFromStorage = () => {
     return JSON.parse(localStorage.getItem("user"));
+  };
+
+  const getNewFavDishesFromStorage = () => {
+    return JSON.parse(localStorage.getItem("newFavDishes"));
   };
 
   const handleUserPatch = async (changedFields, updateType) => {
@@ -137,10 +141,13 @@ function AuthProviderWrapper(props) {
           ...updatedUserData,
         };
       } else if (updateType === "favDishes") {
+        // overwrite existing favDishes with response from database
         updatedUser = {
           ...prevUser,
-          favDishes: [...prevUser.favDishes, ...updatedUserData],
+          favDishes: [...updatedUserData],
         };
+        // save new favDishes into existing favDishes state
+        saveDishesInStateAndStorage(updatedUserData);
       } else if (updateType === "address") {
         updatedUser = {
           ...prevUser,
@@ -212,31 +219,115 @@ function AuthProviderWrapper(props) {
   };
 
   const addFavDish = (dish) => {
-    setFavdishes((prevFavdishes) => {
-      const updatedFavdishes = [...prevFavdishes, dish];
-      localStorage.setItem("favdishes", JSON.stringify(updatedFavdishes));
+    // if dish._id is not included in newFavDishes._id, add it
+    if (!newFavDishes.find((element) => element._id === dish._id)) {
+      setNewFavDishes((prevFavdishes) => {
+        const updatedFavdishes = [...prevFavdishes, dish];
+        localStorage.setItem("newFavDishes", JSON.stringify(updatedFavdishes));
+        return updatedFavdishes;
+      });
+    }
+  };
+
+  const removeFavDish = (dishToDelete) => {
+    setNewFavDishes((prevFavdishes) => {
+      const updatedFavdishes = prevFavdishes.filter(
+        (dish) => dish._id !== dishToDelete._id
+      );
+      localStorage.setItem("newFavDishes", JSON.stringify(updatedFavdishes));
       return updatedFavdishes;
     });
   };
 
-  const removeFavDish = (dishId) => {
-    setFavdishes((prevFavdishes) => {
-      const updatedFavdishes = prevFavdishes.filter(
-        (dish) => dish._id !== dishId
-      );
-      localStorage.setItem("favdishes", JSON.stringify(updatedFavdishes));
-      return updatedFavdishes;
-    });
+  // check if the dish is in favorites
+  const isInFavorites = (recipeId) => {
+    return newFavDishes.some((dish) => dish._id === recipeId);
+  };
+
+  // handling favorites
+  const handleToggleFavorite = (recipe) => {
+    if (isInFavorites(recipe._id)) {
+      removeFavDish(recipe);
+    } else {
+      addFavDish(recipe);
+    }
+  };
+
+  const hasSameElements = () => {
+    // Get newFavDishes from storage
+    const newFavDishes = getNewFavDishesFromStorage();
+  
+    // Get user from storage
+    const storedUser = getUserFromStorage();
+  
+    // If both arrays are empty, return true
+    if (newFavDishes.length === 0 && (!storedUser.favDishes || storedUser.favDishes.length === 0)) {
+      return true;
+    }
+  
+    // If one array is empty and the other is not, return false
+    if (
+      (newFavDishes.length === 0 && storedUser.favDishes && storedUser.favDishes.length !== 0) ||
+      (newFavDishes.length !== 0 && (!storedUser.favDishes || storedUser.favDishes.length === 0))
+    ) {
+      return false;
+    }
+  
+    // Extract and sort _id values from both arrays
+    const sortedIdsNew = newFavDishes.map((item) => item._id).sort();
+    const sortedIdsOld = storedUser.favDishes.map((item) => item._id).sort();
+  
+    // If both sorted arrays have different lengths, return false
+    if (sortedIdsNew.length !== sortedIdsOld.length) {
+      return false;
+    }
+  
+    // If both sorted arrays have the same ids, then return true
+    const hasSameElements = sortedIdsNew.every(
+      (value, index) => value === sortedIdsOld[index]
+    );
+  
+    return hasSameElements;
+  };
+
+  const isFavDishUpdating = () => {
+    if (
+      isLoggedIn &&
+      getUserFromStorage() && getNewFavDishesFromStorage() &&
+      getNewFavDishesFromStorage().length >= 0 &&
+      !hasSameElements()
+    ) {
+      const response = addFavoriteToDB(getNewFavDishesFromStorage());
+    }
   };
 
   const addFavoriteToDB = async (dishes) => {
     const response = await authService.postFavDishes(dishes, user._id);
-    updateUserStateAndLocalStorage(response.data, "favdishes");
+    updateUserStateAndLocalStorage(response.data, "favDishes");
+    return response;
+  };
+
+  const saveDishesInStateAndStorage = (dishes) => {
+    setNewFavDishes((prevFavdishes) => {
+      // Filter out dishes that are already in prevFavdishes
+      const uniqueDishes = dishes.filter(
+        (newDish) =>
+          !prevFavdishes.find((prevDish) => prevDish._id === newDish._id)
+      );
+
+      // Merge previous and new unique dishes
+      const updatedFavdishes = [...prevFavdishes, ...uniqueDishes];
+
+      // Save the updated dishes array in localStorage
+      localStorage.setItem("newFavDishes", JSON.stringify(updatedFavdishes));
+
+      return updatedFavdishes;
+    });
   };
 
   useEffect(() => {
-    authenticateUser();
-  }, []);
+    if (!user) authenticateUser();
+  });
 
   const isActiveSubscriptionInUser = () => {
     return user?.activeSubscription && user.activeSubscription != null;
@@ -260,6 +351,22 @@ function AuthProviderWrapper(props) {
     return formattedDate;
   };
 
+  const loadAllUserData = () => {
+    if (!isUserLoaded && user) {
+      authService
+        .getUser(user._id)
+        .then((response) => {
+          updateUserStateAndLocalStorage(response.data, undefined, undefined);
+          setIsUserLoaded(true);
+          // set fav dishes in state and storage
+          saveDishesInStateAndStorage(response.data.favDishes);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -276,12 +383,19 @@ function AuthProviderWrapper(props) {
         authenticateUser,
         logOutUser,
         updateUserStateAndLocalStorage,
-        favdishes,
+        newFavDishes,
+        setNewFavDishes,
         addFavoriteToDB,
         addFavDish,
         removeFavDish,
+        isInFavorites,
+        handleToggleFavorite,
+        hasSameElements,
+        isFavDishUpdating,
         isActiveSubscriptionInUser,
         getSubscriptionReorderDate,
+        loadAllUserData,
+        getNewFavDishesFromStorage,
       }}
     >
       {props.children}

@@ -13,6 +13,8 @@ function CartProviderWrapper(props) {
   const [cart, setCart] = useState([]);
   const [badge, setBadge] = useState(0);
   const [mealPlan, setMealPlan] = useState({});
+  const [recipes, setRecipes] = useState([]);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
 
   useEffect(() => {
     // Load cart from localStorage if it exists
@@ -110,7 +112,7 @@ function CartProviderWrapper(props) {
   const deleteMealPlan = () => {
     setMealPlan({});
     localStorage.removeItem("mealPlan");
-  }
+  };
 
   // Update count on badge, after adding or removing a dish
   const updateBadge = (count) => {
@@ -175,6 +177,10 @@ function CartProviderWrapper(props) {
         getDishesAndQuantity,
         checkout,
         setMealPlanInStateAndStorage,
+        recipes,
+        setRecipes,
+        filteredRecipes,
+        setFilteredRecipes,
       }}
     >
       {props.children}
