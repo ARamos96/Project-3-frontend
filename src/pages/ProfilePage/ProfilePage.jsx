@@ -15,7 +15,7 @@ function ProfilePage() {
     isUserLoaded,
     user,
     updateUserStateAndLocalStorage,
-    setIsUserLoaded,
+    setIsUserLoaded, loadAllUserData,
   } = useContext(AuthContext);
 
   // Controls the editing of each element
@@ -158,17 +158,7 @@ function ProfilePage() {
   };
 
   useEffect(() => {
-    if (!isUserLoaded) {
-      authService
-        .getUser(user._id)
-        .then((response) => {
-          updateUserStateAndLocalStorage(response.data, undefined, undefined);
-          setIsUserLoaded(true);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+    if (user && Object.keys(user).length === 6) loadAllUserData();
   }, );
 
   if (!user || !isUserLoaded) {

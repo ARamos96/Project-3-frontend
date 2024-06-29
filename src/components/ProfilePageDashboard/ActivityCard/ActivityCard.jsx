@@ -2,7 +2,7 @@ import React from "react";
 
 const ActivityCard = ({ user }) =>
   (user.activeSubscription || user.favDishes || user.previousSubscriptions) && (
-    <div style={{ flex: "1 1 0%", minWidth: 300, padding: 10 }}>
+<div style={{ flex: "1 1 0%", minWidth: 300, padding: 10 }}>
       <h2>Activity</h2>
       {user.activeSubscription && (
         <div className="profile-item">
