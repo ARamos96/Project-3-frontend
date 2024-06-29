@@ -34,8 +34,14 @@ const MONGO_URI = process.env.REACT_APP_SERVER_URL
   : "http://localhost:5005/dishes";
 
 function RecipesList() {
-  const { isLoggedIn, favdishes, addFavDish, removeFavDish, addFavoriteToDB, user } =
-    useContext(AuthContext);
+  const {
+    isLoggedIn,
+    favdishes,
+    addFavDish,
+    removeFavDish,
+    addFavoriteToDB,
+    user,
+  } = useContext(AuthContext);
   const { addToCart, mealPlan } = useContext(CartContext);
   const navigate = useNavigate();
 
@@ -67,7 +73,9 @@ function RecipesList() {
       if (isLoggedIn && user) {
         const response = addFavoriteToDB(favdishes);
       }
+      
     };
+    
   }, []);
 
   useEffect(() => {
@@ -196,8 +204,10 @@ function RecipesList() {
                 className={selectedOrigins.includes(origin) ? "active" : ""}
               >
                 {origin}
-                <span></span><span></span><span></span><span></span>
-
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
               </button>
             ))}
           </div>
@@ -210,8 +220,10 @@ function RecipesList() {
                 className={selectedDiets.includes(diet) ? "active" : ""}
               >
                 {diet}
-                <span></span><span></span><span></span><span></span>
-
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
               </button>
             ))}
           </div>
@@ -263,10 +275,14 @@ function RecipesList() {
                   onClick={() => handleAddToCart(recipe)}
                 >
                   Add to cart
-                  <span></span><span></span><span></span><span></span>
-
-                  <span></span><span></span><span></span><span></span>
-
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </button>
               ) : (
                 <button
@@ -274,8 +290,10 @@ function RecipesList() {
                   onClick={() => navigate("/mealplan")}
                 >
                   Start Subscription
-                  <span></span><span></span><span></span><span></span>
-
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </button>
               )}
               <button
@@ -283,8 +301,10 @@ function RecipesList() {
                 onClick={() => navigate(`/recipes/${recipe._id}`)}
               >
                 + Info
-                <span></span><span></span><span></span><span></span>
-
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
               </button>
             </div>
           ))}
@@ -298,8 +318,10 @@ function RecipesList() {
             className={currentPage === index + 1 ? "active" : ""}
           >
             {index + 1}
-            <span></span><span></span><span></span><span></span>
-
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
         ))}
       </div>
