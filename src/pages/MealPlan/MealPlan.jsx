@@ -191,7 +191,7 @@ function MealPlan() {
   };
 
   return (
-    <div>
+    <div className="mealPlan-container">
       <section>
         <h1>Meal Plan</h1>
         <h2>Set your meal plan</h2>
