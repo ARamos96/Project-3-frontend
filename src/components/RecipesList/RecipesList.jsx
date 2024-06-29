@@ -168,37 +168,6 @@ function RecipesList() {
 
   return (
     <>
-      <div className="filter-and-search">
-        <div className="filter-tags">
-          <div className="origin-tags">
-            <h2>Filter by Origin</h2>
-            {uniqueOrigins.map((origin, index) => (
-              <button
-                key={index}
-                onClick={() => handleOriginClick(origin)}
-                className={selectedOrigins.includes(origin) ? "active" : ""}
-              >
-                {origin}
-              </button>
-            ))}
-          </div>
-          <div className="diet-tags">
-            <h2>Filter by Diet</h2>
-            {uniqueDiets.map((diet, index) => (
-              <button
-                key={index}
-                onClick={() => handleDietClick(diet)}
-                className={selectedDiets.includes(diet) ? "active" : ""}
-              >
-                {diet}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className="search-bar-container">
-          <SearchBar onSearch={(term) => setSearchTerm(term)} />
-        </div>
-      </div>
       {!recipes && !filteredRecipes ? (
         <Loading />
       ) : (
