@@ -5,7 +5,7 @@ import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
 
 function HomePage() {
   return (
-    <div>
+    <div className="HomePage-container">
       <section>
         <h1>Savor Swift</h1>
       </section>

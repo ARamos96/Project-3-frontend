@@ -1,6 +1,6 @@
 .recipe-details {
     padding: 20px;
-    max-width: 1000px;
+    max-width: 2000px;
     margin: 0 auto;
   }
   
@@ -51,7 +51,7 @@
   
   .mid-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     margin-bottom: 20px;
   }
   
