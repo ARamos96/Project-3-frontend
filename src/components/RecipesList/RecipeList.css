@@ -24,10 +24,11 @@
   } */
 
 .filter-tags button.active {
-  background-color: #0056b3; /* Green background */
-  color: white; /* White text */
-  border: none; /* Remove border */
+  background-color: rgb(255, 165, 0); 
+  color: white; 
+  border: none; 
 }
+
 
 .recipe-container a {
   text-decoration: none;
@@ -121,7 +122,7 @@
 
 .subscription-button:hover {
   outline: 2px solid #e8e8e8;
-  background: rgba(255, 255, 255, 0.9);
+  background: black;
   color: black;
 }
 
@@ -145,6 +146,8 @@
 }
 .info-button:hover {
   outline: 2px solid #e8e8e8;
-  background: rgba(255, 255, 255, 0.9);
+  background: black;
   color: black;
 }
+
+

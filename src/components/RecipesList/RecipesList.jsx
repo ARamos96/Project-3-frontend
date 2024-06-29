@@ -196,6 +196,8 @@ function RecipesList() {
                 className={selectedOrigins.includes(origin) ? "active" : ""}
               >
                 {origin}
+                <span></span><span></span><span></span><span></span>
+
               </button>
             ))}
           </div>
@@ -208,6 +210,8 @@ function RecipesList() {
                 className={selectedDiets.includes(diet) ? "active" : ""}
               >
                 {diet}
+                <span></span><span></span><span></span><span></span>
+
               </button>
             ))}
           </div>
@@ -259,6 +263,10 @@ function RecipesList() {
                   onClick={() => handleAddToCart(recipe)}
                 >
                   Add to cart
+                  <span></span><span></span><span></span><span></span>
+
+                  <span></span><span></span><span></span><span></span>
+
                 </button>
               ) : (
                 <button
@@ -266,6 +274,8 @@ function RecipesList() {
                   onClick={() => navigate("/mealplan")}
                 >
                   Start Subscription
+                  <span></span><span></span><span></span><span></span>
+
                 </button>
               )}
               <button
@@ -273,6 +283,8 @@ function RecipesList() {
                 onClick={() => navigate(`/recipes/${recipe._id}`)}
               >
                 + Info
+                <span></span><span></span><span></span><span></span>
+
               </button>
             </div>
           ))}
@@ -286,6 +298,8 @@ function RecipesList() {
             className={currentPage === index + 1 ? "active" : ""}
           >
             {index + 1}
+            <span></span><span></span><span></span><span></span>
+
           </button>
         ))}
       </div>
