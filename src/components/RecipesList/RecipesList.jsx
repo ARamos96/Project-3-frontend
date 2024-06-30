@@ -25,7 +25,6 @@ function RecipesList() {
     addToCart,
     mealPlan,
     recipes,
-    setRecipes,
     filteredRecipes,
     setFilteredRecipes,
   } = useContext(CartContext);
@@ -44,7 +43,7 @@ function RecipesList() {
     return () => {
       isFavDishUpdating();
     };
-  }, [user]);
+  }, [isFavDishUpdating, user]);
 
   useEffect(() => {
     // Extract unique diets from recipes to initialize initialSelectedDiets
@@ -59,7 +58,7 @@ function RecipesList() {
     } else {
       setSelectedDiets(initialSelectedDiets);
     }
-  }, [recipes, mealPlan]);
+  }, [recipes, mealPlan, initialSelectedDiets]);
 
   useEffect(() => {
     // Start with all recipes for filtering
@@ -91,7 +90,7 @@ function RecipesList() {
     // Update the filtered recipes state and reset the current page to 1
     setFilteredRecipes(recipesToFilter);
     setCurrentPage(1);
-  }, [selectedOrigins, selectedDiets, searchTerm, recipes]);
+  }, [selectedOrigins, selectedDiets, searchTerm, recipes, setFilteredRecipes]);
 
   const handleOriginClick = (origin) => {
     // Update the selectedOrigins state based on the clicked origin.
