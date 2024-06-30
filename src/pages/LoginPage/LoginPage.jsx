@@ -3,6 +3,28 @@ import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import authService from "../../services/auth.service";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
+import InputAdornment from "@mui/material/InputAdornment";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Box from "@mui/material/Box";
+
+
+// Styled component for the login button
+const StyledButton = styled("button")({
+  marginTop: "1rem",
+  backgroundColor: "#1976d2",
+  color: "white",
+  border: "none",
+  padding: "10px 20px",
+  cursor: "pointer",
+  "&:hover": {
+    backgroundColor: "#0d47a1",
+  },
+});
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -10,7 +32,6 @@ function LoginPage() {
   const [errorMessage, setErrorMessage] = useState(undefined);
 
   const navigate = useNavigate();
-
   const { storeToken, authenticateUser } = useContext(AuthContext);
 
   const handleEmail = (e) => setEmail(e.target.value);
@@ -20,25 +41,14 @@ function LoginPage() {
     e.preventDefault();
     const requestBody = { email, password };
 
-    // Send a request to the server using axios
-    /* 
-    axios.post(`${process.env.REACT_APP_SERVER_URL}/auth/login`)
-      .then((response) => {})
-    */
-
-    // Or using a service
     authService
       .login(requestBody)
       .then((response) => {
-        // If the POST request is successful store the authentication token,
-        // after the token is stored authenticate the user
-        // and at last navigate to the home page
         storeToken(response.data.authToken);
         authenticateUser();
         navigate("/mealplan");
       })
       .catch((error) => {
-        // If the request resolves with an error, set the error message in the state
         const errorDescription = error.response.data.message;
         setErrorMessage(errorDescription);
       });
@@ -46,29 +56,55 @@ function LoginPage() {
 
   return (
     <div className="LoginPage">
-      <h1>Login</h1>
+      <h1>
+        Login
+        </h1>
 
       <form onSubmit={handleLoginSubmit}>
-        <label>Email:</label>
-        <input type="email" name="email" value={email} onChange={handleEmail} />
+        <TextField
+          label="Email"
+          type="email"
+          name="email"
+          value={email}
+          onChange={handleEmail}
+          fullWidth
+          margin="normal"
+          InputProps={{
+            style: {
+              borderColor: "yellow",
+            },
+          }}
+          variant="outlined"
+          required
+        />
 
-        <label>Password:</label>
-        <input
+        <TextField
+          label="Password"
           type="password"
           name="password"
           value={password}
           onChange={handlePassword}
+          fullWidth
+          margin="normal"
+          InputProps={{
+            style: {
+              borderColor: "yellow",
+            },
+          }}
+          variant="outlined"
+          required
         />
 
-        <button type="submit">Login
-        <span></span><span></span><span></span><span></span>
-
-        </button>
+        <button type="submit">
+          Login
+          </button>
       </form>
+
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      <p>Don't have an account yet?</p>
-      <Link to={"/signup"}> Sign Up</Link>
+      <p>
+        Don't have an account yet? <Link to={"/signup"}>Sign Up</Link>
+      </p>
     </div>
   );
 }
