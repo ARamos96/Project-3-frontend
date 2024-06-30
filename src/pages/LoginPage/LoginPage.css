@@ -1,0 +1,41 @@
+.LoginPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+
+  
+  .LoginPage form {
+    width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  }
+  
+  .LoginPage form .MuiTextField-root {
+    margin-bottom: 15px;
+  }
+  
+
+
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+
+  .LoginPage a {
+    text-decoration: none;
+    color: goldenrod;
+    border: 0.1em solid var(--c);
+    --c: goldenrod;
+    border-radius: 8px;
+    padding:5px;
+  }
+  
+  .LoginPage a:hover {
+    text-decoration: underline;
+  }

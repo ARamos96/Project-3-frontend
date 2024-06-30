@@ -1,40 +1,44 @@
 .SignupPage {
-  text-align: left;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 .SignupPage form {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
 }
 
-.SignupPage label {
-  margin-bottom: 8px;
-  width: 100px;
+
+
+.SignupPage .form-control {
+  margin-bottom: 20px;
 }
 
-.password-input-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.SignupPage .error-message {
+  color: red;
+  margin-top: 5px;
 }
 
-.password-toggle-checkbox {
-  margin-left: 8px;
+.SignupPage p {
+  text-align: center;
+  margin-top: 20px;
 }
 
-.password-toggle-label {
-  margin-left: 4px;
-  font-size: 14px;
+.SignupPage a {
+  text-decoration: none;
+  color: goldenrod;
+  border: 0.1em solid var(--c);
+  --c: goldenrod;
+  border-radius: 8px;
+  padding:5px;
+
+
 }
 
-.SignupPage input {
-  padding: 8px;
-  margin-bottom: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
+.SignupPage a:hover {
+  text-decoration: underline;
 }
