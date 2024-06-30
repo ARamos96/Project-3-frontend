@@ -21,11 +21,21 @@
     align-items: center;
 }
 
+.step-container h2{
+    width: 250px;
+}
+
 .step-container img{
     width: 250px;
     height: 250px;
     border-radius: 125px;
 }
+
+.step-container p{
+    text-align: justify;
+    line-height: 1.5em;
+}
+
 .FAQs {
     width: 100vw;
 }

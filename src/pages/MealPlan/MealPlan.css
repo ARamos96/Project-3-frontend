@@ -5,11 +5,20 @@
       
 }
 
+.people{
+    margin: 40px 0px;
+}
+
 
 
 .people button{
     margin: 10px;
     padding: 10px 30px;
+}
+
+.dishesWeek{
+    margin: 40px 0px;
+
 }
 
 .dishesWeek button{
@@ -22,5 +31,11 @@
     padding: 10px 30px;
     margin: 10px;
 }
+
+.diet-list{
+    margin: 40px 0px;
+}
+
+
 
 

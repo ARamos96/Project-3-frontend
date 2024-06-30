@@ -25,6 +25,7 @@
 
 .HowItWorksstepper p{
     padding: 50px 0px;
+    line-height: 2em;
 }
 
 
@@ -37,6 +38,7 @@
 .what-is-container p{
     text-align: center;
     padding: 50px 0px;
+    line-height: 2em;
 }
 
 .howitworks-container h2{
