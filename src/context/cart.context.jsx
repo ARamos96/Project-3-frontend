@@ -1,33 +1,37 @@
 // src/context/auth.context.jsx
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import authService from "../services/auth.service";
+import { AuthContext } from "./auth.context";
 
 const CartContext = React.createContext();
 
 function CartProviderWrapper(props) {
   const navigate = useNavigate();
+  const { user, loadAllUserData } = useContext(AuthContext);
 
   const [cart, setCart] = useState([]);
   const [badge, setBadge] = useState(0);
   const [mealPlan, setMealPlan] = useState({});
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [hasFetchedRecipes, setHasFetchedRecipes] = useState(false);
 
+  // On user loading, if user has less than 6 fields (just signed up, token payload),
+  // load all user data
   useEffect(() => {
-    // Load cart from localStorage if it exists
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      setCart(JSON.parse(storedCart));
+    if (user && Object.keys(user).length <= 6) loadAllUserData();
+  }, [user, loadAllUserData]);
+
+  // On context loading, get dishes from database
+  useEffect(() => {
+    if (recipes?.length === 0 && !hasFetchedRecipes) {
+      fetchRecipes();
     }
-    // Load mealPlan from localStorage if it exists
-    const storedmealPlan = localStorage.getItem("mealPlan");
-    if (storedmealPlan) {
-      setMealPlan(JSON.parse(storedmealPlan));
-    }
-  }, []);
+  });
 
   // Add dish object, including duplicates
   const addToCart = (dish) => {
@@ -161,9 +165,15 @@ function CartProviderWrapper(props) {
     setMealPlan(mealPlan);
   };
 
-  const removeMealPlanFromStateAndStorage = () => {
-    localStorage.removeItem("mealPlan");
-    setMealPlan({});
+  const fetchRecipes = async () => {
+    try {
+      const response = await authService.getDishes();
+      setRecipes(response.data);
+      setFilteredRecipes(response.data); // Set initial filtered recipes to all recipes
+      setHasFetchedRecipes(true);
+    } catch (error) {
+      console.error("Error fetching recipes:", error);
+    }
   };
 
   return (

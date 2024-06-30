@@ -2,19 +2,21 @@ import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
-import ShoppingCart from ".././ShoppingCart/ShoppingCart"
+import { CartContext } from "../../context/cart.context";
+import ShoppingCart from ".././ShoppingCart/ShoppingCart";
 
 function Navbar() {
   // Subscribe to the AuthContext to gain access to
   // the values from AuthContext.Provider's `value` prop
   const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
+  const { deleteMealPlan, emptyCart } = useContext(CartContext);
 
   return (
     <nav>
       <Link to="/">
         <button>Home</button>
       </Link>
-      
+
       <Link to="/recipes">
         <button>Our Meals</button>
       </Link>
@@ -26,10 +28,12 @@ function Navbar() {
       <Link to="/mealplan">
         <button>Meal Plan</button>
       </Link>
-      
+
       {isLoggedIn && (
         <>
-          <button onClick={logOutUser}>Logout</button>
+          <button onClick={logOutUser(() => deleteMealPlan, () => emptyCart)}>
+            Logout
+          </button>
 
           <Link to="/profile">
             <button>Profile</button>
@@ -37,8 +41,7 @@ function Navbar() {
           </Link>
 
           <span>{user && user.name}</span>
-          <ShoppingCart/>
-
+          <ShoppingCart />
         </>
       )}
 

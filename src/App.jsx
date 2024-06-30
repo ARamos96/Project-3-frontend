@@ -1,5 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
 
 import Navbar from "./components/Navbar/Navbar";
 import TailWindNavbar from "./components/Navbar/TailWindNavbar";
@@ -24,6 +25,19 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      // save the cart, mealplan to user
+      // Perform your global cleanup actions here
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
   return (
     <div className="App">
       {/* <Navbar /> */}

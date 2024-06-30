@@ -37,10 +37,11 @@ function AuthProviderWrapper(props) {
           }
         })
         .catch(() => {
-          // if token is expired, remover user from local storage
+          // if token is expired, remover user from local storage and state
           setIsLoggedIn(false);
           setIsLoading(false);
           setUser(null);
+          localStorage.removeItem("user");
         });
     } else {
       setIsLoggedIn(false);
@@ -55,18 +56,23 @@ function AuthProviderWrapper(props) {
 
   const removeMealPlan = () => {
     localStorage.removeItem("mealPlan");
-  }
+  };
 
   const removeFavDishes = () => {
-    localStorage.removeItem("favdishes");
-  }
+    localStorage.removeItem("newFavdishes");
+  };
 
-  const logOutUser = () => {
-    removeToken();
-    removeMealPlan();
+  // on log out, remove token, user, meal plan, fav dishes, cart
+  // meal plan and cart removal have to be supplied (inner context)
+  const logOutUser = (deleteMealPlan, emptyCart) => {
+    
+    deleteMealPlan();
+    emptyCart();
+
     removeFavDishes();
-    localStorage.removeItem("user");
-    localStorage.removeItem("newFavDishes");
+    
+    // checks for token and removes user from state and storage if none exists
+    removeToken();
     authenticateUser();
     setIsUserLoaded(false);
   };
@@ -266,44 +272,51 @@ function AuthProviderWrapper(props) {
   const hasSameElements = () => {
     // Get newFavDishes from storage
     const newFavDishes = getNewFavDishesFromStorage();
-  
+
     // Get user from storage
     const storedUser = getUserFromStorage();
-  
+
     // If both arrays are empty, return true
-    if (newFavDishes.length === 0 && (!storedUser.favDishes || storedUser.favDishes.length === 0)) {
+    if (
+      newFavDishes.length === 0 &&
+      (!storedUser.favDishes || storedUser.favDishes.length === 0)
+    ) {
       return true;
     }
-  
+
     // If one array is empty and the other is not, return false
     if (
-      (newFavDishes.length === 0 && storedUser.favDishes && storedUser.favDishes.length !== 0) ||
-      (newFavDishes.length !== 0 && (!storedUser.favDishes || storedUser.favDishes.length === 0))
+      (newFavDishes.length === 0 &&
+        storedUser.favDishes &&
+        storedUser.favDishes.length !== 0) ||
+      (newFavDishes.length !== 0 &&
+        (!storedUser.favDishes || storedUser.favDishes.length === 0))
     ) {
       return false;
     }
-  
+
     // Extract and sort _id values from both arrays
     const sortedIdsNew = newFavDishes.map((item) => item._id).sort();
     const sortedIdsOld = storedUser.favDishes.map((item) => item._id).sort();
-  
+
     // If both sorted arrays have different lengths, return false
     if (sortedIdsNew.length !== sortedIdsOld.length) {
       return false;
     }
-  
+
     // If both sorted arrays have the same ids, then return true
     const hasSameElements = sortedIdsNew.every(
       (value, index) => value === sortedIdsOld[index]
     );
-  
+
     return hasSameElements;
   };
 
   const isFavDishUpdating = () => {
     if (
       isLoggedIn &&
-      getUserFromStorage() && getNewFavDishesFromStorage() &&
+      getUserFromStorage() &&
+      getNewFavDishesFromStorage() &&
       getNewFavDishesFromStorage().length >= 0 &&
       !hasSameElements()
     ) {
@@ -362,7 +375,7 @@ function AuthProviderWrapper(props) {
   };
 
   const loadAllUserData = () => {
-    if (!isUserLoaded && user) {
+    if (user) {
       authService
         .getUser(user._id)
         .then((response) => {

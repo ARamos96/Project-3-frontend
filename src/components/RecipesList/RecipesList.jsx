@@ -12,10 +12,6 @@ import "primeicons/primeicons.css";
 import Loading from "../Loading/Loading";
 import SearchBar from "../SearchBar/SearchBar";
 
-const MONGO_URI = process.env.REACT_APP_SERVER_URL
-  ? `${process.env.REACT_APP_SERVER_URL}/dishes`
-  : "http://localhost:5005/dishes";
-
 function RecipesList() {
   const {
     isLoggedIn,
@@ -36,7 +32,6 @@ function RecipesList() {
   const navigate = useNavigate();
 
   const [selectedOrigins, setSelectedOrigins] = useState([]);
-  const [hasFetchedRecipes, setHasFetchedRecipes] = useState(false);
   const [selectedDiets, setSelectedDiets] = useState([]);
   const [initialSelectedDiets, setInitialSelectedDiets] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,24 +39,8 @@ function RecipesList() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const fetchRecipes = async () => {
-    try {
-      const response = await authService.getDishes();
-      setRecipes(response.data);
-      setFilteredRecipes(response.data); // Set initial filtered recipes to all recipes
-      setHasFetchedRecipes(true);
-    } catch (error) {
-      console.error("Error fetching recipes:", error);
-    }
-  };
-
   useEffect(() => {
-    if (user && Object.keys(user).length === 6) loadAllUserData();
-
-    if (recipes.length === 0 && !hasFetchedRecipes) {
-      fetchRecipes();
-    }
-
+    // On unmount, check if favDishes has changed and update changes
     return () => {
       isFavDishUpdating();
     };
@@ -217,7 +196,9 @@ function RecipesList() {
                 className="recipe-container"
                 key={recipe._id}
                 style={{
-                  backgroundImage: `url(/${encodeURIComponent(recipe.name)}.jpg)`,
+                  backgroundImage: `url(/${encodeURIComponent(
+                    recipe.name
+                  )}.jpg)`,
                 }}
               >
                 <Link to={`/recipes/${recipe._id}`}>

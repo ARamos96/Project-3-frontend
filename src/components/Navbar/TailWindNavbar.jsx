@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth.context";
+import { CartContext } from "../../context/cart.context";
 
-import { Fragment } from 'react'
+import { Fragment } from "react";
 import {
   Disclosure,
   DisclosureButton,
@@ -11,23 +12,23 @@ import {
   MenuItem,
   MenuItems,
   Transition,
-} from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+} from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 const navigation = [
-  { name: 'Home', href: '/', current: true },
-  { name: 'Our Meals', href: '/recipes', current: false },
-  { name: 'How It Works', href: '/howitworks', current: false },
-  { name: 'Meal Plan', href: 'mealplan', current: false },
-]
+  { name: "Home", href: "/", current: true },
+  { name: "Our Meals", href: "/recipes", current: false },
+  { name: "How It Works", href: "/howitworks", current: false },
+  { name: "Meal Plan", href: "mealplan", current: false },
+];
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function Example() {
-
-    const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
+  const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
+  const { deleteMealPlan, emptyCart } = useContext(CartContext);
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -61,10 +62,12 @@ export default function Example() {
                         key={item.name}
                         href={item.href}
                         className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
+                          item.current
+                            ? "bg-gray-900 text-white"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                          "rounded-md px-3 py-2 text-sm font-medium"
                         )}
-                        aria-current={item.current ? 'page' : undefined}
+                        aria-current={item.current ? "page" : undefined}
                       >
                         {item.name}
                       </a>
@@ -107,29 +110,38 @@ export default function Example() {
                         {({ focus }) => (
                           <a
                             href="/profile"
-                            className={classNames(focus ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            className={classNames(
+                              focus ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
                           >
                             Your Profile
                           </a>
                         )}
                       </MenuItem>
-                      {isLoggedIn &&
-                      <MenuItem>
-                        {({ focus }) => (
-                          <a
-                            href="#"
-                            className={classNames(focus ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </MenuItem>
-                      }
+                      {isLoggedIn && (
+                        <MenuItem>
+                          {({ focus }) => (
+                            <a
+                              href="#"
+                              className={classNames(
+                                focus ? "bg-gray-100" : "",
+                                "block px-4 py-2 text-sm text-gray-700"
+                              )}
+                            >
+                              Settings
+                            </a>
+                          )}
+                        </MenuItem>
+                      )}
                       <MenuItem>
                         {({ focus }) => (
                           <button
-                            onClick={logOutUser}
-                            className={classNames(focus ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            onClick={logOutUser(() => deleteMealPlan, () => emptyCart)}
+                            className={classNames(
+                              focus ? "bg-gray-100" : "",
+                              "block px-4 py-2 text-sm text-gray-700"
+                            )}
                           >
                             Sign out
                           </button>
@@ -150,10 +162,12 @@ export default function Example() {
                   as="a"
                   href={item.href}
                   className={classNames(
-                    item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                    'block rounded-md px-3 py-2 text-base font-medium'
+                    item.current
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                    "block rounded-md px-3 py-2 text-base font-medium"
                   )}
-                  aria-current={item.current ? 'page' : undefined}
+                  aria-current={item.current ? "page" : undefined}
                 >
                   {item.name}
                 </DisclosureButton>
@@ -163,5 +177,5 @@ export default function Example() {
         </>
       )}
     </Disclosure>
-  )
+  );
 }
