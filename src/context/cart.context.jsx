@@ -31,7 +31,7 @@ function CartProviderWrapper(props) {
     if (recipes?.length === 0 && !hasFetchedRecipes) {
       fetchRecipes();
     }
-  });
+  },[recipes, hasFetchedRecipes]);
 
   // Add dish object, including duplicates
   const addToCart = (dish) => {
