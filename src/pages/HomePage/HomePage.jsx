@@ -5,12 +5,12 @@ import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
 
 function HomePage() {
   return (
-    <div>
+    <div className="HomePage-container">
       <section>
         <h1>Savor Swift</h1>
       </section>
 
-      <section>
+      <section className="what-is-container">
         <h2>What is Savor Swift?</h2>
         <p>
           SavorSwift is a meal subscription service that provides
@@ -20,11 +20,11 @@ function HomePage() {
         </p>
       </section>
 
-      <section>
+      <section className="howitworks-container">
         <h2>How it works?</h2>
         <div className="HowItWorksstepper">
           <div>
-            <h5>Choose</h5>
+            <h5>1. Choose</h5>
             <p>
               <span>
                 "Pick a diet preference, or mix and match tasty
@@ -33,7 +33,7 @@ function HomePage() {
             </p>
           </div>
           <div>
-            <h5>Cook</h5>
+            <h5>2. Cook</h5>
             <p>
               <span>
                 "Receive quality ingredients and easy-to-follow recipes, with
@@ -42,7 +42,7 @@ function HomePage() {
             </p>
           </div>
           <div>
-            <h5>Enjoy</h5>
+            <h5>3. Enjoy</h5>
             <p>
               <span>
                 "You get the right portion size, carbs, protein, fats, and
@@ -59,11 +59,11 @@ function HomePage() {
         </Link>
       </section>
 
-      <section>
+      <section className="dishes-container">
         <h2>Dishes</h2>
         <DishesCarrousel />
         <Link to="/recipes">
-          <button> Take a look to our meals! 
+          <button> Take a look at our meals! 
           <span></span><span></span><span></span><span></span>
 
           </button>

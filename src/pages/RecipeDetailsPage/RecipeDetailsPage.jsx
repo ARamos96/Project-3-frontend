@@ -4,73 +4,71 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
 import "./RecipeDetailsPage.css";
-import "primeicons/primeicons.css"
-
-const MONGO_URI = `${process.env.REACT_APP_SERVER_URL}/dishes` || "http://localhost:5005/dishes";
+import "primeicons/primeicons.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { IconButton } from "@mui/material";
+import { Bookmark, BookmarkBorder } from "@mui/icons-material";
 
 function RecipeDetailsPage() {
-  // Subscribe to the AuthContext to gain access to
-  // the values from AuthContext.Provider's `value` prop
-  const { isLoggedIn, user } = useContext(AuthContext);
-  const { addToCart, mealPlan } = useContext(CartContext);
+  const {
+    isLoggedIn,
+    user,
+    loadAllUserData,
+    isInFavorites,
+    handleToggleFavorite,
+    isFavDishUpdating,
+  } = useContext(AuthContext);
+  const { addToCart, mealPlan, recipes } = useContext(CartContext);
 
   const [recipe, setRecipe] = useState({});
-  const [isFavourite, setIsFavourite] = useState(false)
-
   const navigate = useNavigate();
-
-
-  // Obtain Id from URL
   const { recipeId } = useParams();
 
-  // Get single recipe details
   useEffect(() => {
-    axios
-      .get(`${MONGO_URI}/${recipeId}`)
-      .then((res) => {
-        setRecipe(res.data);
-        if (user) {
-          checkIsFavourite(res.data._id);
-        }
-      })
-      .catch((err) => console.log(err));
-  }, [recipeId, user]);
+    if (user && Object.keys(user).length === 6) loadAllUserData();
+    // find dish in dishes array by id
+    const dish = recipes.find((dish) => dish._id === recipeId);
+    setRecipe(dish);
 
-  //check if it's already favourite
+    return () => {
+      isFavDishUpdating();
+    };
+  }, [recipeId]);
 
-  const checkIsFavourite = (recipeId) => {
-    setIsFavourite(user?.favDishes?.includes(recipeId))
-  }
-
-  const handleFavourite = () => {
-    const url = `${MONGO_URI}/favourites/${user._id}`;
-    const method = isFavourite ? "delete" : "post";
-    const data = { recipeId: recipe._id };
-
-    axios({ method, url, data })
-      .then((res) => {
-        setIsFavourite(!isFavourite);
-      })
-      .catch((err) => console.log(err));
-  };
-
-  // Handler function to add the current recipe to the cart
   const handleAddToCart = (recipe) => {
     if (!mealPlan || !mealPlan.dishesPerWeek) {
       navigate("/mealplan");
     } else {
       addToCart(recipe);
+      toast.success("Dish added to the cart!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
     }
   };
 
   return (
     <div className="recipe-details">
+      <ToastContainer />
+
       <h1>{recipe.name}</h1>
       <div className="first-recipe-section">
-        <img src={recipe.bigImageURL} alt={recipe.name}></img>
+        <img src={`/${recipe.name}.jpg`} alt={recipe.name}></img>
         <div className="recipe-basic-info">
-          <p><span className="pi pi-stopwatch" /> Cooking Time {recipe.cookingTime}'</p>
-          <p>Rating {recipe.rating} <span className="pi pi-star-fill" /></p>
+          <p>
+            <span className="pi pi-stopwatch" /> Cooking Time :{" "}
+            {recipe.cookingTime}'
+          </p>
+          <p>
+            Rating : {recipe.rating} <span className="pi pi-star-fill" />
+          </p>
           <p>Difficulty: {recipe.difficulty}</p>
         </div>
         {isLoggedIn && mealPlan && mealPlan.dishesPerWeek ? (
@@ -78,27 +76,32 @@ function RecipeDetailsPage() {
             className="subscription-button"
             onClick={() => handleAddToCart(recipe)}
           >
-            Add to Subscription
+            Add to cart
           </button>
-        )
-          : (<button
+        ) : (
+          <button
             className="subscription-button"
             onClick={() => navigate("/mealplan")}
           >
             Start Subscription
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span><span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
-          )}
-
-        {isLoggedIn && (
-        <button onClick={handleFavourite}>
-          {isFavourite ? "Unfavourite" : "Favourite"}
-        </button>
         )}
 
-
-
-
-
+        {isLoggedIn && (
+          <IconButton
+            className="favorite-button"
+            onClick={handleToggleFavorite}
+          >
+            {isInFavorites(recipe.id) ? <Bookmark /> : <BookmarkBorder />}
+          </IconButton>
+        )}
       </div>
       <div className="recipe-tags">
         {recipe.categories && (
@@ -112,45 +115,46 @@ function RecipeDetailsPage() {
           </>
         )}
       </div>
-      <div className="recipe-ingredients-container">
-        <h2>Ingredients</h2>
-        <ul className="ingredients-list">
-          {recipe.ingredients &&
-            recipe.ingredients.map((ingredient, index) => (
-              <li key={`ingredient-${index}`}>{ingredient}</li>
-            ))}
-        </ul>
-      </div>
-      {/* Obtain Nutritional Information from Object */}
-      {recipe.nutritionalValuePerServing && (
-        <div className="nutritional-information-table">
-          <h2>Nutritional Information</h2>
-          <table>
-            <tbody>
-              <tr>
-                <th>Calories</th>
-                <td>{recipe.nutritionalValuePerServing.calories}kcal</td>
-              </tr>
-              <tr>
-                <th>Protein</th>
-                <td>{recipe.nutritionalValuePerServing.protein}g</td>
-              </tr>
-              <tr>
-                <th>Carbohydrates</th>
-                <td>{recipe.nutritionalValuePerServing.carbohydrates}g</td>
-              </tr>
-              <tr>
-                <th>Fat</th>
-                <td>{recipe.nutritionalValuePerServing.fat}g</td>
-              </tr>
-              <tr>
-                <th>Fiber</th>
-                <td>{recipe.nutritionalValuePerServing.fiber}g</td>
-              </tr>
-            </tbody>
-          </table>
+      <div className="mid-container">
+        <div className="recipe-ingredients-container">
+          <h2>Ingredients</h2>
+          <ul className="ingredients-list">
+            {recipe.ingredients &&
+              recipe.ingredients.map((ingredient, index) => (
+                <li key={`ingredient-${index}`}>{ingredient}</li>
+              ))}
+          </ul>
         </div>
-      )}
+        {recipe.nutritionalValuePerServing && (
+          <div className="nutritional-information-table">
+            <h2>Nutritional Information</h2>
+            <table>
+              <tbody>
+                <tr>
+                  <th>Calories</th>
+                  <td>{recipe.nutritionalValuePerServing.calories}kcal</td>
+                </tr>
+                <tr>
+                  <th>Protein</th>
+                  <td>{recipe.nutritionalValuePerServing.protein}g</td>
+                </tr>
+                <tr>
+                  <th>Carbohydrates</th>
+                  <td>{recipe.nutritionalValuePerServing.carbohydrates}g</td>
+                </tr>
+                <tr>
+                  <th>Fat</th>
+                  <td>{recipe.nutritionalValuePerServing.fat}g</td>
+                </tr>
+                <tr>
+                  <th>Fiber</th>
+                  <td>{recipe.nutritionalValuePerServing.fiber}g</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
       {recipe.steps && (
         <div className="recipe-steps-container">
           <h2>Step-by-step</h2>
@@ -158,7 +162,7 @@ function RecipeDetailsPage() {
             {recipe.steps.map((step, index) => (
               <li key={`step-${index}`}>
                 <span>
-                  <b>Step {index + 1}</b> {step}
+                  <b> {index + 1}</b> {step}
                 </span>
               </li>
             ))}

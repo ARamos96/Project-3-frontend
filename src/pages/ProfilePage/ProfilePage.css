@@ -28,24 +28,7 @@
     margin-right: 10px;
   }
   
-  .button-group {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .button-profile {
-    background-color: #rgb(255, 165, 0);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #b9ac62;
-  }
-  
+ 
   form .profile-item {
     display: flex;
     flex-direction: column;

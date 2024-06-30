@@ -2,17 +2,15 @@ import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Badge from "@mui/material/Badge";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import DishInCart from "../DishInCart/DishInCart";
 
 import { CartContext } from "../../context/cart.context";
-import "primeicons/primeicons.css"
+import "primeicons/primeicons.css";
 import "./ShoppingCart.css";
 
 function ShoppingCart() {
@@ -42,13 +40,18 @@ function ShoppingCart() {
             ))}
           </List>
           <List>
-              <ListItemText>TOTAL {mealPlan.price} euros</ListItemText>
+            <ListItemText>TOTAL {mealPlan.price} euros</ListItemText>
             <ListItem>
-            <Link to="/checkout" style={{ textDecoration: "none" }}>
-              <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-                Checkout
-              </Button>
-            </Link>
+              <Link to="/checkout" style={{ textDecoration: "none" }}>
+                <Button
+                  onClick={toggleDrawer("right", false)}
+                  variant="contained"
+                  color="primary"
+                  sx={{ mt: 2 }}
+                >
+                  Checkout
+                </Button>
+              </Link>
             </ListItem>
             <Button
               variant="outlined"

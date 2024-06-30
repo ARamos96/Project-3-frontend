@@ -1,13 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
 import "./MealPlan.css";
 import authService from "../../services/auth.service.js";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context.jsx";
-
-const MONGO_URI = "http://localhost:5005/mealplan";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function MealPlan() {
   //add the states
@@ -16,10 +15,56 @@ function MealPlan() {
   const [manyDishes, setManyDishes] = useState(0);
   const [diet, setDiet] = useState([]);
   const [price, setPrice] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
-  const { user } = useContext(AuthContext);
-  const { setMealPlanInStateAndStorage } = useContext(CartContext);
+  const { user, isActiveSubscriptionInUser, getSubscriptionReorderDate } =
+    useContext(AuthContext);
+  const { setMealPlanInStateAndStorage, mealPlan } = useContext(CartContext);
   const navigate = useNavigate();
+
+  // If there is an existing meal plan, fill out the fields and alert the user
+  useEffect(() => {
+    if (isActiveSubscriptionInUser()) {
+      const reorderDate = getSubscriptionReorderDate(
+        user.activeSubscription.createdAt
+      );
+
+      toast.error(
+        `You already have an active subscription. You can start a new one on ${reorderDate} `,
+        {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }
+      );
+
+      // set timeout of 2 seconds
+      setTimeout(() => {
+        navigate("/profile");
+      }, 2000);
+
+      return;
+    }
+    if (Object.keys(mealPlan).length > 0) {
+      setManyPeople(mealPlan.numberOfPeople);
+      setManyDishes(mealPlan.dishesPerWeek);
+      setDiet(mealPlan.diet);
+      setPrice(mealPlan.price);
+
+      toast.info("You already have a meal plan saved", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+    }
+  }, [mealPlan]);
 
   // function to handle how many people are going to be selected
 
@@ -55,9 +100,64 @@ function MealPlan() {
     setPrice(calculatedPrice);
   };
 
+  // Check if there are any changed fields between stored meal plan and form data
+  const getChangedFields = (oldData, formData) => {
+    const changedFields = {};
+
+    // Ignore undefined values:
+    // only compare the formData with existing fields in oldData
+    for (const key in oldData) {
+      if (oldData[key] !== formData[key] && formData[key] !== undefined) {
+        changedFields[key] = formData[key];
+      }
+    }
+    return changedFields;
+  };
+
   // Posting the mealplans to mealPlan route.
 
   const handleSubmit = () => {
+    // Display error toaster if number of people isn't selected
+    if (manyPeople === 0) {
+      toast.error("Please select the number of people.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return; // Prevent form submission
+    }
+
+    // Display error toaster if number of dishes isn't selected
+    if (manyDishes === 0) {
+      toast.error("Please select the number of dishes per week.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return; // Prevent form submission
+    }
+    // Display error toaster if diet isn't selected
+    if (diet.length === 0) {
+      toast.error("Please select at least one diet option.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return;
+    }
     const mealPlanData = {
       numberOfPeople: manyPeople,
       dishesPerWeek: manyDishes,
@@ -66,43 +166,61 @@ function MealPlan() {
       user: user._id,
     };
 
-    authService
-      .postMealPlan(mealPlanData)
-      .then((response) => {
-        setMealPlanInStateAndStorage(response.data);
-        setManyPeople(0);
-        setManyDishes(0);
-        setDiet([]);
-        setPrice(0);
-        setSubmitted(true); // Returns true to indicate that the form has been submitted
-        navigate("/recipes");
-      })
-      .catch((error) => {
-        console.error("Error creating meal plan:", error);
-      });
+    const changes = getChangedFields(mealPlan, mealPlanData);
+
+    // If there are no changed fields between stored meal plan and form data, navigate and skip aving
+    if (Object.keys(changes).length === 0) {
+      navigate("/recipes");
+      return;
+    }
+
+    // Otherwise, save meal plan in state and storage
+
+    setMealPlanInStateAndStorage(mealPlanData);
+    setManyPeople(0);
+    setManyDishes(0);
+    setDiet([]);
+    setPrice(0);
+    navigate("/recipes");
+
+    //toast with success submission
+
+    toast.success("Meal plan submitted successfully!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
   };
 
-  // Added for the conditional rendering when the user is not logged.
+  // Added for the conditional rendering when the user i  s not logged.
 
   const handleLoginRedirect = () => {
     navigate("/login");
   };
 
   return (
-    <div>
+    <div className="mealPlan-container">
       <section>
-        <h2>Choose your Meal Plan</h2>
+        <h1>Meal Plan</h1>
+        <h2>Set your meal plan</h2>
         <h3>How many people?</h3>
         <div className="people">
-        {[1, 2, 3, 4].map((num) => (
+          {[1, 2, 3, 4].map((num) => (
             <button
               key={num}
               onClick={() => handlePeopleClick(num)}
               className={manyPeople === num ? "selected" : ""}
             >
               {num}
-              <span></span><span></span><span></span><span></span>
-
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           ))}
         </div>
@@ -110,16 +228,18 @@ function MealPlan() {
         <h3>How many dishes per week?</h3>
         <div className="dishesWeek">
           {[2, 3, 4, 5].map((num) => (
-             <button
-             key={num}
-             onClick={() => handleDishesClick(num)}
-             className={manyDishes === num ? "selected" : ""}
-           >
-             {num}
-             <span></span><span></span><span></span><span></span>
-
-           </button>
-         ))}
+            <button
+              key={num}
+              onClick={() => handleDishesClick(num)}
+              className={manyDishes === num ? "selected" : ""}
+            >
+              {num}
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          ))}
         </div>
 
         <h3>Diet</h3>
@@ -142,8 +262,10 @@ function MealPlan() {
               className={diet.includes(dietOption) ? "selected" : ""}
             >
               {dietOption}
-              <span></span><span></span><span></span><span></span>
-
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           ))}
         </div>
@@ -153,20 +275,24 @@ function MealPlan() {
           <p>{price} €</p>
         </div>
 
-
-
         {user ? (
           <div>
-            <button onClick={handleSubmit}>Submit!
-            <span></span><span></span><span></span><span></span>
-
+            <button onClick={handleSubmit}>
+              Submit!
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           </div>
         ) : (
           <div>
-            <button onClick={handleLoginRedirect}>To get a meal Plan, please Log in!
-            <span></span><span></span><span></span><span></span>
-
+            <button onClick={handleLoginRedirect}>
+              To get a meal Plan, please Log in!
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           </div>
         )}

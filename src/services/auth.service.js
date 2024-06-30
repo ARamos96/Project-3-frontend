@@ -37,6 +37,14 @@ class AuthService {
     // return axios.post("http://localhost:5005/auth/verify");
   };
 
+  getUser = (id) =>{
+    return this.api.get(`/user/${id}`);
+  }
+
+  getDishes = (id) =>{
+    return this.api.get(`/dishes`);
+  }
+
   patchPersonalDetails = (data, id) => {
     return this.api.patch(`/user/${id}`, data);
     // same as
@@ -52,12 +60,26 @@ class AuthService {
 
   patchPaymentMethod = (data, id) => {
     return this.api.patch(`/payment/${id}`, data);
-  }
+  };
 
   postMealPlan = (requestBody) => {
     return this.api.post("/mealplan", requestBody);
     // same as
     // return axios.post("http://localhost:5005/auth/verify");
+  };
+
+  postAddress = (requestBody, id) => {
+    return this.api.post(`/user/${id}/address`, requestBody);
+  };
+
+  postPaymentMethod = (requestBody, id) => {
+    return this.api.post(`/user/${id}/payment`, requestBody);
+  };
+  postSubscription = (requestBody) => {
+    return this.api.post(`/subscription`, requestBody);
+  }
+  postFavDishes = (requestBody, id) => {
+    return this.api.post(`/user/${id}/update-dishes`, {dishes: requestBody});
   }
 }
 

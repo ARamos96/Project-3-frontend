@@ -17,7 +17,7 @@ function DishInCart({ dish }) {
       <ListItem key={dish._id} disablePadding>
         <ListItemButton>
           <ListItemIcon>
-            <img src={dish.smallImageURL} alt={dish.name} width="50" height="50" />
+            <img src={`${dish.name}.jpg`} alt={dish.name} width="50" height="50" />
             {dish.count}
           </ListItemIcon>
           <ListItemText primary={`${dish.name}`} />
