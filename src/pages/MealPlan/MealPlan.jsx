@@ -104,6 +104,8 @@ function MealPlan() {
   const getChangedFields = (oldData, formData) => {
     const changedFields = {};
 
+    if (Object.keys(oldData).length === 0) return { noActiveMealPlan: true };
+
     // Ignore undefined values:
     // only compare the formData with existing fields in oldData
     for (const key in oldData) {
@@ -185,7 +187,7 @@ function MealPlan() {
 
     //toast with success submission
 
-    toast.success("Meal plan submitted successfully!", {
+    toast.success("Meal plan submitted! Your diet filters have been applied!", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
