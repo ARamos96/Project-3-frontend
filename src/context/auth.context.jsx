@@ -65,12 +65,11 @@ function AuthProviderWrapper(props) {
   // on log out, remove token, user, meal plan, fav dishes, cart
   // meal plan and cart removal have to be supplied (inner context)
   const logOutUser = (deleteMealPlan, emptyCart) => {
-    
     deleteMealPlan();
     emptyCart();
 
     removeFavDishes();
-    
+
     // checks for token and removes user from state and storage if none exists
     removeToken();
     authenticateUser();
@@ -193,7 +192,7 @@ function AuthProviderWrapper(props) {
             ...updatedUserData,
           },
         };
-        if (isPost === "addAddressToUser" && typeof isPost === "string") {
+        if (typeof isPost === "string" && isPost === "addAddressToUser") {
           updatedUser = {
             ...prevUser,
             address: {
@@ -203,8 +202,8 @@ function AuthProviderWrapper(props) {
           };
         }
         if (
-          isPost === "addAddressAndPaymentMethodToUser" &&
-          typeof isPost === "string"
+          typeof isPost === "string" &&
+          isPost === "addAddressAndPaymentMethodToUser"
         ) {
           updatedUser = {
             ...prevUser,
@@ -218,7 +217,7 @@ function AuthProviderWrapper(props) {
             },
           };
         }
-        if (isPost === "addPaymentMethodToUser" && typeof isPost === "string") {
+        if (typeof isPost === "string" && isPost === "addPaymentMethodToUser") {
           updatedUser = {
             ...prevUser,
             paymentMethod: {
