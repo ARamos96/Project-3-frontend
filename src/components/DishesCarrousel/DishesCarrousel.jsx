@@ -34,11 +34,10 @@ function DishesCarrousel() {
           <h3>Look at some of our dishes</h3>
           <section className="carrousel-main">
             {showRecipes &&
-              showRecipes.map((recipe, index) => (
-                <Link to={`/recipes/${recipe._id}`}>
+              showRecipes.map((recipe) => (
+                <Link to={`/recipes/${recipe._id}`} key={recipe._id}>
                   <div
                     className="recipe-showcase-container"
-                    key={index}
                     style={{
                       backgroundImage: `url(/${encodeURIComponent(
                         recipe.name
