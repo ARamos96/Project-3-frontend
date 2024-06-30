@@ -24,7 +24,6 @@ nav {
   }
 
   .navbar-container {
-    background: linear-gradient(109.6deg, rgba(0, 0, 0) 11.2%, rgb(63, 61, 61) 78.9%);
     position: sticky;
     top: 0;
     padding: 5px 15px;
@@ -37,10 +36,11 @@ nav {
     display: flex;
     align-items: center;
     gap: 5px;
+    height: 60px;
 }
 
 .p-menubar img {
-    border-radius: 20px;
+    border-radius: 8px;
 }
 
 .p-menubar img:hover {
@@ -60,13 +60,29 @@ nav {
 }
 
 .p-menuitem-link {
-    background-color: #070707;
+    color: white;
+    height: 32px;
+    font-size: 18px;
+    padding: 8px 16px;  
+    border-radius: 10px;
+}
+.p-menuitem-link:hover {
     color: rgb(255, 165, 0);
     height: 32px;
     font-size: 18px;
     padding: 8px 16px;  
     border-radius: 10px;
-    border: 2px solid black; 
+    --c: goldenrod;
+    border: 0.1em solid var(--c);
+    border-radius: 0.5em;
+  
+}
+
+
+
+.p-menuitem-text{
+    font-size: 20px;
+    margin:10px;
 }
 
 
@@ -83,4 +99,8 @@ nav {
     justify-content:flex-end;
     gap: 10px;
     margin-right: 25px;
+}
+
+.p-button{
+    height: 50px;
 }
