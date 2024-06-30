@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import "./CheckOut.css";
-import axios from "axios";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context.jsx";
 import FormFunctions from "../../utils/FormFunctions";
@@ -9,20 +8,23 @@ import authService from "../../services/auth.service.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading/Loading.jsx";
-import DishInCart from "../../components/DishInCart/DishInCart.jsx";
 import Modal from "../../components/Modal/Modal.jsx";
-import moment from "moment";
 const { handleInputChange } = FormFunctions();
 
 function CheckOut() {
-  const { user, updateUserStateAndLocalStorage, isActiveSubscriptionInUser, getSubscriptionReorderDate } =
-    useContext(AuthContext);
+  const {
+    user,
+    updateUserStateAndLocalStorage,
+    isActiveSubscriptionInUser,
+    getSubscriptionReorderDate,
+  } = useContext(AuthContext);
   const { cart, mealPlan, emptyCart, deleteMealPlan } = useContext(CartContext);
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [subscriptionData, setSubscriptionData] = useState(null);
+  const [isFormInitialized, setIsFormInitialized] = useState(false);
 
   const [addressForm, setAddressForm] = useState({
     address: "",
@@ -42,6 +44,13 @@ function CheckOut() {
 
   const [deliveryDay, setDeliveryDay] = useState(["Monday"]);
 
+  const [saveToUserCheckboxes, setSaveToUserCheckboxes] = useState({
+    putAddressToUser: false,
+    putPaymentToUser: false,
+    postAddressToUser: false,
+    postPaymentToUser: false,
+  });
+
   const allForms = { addressForm, paymentMethodForm, deliveryDay };
 
   const handleDeliveryDayChange = (e) => {
@@ -49,6 +58,24 @@ function CheckOut() {
     setDeliveryDay((prevDays) =>
       checked ? [...prevDays, value] : prevDays.filter((day) => day !== value)
     );
+  };
+
+  const handleCheckboxChange = (e) => {
+    let { name, checked } = e.target;
+    setSaveToUserCheckboxes((prev) => ({ ...prev, [name]: checked }));
+  };
+
+  const getChangedFields = (oldData, formData) => {
+    const changedFields = {};
+
+    // Ignore undefined values:
+    // only compare the formData with existing fields in oldData
+    for (const key in oldData) {
+      if (oldData[key] !== formData[key] && formData[key] !== undefined) {
+        changedFields[key] = formData[key];
+      }
+    }
+    return changedFields;
   };
 
   const validatePaymentMethod = (paymentMethodForm) => {
@@ -144,11 +171,11 @@ function CheckOut() {
     }
   };
 
-
   useEffect(() => {
-    // if user.activeSubscription exists, show modal
     if (isActiveSubscriptionInUser()) {
-      const reorderDate = getSubscriptionReorderDate(user.activeSubscription.createdAt);
+      const reorderDate = getSubscriptionReorderDate(
+        user.activeSubscription.createdAt
+      );
 
       toast.error(
         `You already have an active subscription. You can start a new one on ${reorderDate} `,
@@ -168,7 +195,21 @@ function CheckOut() {
       return;
     }
     // When user is loaded, populate forms with user data if available
-    else if (user) {
+    else if (!user && !mealPlan) {
+      toast.error(`You need to log in and create a meal plan first!`, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+      navigate("/");
+
+      return;
+    } else if (user && !isFormInitialized) {
       setAddressForm(user.address || addressForm);
       setPaymentMethodForm({
         method: "Credit Card",
@@ -177,8 +218,16 @@ function CheckOut() {
         CVV: user?.paymentMethod?.CVV || "",
       });
       setLoading(false);
+      setIsFormInitialized(true);
     }
-  }, [user]);
+  }, [
+    getSubscriptionReorderDate,
+    isActiveSubscriptionInUser,
+    navigate,
+    user,
+    isFormInitialized,
+    mealPlan,
+  ]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -217,7 +266,7 @@ function CheckOut() {
         country: addressForm.country,
         phone: addressForm.phone,
       },
-      mealPlan: mealPlan._id,
+      mealPlan: mealPlan,
       user: user._id,
       dishes: cart.map((item) => item._id),
       deliveryDay,
@@ -228,6 +277,30 @@ function CheckOut() {
         CVV: paymentMethodForm.CVV,
       },
     };
+
+    // Compare changes between user data and forms
+    const changesInAddress = getChangedFields(
+      subscriptionData.shippingAddress,
+      addressForm
+    );
+    const changesInPaymentMethod = getChangedFields(
+      subscriptionData.paymentMethod,
+      paymentMethodForm
+    );
+
+    // Update user data if there are any changes in address or payment method
+    if (Object.keys(changesInAddress).length !== 0) {
+      if (saveToUserCheckboxes.postAddressToUser)
+        subscriptionData.shippingAddress.postToUser = true;
+      else if (saveToUserCheckboxes.putAddressToUser)
+        subscriptionData.shippingAddress.putToUser = true;
+    }
+    if (Object.keys(changesInPaymentMethod).length !== 0) {
+      if (saveToUserCheckboxes.postPaymentToUser)
+        subscriptionData.paymentMethod.postToUser = true;
+      else if (saveToUserCheckboxes.putPaymentToUser)
+        subscriptionData.paymentMethod.putToUser = true;
+    }
 
     setSubscriptionData(subscriptionData);
     setShowModal(true);
@@ -259,7 +332,6 @@ function CheckOut() {
         zipCode: "",
         country: "",
         phone: "",
-        user: user ? user._id : null,
       });
       setPaymentMethodForm({
         method: "",
@@ -329,25 +401,24 @@ function CheckOut() {
       <div className="item-menu">
         {cart.map((item) => (
           <div
-              className="item-container"
-              key={item._id}
-              style={{
-                backgroundImage: `url(/${encodeURIComponent(item.name)}.jpg)`,
-              }}
-            >
-              <Link to={`/recipes/${item._id}`}>
-                {/* <img src={`/${item.name}.jpg`} alt={`${item.name}`} /> */}
-                <p>{item.name}</p>
-                <div className="item-info">
-                  <p>
-                    <span className="pi pi-stopwatch" /> {item.cookingTime}'
-                  </p>
-                  <p>{item.nutritionalValuePerServing.calories}kcal</p>
-                  <p>
-                    {item.rating} <span className="pi pi-star-fill" />
-                  </p>
-                </div>
-              </Link>
+            className="item-container"
+            key={item._id}
+            style={{
+              backgroundImage: `url(/${encodeURIComponent(item.name)}.jpg)`,
+            }}
+          >
+            <Link to={`/recipes/${item._id}`}>
+              <p>{item.name}</p>
+              <div className="item-info">
+                <p>
+                  <span className="pi pi-stopwatch" /> {item.cookingTime}'
+                </p>
+                <p>{item.nutritionalValuePerServing.calories}kcal</p>
+                <p>
+                  {item.rating} <span className="pi pi-star-fill" />
+                </p>
+              </div>
+            </Link>
           </div>
         ))}
       </div>
@@ -440,6 +511,29 @@ function CheckOut() {
                   required
                 />
               </label>
+            </div>
+            <div>
+              {user?.address ? (
+                <label>
+                  <input
+                    type="checkbox"
+                    name={"putAddressToUser"}
+                    checked={saveToUserCheckboxes.putAddressToUser}
+                    onChange={handleCheckboxChange}
+                  />
+                  Update my address to this one
+                </label>
+              ) : (
+                <label>
+                  <input
+                    type="checkbox"
+                    name={"postAddressToUser"}
+                    checked={saveToUserCheckboxes.postAddressToUser}
+                    onChange={handleCheckboxChange}
+                  />
+                  Save this address to my profile
+                </label>
+              )}
             </div>
 
             <h4>Choose a delivery day</h4>
@@ -542,6 +636,29 @@ function CheckOut() {
                   maxLength="3"
                 />
               </label>
+            </div>
+            <div>
+              {user?.address ? (
+                <label>
+                  <input
+                    type="checkbox"
+                    name={"putPaymentToUser"}
+                    checked={saveToUserCheckboxes.putPaymentToUser}
+                    onChange={handleCheckboxChange}
+                  />
+                  Update my payment to this one
+                </label>
+              ) : (
+                <label>
+                  <input
+                    type="checkbox"
+                    name={"postPaymentToUser"}
+                    checked={saveToUserCheckboxes.postPaymentToUser}
+                    onChange={handleCheckboxChange}
+                  />
+                  Save this payment to my profile
+                </label>
+              )}
             </div>
 
             <button type="submit">

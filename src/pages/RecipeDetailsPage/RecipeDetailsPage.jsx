@@ -1,6 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import axios from "axios";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
 import "./RecipeDetailsPage.css";
