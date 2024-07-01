@@ -58,7 +58,7 @@ function RecipesList() {
     } else {
       setSelectedDiets(initialSelectedDiets);
     }
-  }, [recipes, mealPlan, initialSelectedDiets]);
+  }, [recipes, mealPlan]);
 
   useEffect(() => {
     // Start with all recipes for filtering
@@ -90,7 +90,7 @@ function RecipesList() {
     // Update the filtered recipes state and reset the current page to 1
     setFilteredRecipes(recipesToFilter);
     setCurrentPage(1);
-  }, [selectedOrigins, selectedDiets, searchTerm, recipes, setFilteredRecipes]);
+  }, [selectedOrigins, selectedDiets, searchTerm, recipes]);
 
   const handleOriginClick = (origin) => {
     // Update the selectedOrigins state based on the clicked origin.
