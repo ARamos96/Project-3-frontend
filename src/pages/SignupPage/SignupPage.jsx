@@ -148,7 +148,7 @@ function SignupPage() {
             label="Password"
             sx={{ backgroundColor: "white" }}
             variant="outlined"
-            inputProps={{ sx: { border: "1px solid yellow" } }}
+            inputProps={{ sx: { border: '1px solid white' } }}
           />
         </FormControl>
         <FormControl
@@ -184,7 +184,7 @@ function SignupPage() {
             label="Confirm Password"
             sx={{ backgroundColor: "white" }}
             variant="outlined"
-            inputProps={{ sx: { border: "1px solid yellow" } }}
+            inputProps={{ sx: { border: '1px solid white' } }}
           />
         </FormControl>
         <TextField

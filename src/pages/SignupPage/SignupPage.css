@@ -42,3 +42,8 @@
 .SignupPage a:hover {
   text-decoration: underline;
 }
+
+form > div > div > div >  button {
+  /* Targetting 'show password' button only*/
+  --c: none; 
+}
