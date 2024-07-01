@@ -1,10 +1,10 @@
 import React from "react";
-import { Link } from 'react-router-dom'
-import './ActivityCard.css'
+import { Link } from "react-router-dom";
+import "./ActivityCard.css";
 
 const ActivityCard = ({ user }) =>
   (user.activeSubscription || user.favDishes || user.previousSubscriptions) && (
-<div style={{ flex: "1 1 0%", minWidth: 300, padding: 10 }}>
+    <div style={{ flex: "1 1 0%", minWidth: 300, padding: 10 }}>
       <h2>Activity</h2>
       {user.activeSubscription && (
         <div className="profile-item">
@@ -26,8 +26,8 @@ const ActivityCard = ({ user }) =>
           <div>
             Dishes:
             <ul>
-              {user.activeSubscription.dishes.map((dish) => (
-                <li key={dish._id}>
+              {user.activeSubscription.dishes.map((dish, index) => (
+                <li key={index}>
                   <strong>{dish.name}</strong> - {dish.price}$
                   <div>
                     {dish.categories.origin.join(", ")},{" "}
@@ -56,13 +56,13 @@ const ActivityCard = ({ user }) =>
           </div>
         </div>
       )}
-          <strong>Fav Dishes:</strong>
+      <strong>Fav Dishes:</strong>
       {user.favDishes.length > 0 && (
         <div className="profile-fav-dishes">
-            {user.favDishes.map((dish) => (
-              <div
+          {user.favDishes.map((dish, index) => (
+            <div
               className="profile-item-container"
-              key={dish._id}
+              key={index}
               style={{
                 backgroundImage: `url(/${encodeURIComponent(dish.name)}.jpg)`,
               }}
@@ -71,8 +71,8 @@ const ActivityCard = ({ user }) =>
                 {/* <img src={`/${item.name}.jpg`} alt={`${item.name}`} /> */}
                 <p>{dish.name}</p>
               </Link>
-          </div>
-            ))}
+            </div>
+          ))}
         </div>
       )}
       {user.previousSubscriptions.length > 0 && (
