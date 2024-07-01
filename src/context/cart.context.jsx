@@ -11,11 +11,13 @@ const CartContext = React.createContext();
 
 function CartProviderWrapper(props) {
   const navigate = useNavigate();
-  const { user, loadAllUserData } = useContext(AuthContext);
+  const { user, isUserLoaded, checkIfUserDataIsLoaded } =
+    useContext(AuthContext);
 
   const [cart, setCart] = useState([]);
   const [badge, setBadge] = useState(0);
   const [mealPlan, setMealPlan] = useState({});
+  const [isMealPlanLoaded, setIsMealPlanLoaded] = useState(false);
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [hasFetchedRecipes, setHasFetchedRecipes] = useState(false);
@@ -23,15 +25,22 @@ function CartProviderWrapper(props) {
   // On user loading, if user has less than 6 fields (just signed up, token payload),
   // load all user data
   useEffect(() => {
-    if (user && Object.keys(user).length <= 6) loadAllUserData();
-  }, [user, loadAllUserData]);
+    if (user && isUserLoaded) checkIfUserDataIsLoaded();
+
+    const storedMealPlan = JSON.parse(localStorage.getItem("mealPlan"));
+
+    if (!isMealPlanLoaded && storedMealPlan !== null) {
+      setMealPlan(storedMealPlan);
+      setIsMealPlanLoaded(true);
+    }
+  }, [user, isUserLoaded, checkIfUserDataIsLoaded, isMealPlanLoaded, setIsMealPlanLoaded]);
 
   // On context loading, get dishes from database
   useEffect(() => {
     if (recipes?.length === 0 && !hasFetchedRecipes) {
       fetchRecipes();
     }
-  },[recipes, hasFetchedRecipes]);
+  }, [recipes, hasFetchedRecipes]);
 
   // Add dish object, including duplicates
   const addToCart = (dish) => {
@@ -182,6 +191,7 @@ function CartProviderWrapper(props) {
         cart,
         badge,
         mealPlan,
+        isMealPlanLoaded,
         setCart,
         addToCart,
         isCartFull,

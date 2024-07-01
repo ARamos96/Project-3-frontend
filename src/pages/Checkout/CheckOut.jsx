@@ -68,6 +68,7 @@ function CheckOut() {
   const getChangedFields = (oldData, formData) => {
     const changedFields = {};
 
+    if (oldData === undefined) return { isNewDataToUser: true };
     // Ignore undefined values:
     // only compare the formData with existing fields in oldData
     for (const key in oldData) {
@@ -258,33 +259,18 @@ function CheckOut() {
     }
 
     const subscriptionData = {
-      shippingAddress: {
-        address: addressForm.address,
-        city: addressForm.city,
-        region: addressForm.region,
-        zipCode: addressForm.zipCode,
-        country: addressForm.country,
-        phone: addressForm.phone,
-      },
+      shippingAddress: addressForm,
       mealPlan: mealPlan,
       user: user._id,
       dishes: cart.map((item) => item._id),
       deliveryDay,
-      paymentMethod: {
-        method: paymentMethodForm.method,
-        number: paymentMethodForm.number,
-        expiration: paymentMethodForm.expiration,
-        CVV: paymentMethodForm.CVV,
-      },
+      paymentMethod: paymentMethodForm,
     };
 
     // Compare changes between user data and forms
-    const changesInAddress = getChangedFields(
-      subscriptionData.shippingAddress,
-      addressForm
-    );
+    const changesInAddress = getChangedFields(user.address, addressForm);
     const changesInPaymentMethod = getChangedFields(
-      subscriptionData.paymentMethod,
+      user.paymentMethod,
       paymentMethodForm
     );
 
@@ -350,9 +336,8 @@ function CheckOut() {
         navigate("/profile");
       }, 2000);
     } catch (error) {
-      console.error("Error saving the address or payment method:", error);
       toast.error(
-        `Error saving the address or payment method: ${error.message}`,
+        `Oops! Something went wrong. Please try again`,
         {
           position: "top-center",
           autoClose: 3000,
@@ -638,7 +623,7 @@ function CheckOut() {
               </label>
             </div>
             <div>
-              {user?.address ? (
+              {user?.paymentMethod ? (
                 <label>
                   <input
                     type="checkbox"
