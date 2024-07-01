@@ -1,54 +1,63 @@
 .profile-page {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    background-color: black; /* Set background color to black */
-    color: white; /* Set text color to white for contrast */
-  }
-  
-  .profile-columns {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .profile-column {
-    width: 48%;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 20px;
-    background-color: #333; /* Dark background for the profile column */
-  }
-  
-  .profile-item {
-    margin-bottom: 15px;
-  }
-  
-  .profile-item strong {
-    margin-right: 10px;
-  }
-  
- 
-  form .profile-item {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  form .profile-item label {
-    margin-bottom: 5px;
-  }
-  
-  form .profile-item input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  li {
-    margin-bottom: 10px;
-  }
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: black; /* Set background color to black */
+  color: white; /* Set text color to white for contrast */
+}
+
+.profile-columns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-column {
+  width: 48%;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #333; /* Dark background for the profile column */
+}
+
+.profile-item {
+  margin-bottom: 15px;
+}
+
+.profile-item strong {
+  margin-right: 10px;
+}
+
+form .profile-item {
+  display: flex;
+  flex-direction: column;
+}
+
+form .profile-item label {
+  margin-bottom: 5px;
+}
+
+form .profile-item input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+.button-profile {
+  background-color: rgb(255, 165, 0);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  z-index: 0;
+}

@@ -7,7 +7,9 @@ const PersonalForm = ({
   handlePersonalDetailsSubmit,
   handleGoBack,
 }) => (
-  <form onSubmit={handlePersonalDetailsSubmit}>
+  <form 
+  onSubmit={handlePersonalDetailsSubmit}
+  className="form">
     <div className="profile-item">
       <label>Name:</label>
       <input

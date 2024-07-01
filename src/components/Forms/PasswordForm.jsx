@@ -28,10 +28,10 @@ const PasswordForm = ({
     </div>
     <div className="button-group">
       <button className="button-profile" type="submit">
-        Change Password
+        Save
       </button>
       <button className="button-profile" type="button" onClick={handleGoBack}>
-        Go Back Without Saving
+       Go Back Without Saving
       </button>
     </div>
   </form>
