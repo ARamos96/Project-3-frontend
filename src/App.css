@@ -66,7 +66,7 @@ p{
 }
 
 button {
-  --c: goldenrod;
+  --c: rgb(218, 165, 32);
   color: var(--c);
   font-size: 16px;
   border: 0.3em solid var(--c);
