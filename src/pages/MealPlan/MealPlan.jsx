@@ -15,14 +15,17 @@ function MealPlan() {
   const [manyDishes, setManyDishes] = useState(0);
   const [diet, setDiet] = useState([]);
   const [price, setPrice] = useState(0);
+  const [isUserAlerted, setIsUserAlerted] = useState(false);
   const { user, isActiveSubscriptionInUser, getSubscriptionReorderDate } =
     useContext(AuthContext);
-  const { setMealPlanInStateAndStorage, mealPlan } = useContext(CartContext);
+  const { setMealPlanInStateAndStorage, mealPlan, isMealPlanLoaded } =
+    useContext(CartContext);
   const navigate = useNavigate();
+  const [isMealPlanInComponent, setIsMealPlanInComponent] = useState(false);
 
   // If there is an existing meal plan, fill out the fields and alert the user
   useEffect(() => {
-    if (isActiveSubscriptionInUser()) {
+    if (isActiveSubscriptionInUser() && !isUserAlerted) {
       const reorderDate = getSubscriptionReorderDate(
         user.activeSubscription.createdAt
       );
@@ -39,19 +42,20 @@ function MealPlan() {
           progress: undefined,
         }
       );
+      setIsUserAlerted(true);
 
       // set timeout of 2 seconds
       setTimeout(() => {
         navigate("/profile");
-      }, 2000);
+      }, 1000);
 
       return;
-    }
-    if (Object.keys(mealPlan).length > 0) {
+    } else if (isMealPlanLoaded && !isMealPlanInComponent) {
       setManyPeople(mealPlan.numberOfPeople);
       setManyDishes(mealPlan.dishesPerWeek);
       setDiet(mealPlan.diet);
       setPrice(mealPlan.price);
+      setIsMealPlanInComponent(true);
 
       toast.info("You already have a meal plan saved", {
         position: "top-right",
@@ -64,7 +68,14 @@ function MealPlan() {
         theme: "dark",
       });
     }
-  }, [mealPlan]);
+  }, [
+    getSubscriptionReorderDate,
+    isActiveSubscriptionInUser,
+    mealPlan,
+    navigate,
+    user?.activeSubscription?.createdAt,
+    isMealPlanLoaded,
+  ]);
 
   // function to handle how many people are going to be selected
 
@@ -170,19 +181,15 @@ function MealPlan() {
 
     const changes = getChangedFields(mealPlan, mealPlanData);
 
-    // If there are no changed fields between stored meal plan and form data, navigate and skip aving
-    if (Object.keys(changes).length === 0) {
-      navigate("/recipes");
-      return;
+    // If there are changed fields between stored meal plan and form data, save it
+    if (Object.keys(changes).length !== 0) {
+      setMealPlanInStateAndStorage(mealPlanData);
+      setManyPeople(0);
+      setManyDishes(0);
+      setDiet([]);
+      setPrice(0);
     }
 
-    // Otherwise, save meal plan in state and storage
-
-    setMealPlanInStateAndStorage(mealPlanData);
-    setManyPeople(0);
-    setManyDishes(0);
-    setDiet([]);
-    setPrice(0);
     navigate("/recipes");
 
     //toast with success submission
@@ -261,7 +268,7 @@ function MealPlan() {
             <button
               key={dietOption}
               onClick={() => handleDietClick(dietOption)}
-              className={diet.includes(dietOption) ? "selected" : ""}
+              className={diet?.includes(dietOption) ? "selected" : ""}
             >
               {dietOption}
               <span></span>

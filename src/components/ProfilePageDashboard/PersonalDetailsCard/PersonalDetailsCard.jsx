@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import PersonalForm from "../../Forms/PersonalForm";
 import AddressForm from "../../Forms/AddressForm";
 import PaymentMethodForm from "../../Forms/PaymentMethodForm";
 import PasswordForm from "../../Forms/PasswordForm";
+import { AuthContext } from "../../../context/auth.context";
+import Loading from "../../Loading/Loading";
 
 const PersonalDetailsCard = ({ personalDetailsCardProps }) => {
+  const {isUserLoaded} = useContext(AuthContext)
   const {
     user,
     personalDetails,
@@ -50,6 +53,10 @@ const PersonalDetailsCard = ({ personalDetailsCardProps }) => {
     isEditingPaymentMethod,
     isChangingPassword,
   } = isEditingForms;
+
+  if (!user && !isUserLoaded){
+    return <Loading/>;
+  }
 
   return (
     <div style={{ flex: "1 1 0%", minWidth: 300, padding: 10 }}>

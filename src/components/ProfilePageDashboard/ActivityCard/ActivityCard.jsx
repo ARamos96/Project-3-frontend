@@ -1,64 +1,78 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./ActivityCard.css";
+import Loading from "../../Loading/Loading";
 
-const ActivityCard = ({ user }) =>
-  (user.activeSubscription || user.favDishes || user.previousSubscriptions) && (
+const ActivityCard = ({ user }) => {
+  if (
+    !user?.activeSubscription &&
+    !user?.previousSubscriptions?.length &&
+    !user?.favDishes?.length
+  ) {
+    return null;
+  }
+
+  return (
     <div style={{ flex: "1 1 0%", minWidth: 300, padding: 10 }}>
       <h2>Activity</h2>
-      {user.activeSubscription && (
-        <div className="profile-item">
-          <strong>Active Subscription:</strong>
-          <div>
-            Shipping Address: {user.activeSubscription.shippingAddress.address},{" "}
-            {user.activeSubscription.shippingAddress.city},{" "}
-            {user.activeSubscription.shippingAddress.region},{" "}
-            {user.activeSubscription.shippingAddress.zipCode},{" "}
-            {user.activeSubscription.shippingAddress.country},{" "}
-            {user.activeSubscription.shippingAddress.phone}
+
+      {user?.activeSubscription &&
+        user.activeSubscription?.shippingAddress &&
+        user.activeSubscription?.mealPlan && (
+          <div className="profile-item">
+            <strong>Active Subscription:</strong>
+            <div>
+              Shipping Address:{" "}
+              {user.activeSubscription.shippingAddress.address},{" "}
+              {user.activeSubscription.shippingAddress.city},{" "}
+              {user.activeSubscription.shippingAddress.region},{" "}
+              {user.activeSubscription.shippingAddress.zipCode},{" "}
+              {user.activeSubscription.shippingAddress.country},{" "}
+              {user.activeSubscription.shippingAddress.phone}
+            </div>
+            <div>
+              Meal Plan: {user.activeSubscription.mealPlan.diet.join(", ")} for{" "}
+              {user.activeSubscription.mealPlan.numberOfPeople} people,{" "}
+              {user.activeSubscription.mealPlan.dishesPerWeek} dishes/week, $
+              {user.activeSubscription.mealPlan.price}
+            </div>
+            <div>
+              Dishes:
+              <ul>
+                {user.activeSubscription.dishes.map((dish, index) => (
+                  <li key={index}>
+                    <strong>{dish.name}</strong> - {dish.price}$
+                    <div>
+                      {dish.categories.origin.join(", ")},{" "}
+                      {dish.categories.diet.join(", ")}, Cooking time:{" "}
+                      {dish.cookingTime} minutes
+                    </div>
+                    <div>
+                      Nutritional Value:{" "}
+                      {dish.nutritionalValuePerServing.calories} calories,{" "}
+                      {dish.nutritionalValuePerServing.fat}g fat,{" "}
+                      {dish.nutritionalValuePerServing.protein}g protein,{" "}
+                      {dish.nutritionalValuePerServing.carbohydrates}g carbs,{" "}
+                      {dish.nutritionalValuePerServing.fiber}g fiber
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              Delivery Days: {user.activeSubscription.deliveryDay.join(", ")}
+            </div>
+            <div>
+              Payment Method: {user.activeSubscription.paymentMethod.method}{" "}
+              ending in {user.activeSubscription.paymentMethod.number.slice(-4)}
+              , Exp: {user.activeSubscription.paymentMethod.expiration}
+            </div>
           </div>
-          <div>
-            Meal Plan: {user.activeSubscription.mealPlan.diet.join(", ")} for{" "}
-            {user.activeSubscription.mealPlan.numberOfPeople} people,{" "}
-            {user.activeSubscription.mealPlan.dishesPerWeek} dishes/week, $
-            {user.activeSubscription.mealPlan.price}
-          </div>
-          <div>
-            Dishes:
-            <ul>
-              {user.activeSubscription.dishes.map((dish, index) => (
-                <li key={index}>
-                  <strong>{dish.name}</strong> - {dish.price}$
-                  <div>
-                    {dish.categories.origin.join(", ")},{" "}
-                    {dish.categories.diet.join(", ")}, Cooking time:{" "}
-                    {dish.cookingTime} minutes
-                  </div>
-                  <div>
-                    Nutritional Value:{" "}
-                    {dish.nutritionalValuePerServing.calories} calories,{" "}
-                    {dish.nutritionalValuePerServing.fat}g fat,{" "}
-                    {dish.nutritionalValuePerServing.protein}g protein,{" "}
-                    {dish.nutritionalValuePerServing.carbohydrates}g carbs,{" "}
-                    {dish.nutritionalValuePerServing.fiber}g fiber
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            Delivery Days: {user.activeSubscription.deliveryDay.join(", ")}
-          </div>
-          <div>
-            Payment Method: {user.activeSubscription.paymentMethod.method}{" "}
-            ending in {user.activeSubscription.paymentMethod.number.slice(-4)},
-            Exp: {user.activeSubscription.paymentMethod.expiration}
-          </div>
-        </div>
-      )}
-      <strong>Fav Dishes:</strong>
-      {user.favDishes.length > 0 && (
+        )}
+
+      {user?.favDishes?.length > 0 && (
         <div className="profile-fav-dishes">
+          <strong>Fav Dishes:</strong>
           {user.favDishes.map((dish, index) => (
             <div
               className="profile-item-container"
@@ -68,14 +82,14 @@ const ActivityCard = ({ user }) =>
               }}
             >
               <Link to={`/recipes/${dish._id}`}>
-                {/* <img src={`/${item.name}.jpg`} alt={`${item.name}`} /> */}
                 <p>{dish.name}</p>
               </Link>
             </div>
           ))}
         </div>
       )}
-      {user.previousSubscriptions.length > 0 && (
+
+      {user?.previousSubscriptions?.length > 0 && (
         <div className="profile-item">
           <strong>Previous Subscriptions:</strong>
           {user.previousSubscriptions.map((subscription, index) => (
@@ -133,5 +147,6 @@ const ActivityCard = ({ user }) =>
       )}
     </div>
   );
+};
 
 export default ActivityCard;

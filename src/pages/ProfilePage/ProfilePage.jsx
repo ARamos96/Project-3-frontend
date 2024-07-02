@@ -10,13 +10,8 @@ import ActivityCard from "../../components/ProfilePageDashboard/ActivityCard/Act
 import authService from "../../services/auth.service";
 
 function ProfilePage() {
-  const {
-    handleUserUpdate,
-    isUserLoaded,
-    user,
-    updateUserStateAndLocalStorage,
-    setIsUserLoaded, loadAllUserData,
-  } = useContext(AuthContext);
+  const { handleUserUpdate, isUserLoaded, user, checkIfUserDataIsLoaded } =
+    useContext(AuthContext);
 
   // Controls the editing of each element
   const [isEditingPersonalDetails, setIsEditingPersonalDetails] =
@@ -157,11 +152,7 @@ function ProfilePage() {
     userPassword,
   };
 
-  useEffect(() => {
-    if (user && Object.keys(user).length === 6) loadAllUserData();
-  }, );
-
-  if (!user || !isUserLoaded) {
+  if (!user && !isUserLoaded) {
     return <Loading />;
   }
 

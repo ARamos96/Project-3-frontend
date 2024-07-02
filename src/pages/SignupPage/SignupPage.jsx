@@ -1,5 +1,5 @@
 import "./SignupPage.css";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import authService from "../../services/auth.service";
 import TextField from "@mui/material/TextField";
@@ -11,19 +11,23 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Box from "@mui/material/Box";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { AuthContext } from "../../context/auth.context";
 
 function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] =
+    useState(false);
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  const [passwordConfirmationError, setPasswordConfirmationError] = useState(false);
+  const [passwordConfirmationError, setPasswordConfirmationError] =
+    useState(false);
+  const { handleSignUp } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -45,7 +49,7 @@ function SignupPage() {
     setPasswordConfirmationError(false);
   };
 
-  const handleSignupSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let valid = true;
 
@@ -70,12 +74,14 @@ function SignupPage() {
 
     try {
       const requestBody = { email, password, name, lastName };
-      const response = await authService.signup(requestBody);
-      const authToken = response.data.token;
-      localStorage.setItem("authToken", authToken);
+      handleSignUp(requestBody);
       navigate("/mealplan");
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.message) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         const errorDescription = error.response.data.message;
         setErrorMessage(errorDescription);
       } else {
@@ -99,7 +105,7 @@ function SignupPage() {
   return (
     <div className="SignupPage">
       <h1>Sign Up</h1>
-      <form onSubmit={handleSignupSubmit} className="form-control">
+      <form onSubmit={handleSubmit} className="form-control">
         <TextField
           error={emailError}
           label="Email"
@@ -109,15 +115,22 @@ function SignupPage() {
           onChange={handleEmail}
           fullWidth
           margin="normal"
-          sx={{ backgroundColor: 'white' }}
+          sx={{ backgroundColor: "white" }}
           variant="outlined"
-          inputProps={{ sx: { border: '1px solid yellow' } }}
+          inputProps={{ sx: { border: "1px solid yellow" } }}
         />
-        <FormControl fullWidth margin="normal" variant="outlined" sx={{ backgroundColor: 'white' }}>
-          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+        <FormControl
+          fullWidth
+          margin="normal"
+          variant="outlined"
+          sx={{ backgroundColor: "white" }}
+        >
+          <InputLabel htmlFor="outlined-adornment-password">
+            Password
+          </InputLabel>
           <OutlinedInput
             id="outlined-adornment-password"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={handlePassword}
             endAdornment={
@@ -133,16 +146,23 @@ function SignupPage() {
               </InputAdornment>
             }
             label="Password"
-            sx={{ backgroundColor: 'white' }}
+            sx={{ backgroundColor: "white" }}
             variant="outlined"
             inputProps={{ sx: { border: '1px solid white' } }}
           />
         </FormControl>
-        <FormControl fullWidth margin="normal" variant="outlined" sx={{ backgroundColor: 'white' }}>
-          <InputLabel htmlFor="outlined-adornment-password-confirmation">Confirm Password</InputLabel>
+        <FormControl
+          fullWidth
+          margin="normal"
+          variant="outlined"
+          sx={{ backgroundColor: "white" }}
+        >
+          <InputLabel htmlFor="outlined-adornment-password-confirmation">
+            Confirm Password
+          </InputLabel>
           <OutlinedInput
             id="outlined-adornment-password-confirmation"
-            type={showPasswordConfirmation ? 'text' : 'password'}
+            type={showPasswordConfirmation ? "text" : "password"}
             value={passwordConfirmation}
             onChange={handlePasswordConfirmation}
             endAdornment={
@@ -153,12 +173,16 @@ function SignupPage() {
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
                 >
-                  {showPasswordConfirmation ? <VisibilityOff /> : <Visibility />}
+                  {showPasswordConfirmation ? (
+                    <VisibilityOff />
+                  ) : (
+                    <Visibility />
+                  )}
                 </IconButton>
               </InputAdornment>
             }
             label="Confirm Password"
-            sx={{ backgroundColor: 'white' }}
+            sx={{ backgroundColor: "white" }}
             variant="outlined"
             inputProps={{ sx: { border: '1px solid white' } }}
           />
@@ -171,9 +195,9 @@ function SignupPage() {
           onChange={handleName}
           fullWidth
           margin="normal"
-          sx={{ backgroundColor: 'white' }}
+          sx={{ backgroundColor: "white" }}
           variant="outlined"
-          inputProps={{ sx: { border: '1px solid yellow' } }}
+          inputProps={{ sx: { border: "1px solid yellow" } }}
         />
         <TextField
           label="Last Name"
@@ -183,14 +207,18 @@ function SignupPage() {
           onChange={handleLastName}
           fullWidth
           margin="normal"
-          sx={{ backgroundColor: 'white' }}
+          sx={{ backgroundColor: "white" }}
           variant="outlined"
-          inputProps={{ sx: { border: '1px solid yellow' } }}
+          inputProps={{ sx: { border: "1px solid yellow" } }}
         />
-        <button type="submit" className="submit-button">Sign Up</button>
+        <button type="submit" className="submit-button">
+          Sign Up
+        </button>
       </form>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-      <p>Already have an account? <Link to={"/login"}>Login</Link></p>
+      <p>
+        Already have an account? <Link to={"/login"}>Login</Link>
+      </p>
     </div>
   );
 }

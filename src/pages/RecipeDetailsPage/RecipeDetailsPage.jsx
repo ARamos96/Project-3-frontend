@@ -8,15 +8,17 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IconButton } from "@mui/material";
 import { Bookmark, BookmarkBorder } from "@mui/icons-material";
+import Loading from "../../components/Loading/Loading";
 
 function RecipeDetailsPage() {
   const {
     isLoggedIn,
     user,
-    loadAllUserData,
     isInFavorites,
     handleToggleFavorite,
     isFavDishUpdating,
+    isUserLoaded,
+    checkIfUserDataIsLoaded,
   } = useContext(AuthContext);
   const { addToCart, mealPlan, recipes } = useContext(CartContext);
 
@@ -25,7 +27,7 @@ function RecipeDetailsPage() {
   const { recipeId } = useParams();
 
   useEffect(() => {
-    if (user && Object.keys(user).length === 6) loadAllUserData();
+    if (user && isUserLoaded) checkIfUserDataIsLoaded();
     // find dish in dishes array by id
     const dish = recipes.find((dish) => dish._id === recipeId);
     setRecipe(dish);
@@ -33,7 +35,14 @@ function RecipeDetailsPage() {
     return () => {
       isFavDishUpdating();
     };
-  }, [recipeId]);
+  }, [
+    checkIfUserDataIsLoaded,
+    isFavDishUpdating,
+    isUserLoaded,
+    recipeId,
+    recipes,
+    user,
+  ]);
 
   const handleAddToCart = (recipe) => {
     if (!mealPlan || !mealPlan.dishesPerWeek) {
@@ -52,6 +61,10 @@ function RecipeDetailsPage() {
       });
     }
   };
+
+  if (!recipe) {
+    return <Loading />;
+  }
 
   return (
     <div className="recipe-details">
@@ -86,7 +99,8 @@ function RecipeDetailsPage() {
             <span></span>
             <span></span>
             <span></span>
-            <span></span><span></span>
+            <span></span>
+            <span></span>
             <span></span>
             <span></span>
             <span></span>
@@ -96,9 +110,9 @@ function RecipeDetailsPage() {
         {isLoggedIn && (
           <IconButton
             className="favorite-button"
-            onClick={handleToggleFavorite}
+            onClick={() => handleToggleFavorite(recipe)}
           >
-            {isInFavorites(recipe.id) ? <Bookmark /> : <BookmarkBorder />}
+            {isInFavorites(recipeId) ? <Bookmark /> : <BookmarkBorder />}
           </IconButton>
         )}
       </div>
