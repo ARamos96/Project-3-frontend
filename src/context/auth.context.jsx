@@ -39,11 +39,9 @@ function AuthProviderWrapper(props) {
             ...prevUser,
             ...userInStorage,
           }));
+          /////////////////////////////////////////////////
           setIsUserLoaded(true);
         }
-        // Whether user is token payload or stored user, isUserLoaded is true
-        // Check if fav dishes in local storage are ahead of user in storage and POST if so
-        await isFavDishUpdating();
       } catch (error) {
         // if token is expired
         const errorMessage =
@@ -106,7 +104,11 @@ function AuthProviderWrapper(props) {
   // check if there is more user data in database
   const checkIfUserDataIsLoaded = async () => {
     const userInStorage = localStorage.getItem("user");
-    if ((JSON.parse(userInStorage) !== null) && !isUserLoaded && Object.keys(JSON.parse(userInStorage)).length <= 6)
+    if (
+      JSON.parse(userInStorage) !== null &&
+      !isUserLoaded &&
+      Object.keys(JSON.parse(userInStorage)).length <= 6
+    )
       await loadAllUserData();
   };
 
@@ -409,7 +411,6 @@ function AuthProviderWrapper(props) {
 
   useEffect(() => {
     if (isLoading) authenticateUser();
-    if (isUserLoaded) checkIfUserDataIsLoaded();
   });
 
   // Return false if activeSubscription is null or undefined
@@ -436,7 +437,7 @@ function AuthProviderWrapper(props) {
   };
 
   const loadAllUserData = async () => {
-    const userInStorage = localStorage.getItem("user");
+    const userInStorage = JSON.parse(localStorage.getItem("user"));
     if (JSON.parse(userInStorage) !== null) {
       try {
         const response = await authService.getUser(userInStorage._id);
