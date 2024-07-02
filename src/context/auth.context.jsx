@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import React, { useState, useEffect } from "react";
 import authService from "../services/auth.service";
 import moment from "moment";
@@ -20,6 +21,7 @@ function AuthProviderWrapper(props) {
       authService
         .verify()
         .then((response) => {
+          // If the token is valid
           const user = response.data;
           setIsLoggedIn(true);
           setIsLoading(false);
@@ -48,8 +50,37 @@ function AuthProviderWrapper(props) {
             setIsUserLoaded(true);
           }
         })
-        .catch(() => {
-          // if token is expired, remover user from local storage and state
+        .catch((error) => {
+          // if token is expired, remover user from local storage and state, alert user
+          const errorMessage =
+            error.response?.data?.message ||
+            "An error occurred. Please try again.";
+          if (errorMessage === "jwt expired") {
+            toast.error("Your credentials expired: Please log in again", {
+              position: "top-center",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+            // remove stored information
+            removeToken();
+            localStorage.removeItem("user");
+            removeFavDishes();
+          } else {
+            toast.error("Oops! Something went wrong. Please try again", {
+              position: "top-center",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          }
+          removeFavDishes();
           setIsLoggedIn(false);
           setIsLoading(false);
           setIsUserLoaded(false);
@@ -57,9 +88,12 @@ function AuthProviderWrapper(props) {
           localStorage.removeItem("user");
         });
     } else {
+      // If there is no token available
       setIsLoggedIn(false);
       setIsLoading(false);
       setUser(null);
+      removeFavDishes();
+      localStorage.removeItem("user");
     }
   };
 
@@ -89,7 +123,7 @@ function AuthProviderWrapper(props) {
   };
 
   const removeFavDishes = () => {
-    localStorage.removeItem("newFavdishes");
+    localStorage.removeItem("newFavDishes");
   };
 
   // on log out, remove token, user, meal plan, fav dishes, cart
