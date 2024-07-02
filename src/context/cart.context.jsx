@@ -33,7 +33,13 @@ function CartProviderWrapper(props) {
       setMealPlan(storedMealPlan);
       setIsMealPlanLoaded(true);
     }
-  }, [user, isUserLoaded, checkIfUserDataIsLoaded, isMealPlanLoaded, setIsMealPlanLoaded]);
+  }, [
+    user,
+    isUserLoaded,
+    checkIfUserDataIsLoaded,
+    isMealPlanLoaded,
+    setIsMealPlanLoaded,
+  ]);
 
   // On context loading, get dishes from database
   useEffect(() => {
@@ -41,6 +47,29 @@ function CartProviderWrapper(props) {
       fetchRecipes();
     }
   }, [recipes, hasFetchedRecipes]);
+
+  const checkSavedCartOrMealPlan = () => {
+    // Initialize flags to false to indicate if a cart or meal plan is saved
+    const isCart = false;
+    const isMealPlan = false;
+
+    // Retrieve the cart if it exists
+    const storedCart = JSON.parse(localStorage.getItem("cart"));
+
+    // Retrieve mealplan if it exists
+    const storedMealPlan = JSON.parse(localStorage.getItem("mealPlan"));
+
+    // Check if storedCart is explicitly not null or undefined
+    if (storedCart !== null && storedCart !== undefined) {
+      isCart = true;
+    }
+    // Check if storedMealPlan is explicitly not null or undefined
+    if (storedMealPlan !== null && storedMealPlan !== undefined) {
+      isMealPlan = true;
+    }
+
+    return {}
+  };
 
   // Add dish object, including duplicates
   const addToCart = (dish) => {

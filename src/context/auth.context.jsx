@@ -15,79 +15,77 @@ function AuthProviderWrapper(props) {
     localStorage.setItem("authToken", token);
   };
 
-  const authenticateUser = () => {
+  const authenticateUser = async () => {
     const storedToken = localStorage.getItem("authToken");
 
     // If token exists, verify it
     if (storedToken) {
-      authService
-        .verify()
-        .then((response) => {
-          // If the token is valid
-          const user = response.data;
-          setIsLoggedIn(true);
-          setIsLoading(false);
-          // If user is not in local storage, initialize user with JWT payload
-          if (localStorage.getItem("user") !== null) {
-            setUser(user);
-            localStorage.setItem("user", JSON.stringify(user));
-            // Check if all data is loaded from database
-            checkIfUserDataIsLoaded();
-          } else {
-            // Otherwise, update user state with localStorage
-            const userInStorage = JSON.parse(localStorage.getItem("user"));
-            setUser((prevUser) => ({
-              ...prevUser,
-              ...userInStorage,
-            }));
-            setIsUserLoaded(true);
-          }
-          // Whether user is token payload or stored user, isUserLoaded is true
-          // Check if fav dishes in local storage are ahead of user in storage and POST if so
-          isFavDishUpdating();
-        })
-        .catch((error) => {
-          // if token is expired
-          const errorMessage =
-            error.response?.data?.message ||
-            "An error occurred. Please try again.";
-          if (errorMessage === "jwt expired") {
-            toast.error("Your credentials expired: Please log in again", {
-              position: "top-center",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
-            // remove stored information
-            removeToken();
-            localStorage.removeItem("user");
-            removeFavDishes();
-          } else {
-            toast.error("Oops! Something went wrong. Please try again", {
-              position: "top-center",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
-          }
-          // Check fav dishes in local storage (from whichever user was logged first) and POST if needed
-          isFavDishUpdating()
-
-          // Delete stored information in local storage
-          removeFavDishes();
-          setUser(null);
+      try {
+        const response = await authService.verify();
+        // If the token is valid
+        const user = response.data;
+        setIsLoggedIn(true);
+        setIsLoading(false);
+        // If user is not in local storage, initialize user with JWT payload
+        if (localStorage.getItem("user") === null) {
+          setUser(user);
+          localStorage.setItem("user", JSON.stringify(user));
+          // Check if all data is loaded from database
+          await checkIfUserDataIsLoaded();
+        } else {
+          // Otherwise, update user state with localStorage
+          const userInStorage = JSON.parse(localStorage.getItem("user"));
+          setUser((prevUser) => ({
+            ...prevUser,
+            ...userInStorage,
+          }));
+          setIsUserLoaded(true);
+        }
+        // Whether user is token payload or stored user, isUserLoaded is true
+        // Check if fav dishes in local storage are ahead of user in storage and POST if so
+        await isFavDishUpdating();
+      } catch (error) {
+        // if token is expired
+        const errorMessage =
+          error.response?.data?.message ||
+          "An error occurred. Please try again.";
+        if (errorMessage === "jwt expired") {
+          toast.error("Your credentials expired: Please log in again", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          // remove stored information
+          removeToken();
           localStorage.removeItem("user");
+          removeFavDishes();
+        } else {
+          toast.error("Oops! Something went wrong. Please try again", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+        // Check fav dishes in local storage (from whichever user was logged first) and POST if needed
+        await isFavDishUpdating();
 
-          // No user logged in but page is loaded
-          setIsLoggedIn(false);
-          setIsLoading(false);
-        });
+        // Delete stored information in local storage
+        removeFavDishes();
+        setUser(null);
+        localStorage.removeItem("user");
+
+        // No user logged in but page is loaded
+        setIsLoggedIn(false);
+        setIsLoading(false);
+      }
     } else {
       // If there is no token available
       setIsLoggedIn(false);
@@ -106,9 +104,10 @@ function AuthProviderWrapper(props) {
 
   // If user has logged in and only contains token payload,
   // check if there is more user data in database
-  const checkIfUserDataIsLoaded = () => {
-    if (user && isUserLoaded && Object.keys(user).length <= 6)
-      loadAllUserData();
+  const checkIfUserDataIsLoaded = async () => {
+    const userInStorage = localStorage.getItem("user");
+    if ((JSON.parse(userInStorage) !== null) && !isUserLoaded && Object.keys(JSON.parse(userInStorage)).length <= 6)
+      await loadAllUserData();
   };
 
   const removeToken = () => {
@@ -372,7 +371,7 @@ function AuthProviderWrapper(props) {
     return hasSameElements;
   };
 
-  const isFavDishUpdating = () => {
+  const isFavDishUpdating = async () => {
     if (
       isLoggedIn &&
       getUserFromStorage() &&
@@ -380,7 +379,7 @@ function AuthProviderWrapper(props) {
       getNewFavDishesFromStorage().length >= 0 &&
       !hasSameElements()
     ) {
-      const response = addFavoriteToDB(getNewFavDishesFromStorage());
+      await addFavoriteToDB(getNewFavDishesFromStorage());
     }
   };
 
@@ -436,19 +435,18 @@ function AuthProviderWrapper(props) {
     return formattedDate;
   };
 
-  const loadAllUserData = () => {
-    if (user) {
-      authService
-        .getUser(user._id)
-        .then((response) => {
-          updateUserStateAndLocalStorage(response.data, undefined, undefined);
-          setIsUserLoaded(true);
-          // set fav dishes in state and storage
-          saveDishesInStateAndStorage(response.data.favDishes);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+  const loadAllUserData = async () => {
+    const userInStorage = localStorage.getItem("user");
+    if (JSON.parse(userInStorage) !== null) {
+      try {
+        const response = await authService.getUser(userInStorage._id);
+        updateUserStateAndLocalStorage(response.data, undefined, undefined);
+        setIsUserLoaded(true);
+        // set fav dishes in state and storage
+        saveDishesInStateAndStorage(response.data.favDishes);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

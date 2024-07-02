@@ -152,13 +152,7 @@ function ProfilePage() {
     userPassword,
   };
 
-  useEffect(() => {
-    // If user has logged in and only contains token payload,
-    // check if there is more user data in database
-    if (!isUserLoaded) checkIfUserDataIsLoaded();
-  }, [isUserLoaded, checkIfUserDataIsLoaded]);
-
-  if (!user || !isUserLoaded) {
+  if (!user && !isUserLoaded) {
     return <Loading />;
   }
 

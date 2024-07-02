@@ -9,7 +9,7 @@ const ActivityCard = ({ user }) => {
     !user?.previousSubscriptions?.length &&
     !user?.favDishes?.length
   ) {
-    return <Loading />;
+    return null;
   }
 
   return (
