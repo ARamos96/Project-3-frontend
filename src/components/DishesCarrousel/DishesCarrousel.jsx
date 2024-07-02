@@ -9,17 +9,23 @@ function DishesCarrousel() {
   const [showRecipes, setShowRecipes] = useState([]);
   const { recipes } = useContext(CartContext);
 
-  // Get 3 random numbers between 0 and recipes.length
-  const get3RandomNumbers = Array.from({ length: 3 }, () =>
-    Math.floor(Math.random() * recipes.length)
-  );
+  // Get 3 non-repeating random numbers between 0 and recipes.length
+  const get3UniqueRandomNumbers = (length) => {
+    const uniqueNumbers = new Set();
+
+    while (uniqueNumbers.size < 3) {
+      uniqueNumbers.add(Math.floor(Math.random() * length));
+    }
+
+    return Array.from(uniqueNumbers);
+  };
 
   // Get recipes from the database
   useEffect(() => {
-    // get 3 random recipes from recipes array
     if (recipes?.length > 0) {
-      const showcasedRecipes = get3RandomNumbers.map((index) => recipes[index]);
-      setShowRecipes(showcasedRecipes); // Set showRecipes to the first 3 items
+      const randomIndices = get3UniqueRandomNumbers(recipes.length);
+      const showcasedRecipes = randomIndices.map((index) => recipes[index]);
+      setShowRecipes(showcasedRecipes);
     }
   }, [recipes]);
 
