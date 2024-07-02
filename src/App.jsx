@@ -2,8 +2,6 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 
-import Navbar from "./components/Navbar/Navbar";
-import TailWindNavbar from "./components/Navbar/TailWindNavbar";
 import PrimeReactNavbar from "./components/Navbar/PrimeReactNavbar";
 
 import Footer from "./components/Footer/Footer";
@@ -21,27 +19,24 @@ import CheckOut from "./pages/Checkout/CheckOut";
 import IsPrivate from "./components/IsPrivate/IsPrivate";
 import IsAnon from "./components/IsAnon/IsAnon";
 
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       // save the cart, mealplan to user
       // Perform your global cleanup actions here
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
   return (
     <div className="App">
-      {/* <Navbar /> */}
-      {/* <TailWindNavbar /> */}
       <PrimeReactNavbar />
       <ToastContainer />
 
@@ -73,19 +68,12 @@ function App() {
             </IsAnon>
           }
         />
-        
+
         <Route path="/mealplan" element={<MealPlan />} />
 
-        <Route path="/checkout" element={ <CheckOut />} />
+        <Route path="/checkout" element={<CheckOut />} />
 
-        <Route
-          path="/howitworks"
-          element={
-            
-              <HowItWorksPage />
-           
-          }
-        />
+        <Route path="/howitworks" element={<HowItWorksPage />} />
 
         <Route path="/recipes" element={<RecipesPage />} />
         <Route path="/recipes/:recipeId" element={<RecipeDetailsPage />} />
