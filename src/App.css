@@ -83,7 +83,6 @@ button {
   cursor: pointer;
   padding: 10px 30px;
   margin: 10px;
-
 }
 
 button span {
@@ -122,8 +121,6 @@ button span:nth-child(4) {
 button span:nth-child(5) {
   --n: 4;
 }
-
-
 
 .selected {
   background-color: rgb(255, 165, 0);

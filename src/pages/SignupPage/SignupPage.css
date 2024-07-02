@@ -14,8 +14,6 @@
   border-radius: 8px;
 }
 
-
-
 .SignupPage .form-control {
   margin-bottom: 20px;
 }
@@ -37,17 +35,10 @@
   --c: goldenrod;
   border-radius: 8px;
   padding:5px;
-
-
 }
 
 .SignupPage a:hover {
   text-decoration: underline;
-}
-
-form > div > div > div >  button {
-  /* Targetting 'show password' button only*/
-  --c: none; 
 }
 
 .SignupPage button {
@@ -66,5 +57,21 @@ form > div > div > div >  button {
 .SignupPage button:hover {
   outline: 2px solid #e8e8e8;
   background: black;
-  color: black;
 }
+
+form > div > div > div >  button {
+  /* Targetting 'show password' button only*/
+  --c: transparent; 
+}
+
+form > div > div > div >  button span {
+  /* Targetting 'show password' button only*/
+  --c: transparent; 
+  background-color: transparent;
+  transform: none;
+  transition: none;
+  transition-delay: unset;
+  z-index: -1;
+}
+
+
