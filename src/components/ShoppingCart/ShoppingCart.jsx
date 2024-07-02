@@ -59,6 +59,8 @@ function ShoppingCart() {
                   onClick={toggleDrawer("right", false)}
                 >
                   Checkout
+                  <span></span><span></span><span></span><span></span><span></span>
+
                 </button>
               </Link>
             </ListItem>
@@ -68,6 +70,8 @@ function ShoppingCart() {
                 onClick={emptyCart}
               >
                 Empty Cart
+                <span></span><span></span><span></span><span></span><span></span>
+
               </button>
             </ListItem>
           </List>
