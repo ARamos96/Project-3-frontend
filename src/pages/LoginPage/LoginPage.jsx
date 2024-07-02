@@ -69,6 +69,7 @@ function LoginPage() {
           onChange={handleEmail}
           fullWidth
           margin="normal"
+          sx={{ backgroundColor: "white" }}
           InputProps={{
             style: {
               borderColor: "yellow",
@@ -86,6 +87,7 @@ function LoginPage() {
           onChange={handlePassword}
           fullWidth
           margin="normal"
+          sx={{ backgroundColor: "white" }}
           InputProps={{
             style: {
               borderColor: "yellow",
