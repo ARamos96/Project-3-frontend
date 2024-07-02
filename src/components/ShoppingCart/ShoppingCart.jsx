@@ -4,14 +4,12 @@ import Box from "@mui/material/Box";
 import Badge from "@mui/material/Badge";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import List from "@mui/material/List";
-import Button from "@mui/material/Button";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import DishInCart from "../DishInCart/DishInCart";
 
 import { CartContext } from "../../context/cart.context";
-import "primeicons/primeicons.css";
-import "./ShoppingCart.css";
+import "./ShoppingCart.css"; // Import your custom styles
 
 function ShoppingCart() {
   const { badge, cart, getDishesAndQuantity, mealPlan, emptyCart } =
@@ -34,39 +32,67 @@ function ShoppingCart() {
     <>
       {cart && cart.length !== 0 ? (
         <>
-          <List>
+          <List
+            sx={{
+              width: "100%",
+              bgcolor: "background.paper",
+            }}
+          >
             {getDishesAndQuantity().map((dish) => (
               <DishInCart key={dish._id} dish={dish} />
             ))}
           </List>
-          <List>
-            <ListItemText>TOTAL {mealPlan.price} euros</ListItemText>
+          <List
+            sx={{
+              width: "100%",
+              bgcolor: "background.paper",
+              mt: 2,
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "10px", 
+            }}
+          >
             <ListItem>
               <Link to="/checkout" style={{ textDecoration: "none" }}>
-                <Button
+                <button
+                  className="checkoutButton" 
                   onClick={toggleDrawer("right", false)}
-                  variant="contained"
-                  color="primary"
-                  sx={{ mt: 2 }}
                 >
                   Checkout
-                </Button>
+                </button>
               </Link>
             </ListItem>
-            <Button
-              variant="outlined"
-              color="secondary"
-              sx={{ mt: 2 }}
-              onClick={emptyCart}
-            >
-              Empty Cart
-            </Button>
+            <ListItem>
+              <button
+                className="emptyCartButton" 
+                onClick={emptyCart}
+              >
+                Empty Cart
+              </button>
+            </ListItem>
           </List>
         </>
       ) : (
-        <List>
+        <List
+          sx={{
+            width: "100%",
+            bgcolor: "background.paper",
+            mt: 2,
+            display: "flex",
+            justifyContent: "center",
+            padding: "10px", 
+          }}
+        >
           <ListItem>
-            <ListItemText>Your cart is empty, please add dishes.</ListItemText>
+            <ListItemText
+              primary="Your cart is empty, please add dishes."
+              primaryTypographyProps={{
+                sx: {
+                  fontSize: "1rem",
+                  textAlign: "center",
+                },
+              }}
+            />
           </ListItem>
         </List>
       )}
@@ -89,11 +115,6 @@ function ShoppingCart() {
     >
       <div>
         <Badge color="secondary" badgeContent={badge}>
-          {/* <ShoppingCartIcon
-            fontSize="large"
-            className="icon"
-            onClick={toggleDrawer("right", true)}
-          /> */}
           <i
             className="pi pi-shopping-cart pi-large"
             onClick={toggleDrawer("right", true)}
@@ -106,11 +127,18 @@ function ShoppingCart() {
         open={state.right}
         onClose={toggleDrawer("right", false)}
         onOpen={toggleDrawer("right", true)}
+        sx={{
+          "& .MuiDrawer-paper": {
+            bgcolor: "background.default",
+            width: 500,
+            padding: "20px",
+          },
+        }}
       >
         <Box
           sx={{ width: 500 }}
           role="presentation"
-          onClick={(event) => event.stopPropagation()} // Prevent click events from closing the drawer
+          onClick={(event) => event.stopPropagation()} 
         >
           {list("right")}
         </Box>

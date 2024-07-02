@@ -1,7 +1,33 @@
-/* BadgeVisibility.css */
+.emptyCartButton {
+  /* Add your custom styles for the Empty Cart button */
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: white;
+  color: red;
+  border: 5px solid red;  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
 
-.icon {
-    color: white; /* Set the icon color to white for visibility against black background */
-    font-size: 36px; /* Increase the icon size */
-  }
-  
+.emptyCartButton:hover {
+  background-color: #d32f2f;
+}
+
+.emptyCartButton span {
+  position: absolute;
+  width: 25%;
+  height: 100%;
+  background-color:red;
+  transform: translateY(150%);
+  border-radius: 50%;
+  left: calc((var(--n) - 1) * 25%);
+  transition: 0.5s;
+  transition-delay: calc((var(--n) - 1) * 0.1s);
+  z-index: -1;
+}
+
+.emptyCartButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+
