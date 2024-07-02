@@ -292,12 +292,44 @@ function CheckOut() {
     setShowModal(true);
   };
 
+  // Handle extra user updates - if user wants to add/edit payment or address
+  const checkForExtraUserUpdates = () => {
+    let extraUserUpdates = "";
+    if (
+      (saveToUserCheckboxes.putAddressToUser ||
+        saveToUserCheckboxes.postAddressToUser) &&
+      (saveToUserCheckboxes.putPaymentToUser ||
+        saveToUserCheckboxes.postPaymentToUser)
+    ) {
+      extraUserUpdates = "addAddressAndPaymentMethodToUser";
+    }
+    else if (
+      saveToUserCheckboxes.putAddressToUser ||
+      saveToUserCheckboxes.postAddressToUser
+    ) {
+      extraUserUpdates = "addAddressToUser";
+    } else if (
+      saveToUserCheckboxes.putPaymentToUser ||
+      saveToUserCheckboxes.postPaymentToUser
+    ) {
+      extraUserUpdates = "addPaymentMethodToUser";
+    }
+
+    return extraUserUpdates;
+  };
   const handleConfirmPurchase = async () => {
     setShowModal(false);
     try {
       const response = await authService.postSubscription(subscriptionData);
 
-      updateUserStateAndLocalStorage(response.data, "subscription");
+      // Handle extra user updates
+      const extraUserUpdates = checkForExtraUserUpdates();
+
+      updateUserStateAndLocalStorage(
+        response.data,
+        "subscription",
+        extraUserUpdates
+      );
 
       toast.success("Your subscription has been confirmed!", {
         position: "top-right",
@@ -336,18 +368,15 @@ function CheckOut() {
         navigate("/profile");
       }, 2000);
     } catch (error) {
-      toast.error(
-        `Oops! Something went wrong. Please try again`,
-        {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
-      );
+      toast.error(`Oops! Something went wrong. Please try again`, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
