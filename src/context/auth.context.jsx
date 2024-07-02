@@ -29,10 +29,22 @@ function AuthProviderWrapper(props) {
             localStorage.setItem("user", JSON.stringify(user));
           } else {
             // Otherwise, update user state with localStorage
+            const userInStorage = JSON.parse(localStorage.getItem("user"));
             setUser((prevUser) => ({
               ...prevUser,
-              ...JSON.parse(localStorage.getItem("user")),
+              ...userInStorage,
             }));
+
+            // Check if favDishes in storage and push them into array if so
+            const storedFavDishes = JSON.parse(
+              localStorage.getItem("newFavDishes")
+            );
+            if (storedFavDishes) {
+              setNewFavDishes((prevDishes) => [
+                ...prevDishes,
+                ...storedFavDishes,
+              ]);
+            }
             setIsUserLoaded(true);
           }
         })
@@ -40,6 +52,7 @@ function AuthProviderWrapper(props) {
           // if token is expired, remover user from local storage and state
           setIsLoggedIn(false);
           setIsLoading(false);
+          setIsUserLoaded(false);
           setUser(null);
           localStorage.removeItem("user");
         });
@@ -48,6 +61,23 @@ function AuthProviderWrapper(props) {
       setIsLoading(false);
       setUser(null);
     }
+  };
+
+  const handleSignUp = async (requestBody) => {
+    const response = await authService.signup(requestBody);
+    storeToken(response.data.authToken);
+    setUser(response.data.user);
+    setUserInStorage(response.data.user);
+    setIsUserLoaded(true);
+    setIsLoggedIn(true);
+    setIsLoading(false);
+  };
+
+  // If user has logged in and only contains token payload,
+  // check if there is more user data in database
+  const checkIfUserDataIsLoaded = () => {
+    if (user && isUserLoaded && Object.keys(user).length <= 6)
+      loadAllUserData();
   };
 
   const removeToken = () => {
@@ -348,11 +378,13 @@ function AuthProviderWrapper(props) {
   };
 
   useEffect(() => {
-    if (!user) authenticateUser();
+    if (isLoading) authenticateUser();
+    if (isUserLoaded) checkIfUserDataIsLoaded();
   });
 
+  // Return false if activeSubscription is null or undefined
   const isActiveSubscriptionInUser = () => {
-    return user?.activeSubscription && user.activeSubscription != null;
+    return user?.activeSubscription != null;
   };
 
   const getSubscriptionReorderDate = (createdAt) => {
@@ -403,7 +435,9 @@ function AuthProviderWrapper(props) {
         getUserFromStorage,
         storeToken,
         authenticateUser,
+        handleSignUp,
         logOutUser,
+        checkIfUserDataIsLoaded,
         updateUserStateAndLocalStorage,
         newFavDishes,
         setNewFavDishes,
