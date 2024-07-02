@@ -39,7 +39,20 @@ function AuthProviderWrapper(props) {
             ...prevUser,
             ...userInStorage,
           }));
-          /////////////////////////////////////////////////
+          // If there is a newFavDishes in local storage and it´s different
+          // from the favDishes key in user local storage, POST to database and
+          // update user state
+          if (
+            userInStorage?.favDishes &&
+            Array.isArray(userInStorage.favDishes) &&
+            userInStorage.favDishes.length > 0
+          ) {
+            if (!hasSameElements()) {
+              await addFavoriteToDB(getNewFavDishesFromStorage());
+              saveDishesInStateAndStorage(getNewFavDishesFromStorage());
+            }
+            saveDishesInStateAndStorage(getNewFavDishesFromStorage());
+          }
           setIsUserLoaded(true);
         }
       } catch (error) {
@@ -72,9 +85,6 @@ function AuthProviderWrapper(props) {
             progress: undefined,
           });
         }
-        // Check fav dishes in local storage (from whichever user was logged first) and POST if needed
-        await isFavDishUpdating();
-
         // Delete stored information in local storage
         removeFavDishes();
         setUser(null);
@@ -330,6 +340,7 @@ function AuthProviderWrapper(props) {
     }
   };
 
+  // Compares favDishes in local storage with favDishes key in user local storage
   const hasSameElements = () => {
     // Get newFavDishes from storage
     const newFavDishes = getNewFavDishesFromStorage();
