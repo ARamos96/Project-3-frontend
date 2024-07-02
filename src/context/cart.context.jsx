@@ -25,9 +25,7 @@ function CartProviderWrapper(props) {
   // On user loading, if user has less than 6 fields (just signed up, token payload),
   // load all user data
   useEffect(() => {
-    if (user && isUserLoaded) checkIfUserDataIsLoaded();
-
-    const storedMealPlan = JSON.parse(localStorage.getItem("mealPlan"));
+      const storedMealPlan = JSON.parse(localStorage.getItem("mealPlan"));
 
     if (!isMealPlanLoaded && storedMealPlan !== null) {
       setMealPlan(storedMealPlan);

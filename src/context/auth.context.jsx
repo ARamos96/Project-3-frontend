@@ -438,7 +438,7 @@ function AuthProviderWrapper(props) {
 
   const loadAllUserData = async () => {
     const userInStorage = JSON.parse(localStorage.getItem("user"));
-    if (JSON.parse(userInStorage) !== null) {
+    if (userInStorage !== null) {
       try {
         const response = await authService.getUser(userInStorage._id);
         updateUserStateAndLocalStorage(response.data, undefined, undefined);

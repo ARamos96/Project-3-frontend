@@ -213,6 +213,7 @@ function SignupPage() {
         />
         <button type="submit" className="submit-button">
           Sign Up
+          <span></span><span></span><span></span><span></span>
         </button>
       </form>
       {errorMessage && <p className="error-message">{errorMessage}</p>}
