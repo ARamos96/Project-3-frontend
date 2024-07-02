@@ -5,7 +5,6 @@ import { CartContext } from "../../context/cart.context";
 import { Menubar } from "primereact/menubar";
 import { Badge } from "primereact/badge";
 import { Avatar } from "primereact/avatar";
-import PrimeButton from "./PrimeButton";
 import ShoppingCart from "../ShoppingCart/ShoppingCart";
 import "./Navbar.css"; // Import your custom CSS file for Navbar styling
 
@@ -94,14 +93,12 @@ export default function Navbar() {
       ) : (
         <>
           <Link to="/signup">
-            <PrimeButton label="Sign Up" icon="pi pi-user-plus">
-              Sign Up
-            </PrimeButton>
+            <button className="log-in-button">Sign In</button>
           </Link>
           <Link to="/login">
-            <PrimeButton label="Login" icon="pi pi-sign-in">
-              Login
-            </PrimeButton>
+            <button className="log-in-button">
+              Log In
+            </button>
           </Link>
         </>
       )}
