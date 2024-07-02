@@ -17,6 +17,8 @@ function AuthProviderWrapper(props) {
 
   const authenticateUser = () => {
     const storedToken = localStorage.getItem("authToken");
+
+    // If token exists, verify it
     if (storedToken) {
       authService
         .verify()
@@ -26,9 +28,11 @@ function AuthProviderWrapper(props) {
           setIsLoggedIn(true);
           setIsLoading(false);
           // If user is not in local storage, initialize user with JWT payload
-          if (!localStorage.getItem("user")) {
+          if (localStorage.getItem("user") !== null) {
             setUser(user);
             localStorage.setItem("user", JSON.stringify(user));
+            // Check if all data is loaded from database
+            checkIfUserDataIsLoaded();
           } else {
             // Otherwise, update user state with localStorage
             const userInStorage = JSON.parse(localStorage.getItem("user"));
@@ -36,22 +40,14 @@ function AuthProviderWrapper(props) {
               ...prevUser,
               ...userInStorage,
             }));
-
-            // Check if favDishes in storage and push them into array if so
-            const storedFavDishes = JSON.parse(
-              localStorage.getItem("newFavDishes")
-            );
-            if (storedFavDishes) {
-              setNewFavDishes((prevDishes) => [
-                ...prevDishes,
-                ...storedFavDishes,
-              ]);
-            }
             setIsUserLoaded(true);
           }
+          // Whether user is token payload or stored user, isUserLoaded is true
+          // Check if fav dishes in local storage are ahead of user in storage and POST if so
+          isFavDishUpdating();
         })
         .catch((error) => {
-          // if token is expired, remover user from local storage and state, alert user
+          // if token is expired
           const errorMessage =
             error.response?.data?.message ||
             "An error occurred. Please try again.";
@@ -80,12 +76,17 @@ function AuthProviderWrapper(props) {
               progress: undefined,
             });
           }
+          // Check fav dishes in local storage (from whichever user was logged first) and POST if needed
+          isFavDishUpdating()
+
+          // Delete stored information in local storage
           removeFavDishes();
-          setIsLoggedIn(false);
-          setIsLoading(false);
-          setIsUserLoaded(false);
           setUser(null);
           localStorage.removeItem("user");
+
+          // No user logged in but page is loaded
+          setIsLoggedIn(false);
+          setIsLoading(false);
         });
     } else {
       // If there is no token available
@@ -100,11 +101,7 @@ function AuthProviderWrapper(props) {
   const handleSignUp = async (requestBody) => {
     const response = await authService.signup(requestBody);
     storeToken(response.data.authToken);
-    setUser(response.data.user);
-    setUserInStorage(response.data.user);
-    setIsUserLoaded(true);
-    setIsLoggedIn(true);
-    setIsLoading(false);
+    authenticateUser();
   };
 
   // If user has logged in and only contains token payload,
