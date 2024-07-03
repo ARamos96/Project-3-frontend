@@ -4,7 +4,7 @@ import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
 import "./MealPlan.css";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context.jsx";
-import { showToast } from "../../components/Toast/Toast.js";
+import { showToast } from "../../utils/Toast.js";
 
 function MealPlan() {
   const [numPeople, setNumPeople] = useState(0);
