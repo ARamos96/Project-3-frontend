@@ -2,17 +2,13 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
 import "./MealPlan.css";
-import authService from "../../services/auth.service.js";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context.jsx";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { showToast } from "../../components/Toast/Toast.js";
 
 function MealPlan() {
-  //add the states
-
-  const [manyPeople, setManyPeople] = useState(0);
-  const [manyDishes, setManyDishes] = useState(0);
+  const [numPeople, setNumPeople] = useState(0);
+  const [numDishes, setNumDishes] = useState(0);
   const [diet, setDiet] = useState([]);
   const [price, setPrice] = useState(0);
   const [isUserAlerted, setIsUserAlerted] = useState(false);
@@ -23,50 +19,31 @@ function MealPlan() {
   const navigate = useNavigate();
   const [isMealPlanInComponent, setIsMealPlanInComponent] = useState(false);
 
-  // If there is an existing meal plan, fill out the fields and alert the user
   useEffect(() => {
     if (isActiveSubscriptionInUser() && !isUserAlerted) {
       const reorderDate = getSubscriptionReorderDate(
         user.activeSubscription.createdAt
       );
 
-      toast.error(
+      showToast(
         `You already have an active subscription. You can start a new one on ${reorderDate} `,
-        {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
+        "error"
       );
       setIsUserAlerted(true);
 
-      // set timeout of 2 seconds
       setTimeout(() => {
         navigate("/profile");
       }, 1000);
 
       return;
     } else if (isMealPlanLoaded && !isMealPlanInComponent) {
-      setManyPeople(mealPlan.numberOfPeople);
-      setManyDishes(mealPlan.dishesPerWeek);
+      setNumPeople(mealPlan.numberOfPeople);
+      setNumDishes(mealPlan.dishesPerWeek);
       setDiet(mealPlan.diet);
       setPrice(mealPlan.price);
       setIsMealPlanInComponent(true);
 
-      toast.info("You already have a meal plan saved", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      showToast("You already have a meal plan saved", "info");
     }
   }, [
     getSubscriptionReorderDate,
@@ -77,21 +54,15 @@ function MealPlan() {
     isMealPlanLoaded,
   ]);
 
-  // function to handle how many people are going to be selected
-
   const handlePeopleClick = (people) => {
-    setManyPeople(people);
-    calculatePrice(people, manyDishes);
+    setNumPeople(people);
+    calculatePrice(people, numDishes);
   };
-
-  // function to handle how many dishes are going to be selected
 
   const handleDishesClick = (dishes) => {
-    setManyDishes(dishes);
-    calculatePrice(manyPeople, dishes);
+    setNumDishes(dishes);
+    calculatePrice(numPeople, dishes);
   };
-
-  // function to select several diet
 
   const handleDietClick = (diet) => {
     setDiet((prev) => {
@@ -103,22 +74,17 @@ function MealPlan() {
     });
   };
 
-  // Added function to calculate the price based on a fixed price of 10. Redo this with time.
-
   const calculatePrice = (people, dishes) => {
     const basePrice = 5;
     const calculatedPrice = basePrice * people * dishes;
     setPrice(calculatedPrice);
   };
 
-  // Check if there are any changed fields between stored meal plan and form data
   const getChangedFields = (oldData, formData) => {
     const changedFields = {};
 
     if (Object.keys(oldData).length === 0) return { noActiveMealPlan: true };
 
-    // Ignore undefined values:
-    // only compare the formData with existing fields in oldData
     for (const key in oldData) {
       if (oldData[key] !== formData[key] && formData[key] !== undefined) {
         changedFields[key] = formData[key];
@@ -127,53 +93,25 @@ function MealPlan() {
     return changedFields;
   };
 
-  // Posting the mealplans to mealPlan route.
-
   const handleSubmit = () => {
-    // Display error toaster if number of people isn't selected
-    if (manyPeople === 0) {
-      toast.error("Please select the number of people.", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return; // Prevent form submission
-    }
-
-    // Display error toaster if number of dishes isn't selected
-    if (manyDishes === 0) {
-      toast.error("Please select the number of dishes per week.", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return; // Prevent form submission
-    }
-    // Display error toaster if diet isn't selected
-    if (diet.length === 0) {
-      toast.error("Please select at least one diet option.", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+    if (numPeople === 0) {
+      showToast("Please select the number of people.", "error");
       return;
     }
+
+    if (numDishes === 0) {
+      showToast("Please select the number of dishes per week.", "error");
+      return;
+    }
+
+    if (diet.length === 0) {
+      showToast("Please select at least one diet option.", "error");
+      return;
+    }
+
     const mealPlanData = {
-      numberOfPeople: manyPeople,
-      dishesPerWeek: manyDishes,
+      numberOfPeople: numPeople,
+      dishesPerWeek: numDishes,
       diet: diet,
       price: price,
       user: user._id,
@@ -181,32 +119,21 @@ function MealPlan() {
 
     const changes = getChangedFields(mealPlan, mealPlanData);
 
-    // If there are changed fields between stored meal plan and form data, save it
     if (Object.keys(changes).length !== 0) {
       setMealPlanInStateAndStorage(mealPlanData);
-      setManyPeople(0);
-      setManyDishes(0);
+      setNumPeople(0);
+      setNumDishes(0);
       setDiet([]);
       setPrice(0);
     }
 
     navigate("/recipes");
 
-    //toast with success submission
-
-    toast.success("Meal plan submitted! Your diet filters have been applied!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-    });
+    showToast(
+      "Meal plan submitted! Your diet filters have been applied!",
+      "success"
+    );
   };
-
-  // Added for the conditional rendering when the user i  s not logged.
 
   const handleLoginRedirect = () => {
     navigate("/login");
@@ -223,7 +150,7 @@ function MealPlan() {
             <button
               key={num}
               onClick={() => handlePeopleClick(num)}
-              className={manyPeople === num ? "selected" : ""}
+              className={numPeople === num ? "selected" : ""}
             >
               {num}
               <span></span>
@@ -240,7 +167,7 @@ function MealPlan() {
             <button
               key={num}
               onClick={() => handleDishesClick(num)}
-              className={manyDishes === num ? "selected" : ""}
+              className={numDishes === num ? "selected" : ""}
             >
               {num}
               <span></span>
