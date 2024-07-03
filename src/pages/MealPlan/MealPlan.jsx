@@ -5,6 +5,7 @@ import "./MealPlan.css";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context.jsx";
 import { showToast } from "../../utils/Toast.js";
+import { validateMealPlan } from "../../utils/DataValidation.js";
 
 function MealPlan() {
   const [numPeople, setNumPeople] = useState(0);
@@ -94,18 +95,12 @@ function MealPlan() {
   };
 
   const handleSubmit = () => {
-    if (numPeople === 0) {
-      showToast("Please select the number of people.", "error");
-      return;
-    }
 
-    if (numDishes === 0) {
-      showToast("Please select the number of dishes per week.", "error");
-      return;
-    }
+    // Returns an empty array or error messages in new lines
+    const errorMessages = validateMealPlan(numPeople, numDishes, diet);
 
-    if (diet.length === 0) {
-      showToast("Please select at least one diet option.", "error");
+    if (errorMessages.length > 0) {
+      showToast(errorMessages, "error");
       return;
     }
 
