@@ -1,36 +1,41 @@
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const showToast = (message, type = "default") => {
-  const options = {
-    position: "top-center",
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-  };
+const OPTIONS = {
+  position: "top-center",
+  autoClose: 3000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+};
 
+const showToast = (message, type = "default") => {
   switch (type) {
     case "success":
-      toast.success(message, options);
+      toast.success(message, OPTIONS);
       break;
     case "error":
-      toast.error(message, options);
+      toast.error(message, OPTIONS);
       break;
     case "warning":
-      toast.warn(message, options);
+      toast.warn(message, OPTIONS);
       break;
     case "info":
-      toast.info(message, options);
+      toast.info(message, OPTIONS);
       break;
     default:
-      toast(message, options);
+      toast(message, OPTIONS);
   }
 };
 
-const showPromiseToast = (promise, pendingMessage, successMessage, errorMessage) => {
+const showPromiseToast = (
+  promise,
+  pendingMessage,
+  successMessage,
+  errorMessage
+) => {
   toast.promise(
     promise,
     {
@@ -38,14 +43,7 @@ const showPromiseToast = (promise, pendingMessage, successMessage, errorMessage)
       success: successMessage,
       error: errorMessage,
     },
-    {
-      position: "top-center",
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    }
+    OPTIONS
   );
 };
 
