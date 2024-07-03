@@ -266,7 +266,7 @@ function AuthProviderWrapper(props) {
         };
         if (typeof isPost === "string" && isPost === "addAddressToUser") {
           updatedUser = {
-            ...prevUser,
+            ...updatedUser,
             address: {
               ...prevUser.address,
               ...updatedUserData.shippingAddress,
@@ -278,7 +278,7 @@ function AuthProviderWrapper(props) {
           isPost === "addAddressAndPaymentMethodToUser"
         ) {
           updatedUser = {
-            ...prevUser,
+            ...updatedUser,
             address: {
               ...prevUser.address,
               ...updatedUserData.shippingAddress,
@@ -291,7 +291,7 @@ function AuthProviderWrapper(props) {
         }
         if (typeof isPost === "string" && isPost === "addPaymentMethodToUser") {
           updatedUser = {
-            ...prevUser,
+            ...updatedUser,
             paymentMethod: {
               ...prevUser.paymentMethod,
               ...updatedUserData.paymentMethod,
