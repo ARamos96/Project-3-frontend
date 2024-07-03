@@ -17,4 +17,17 @@ const validateMealPlan = (numPeople, numDishes, diet) => {
   return messages.join('\n');
 };
 
-export { validateMealPlan };
+// Gets an object and calls trim() on all string values
+const trimObjectValues = (obj) => {
+    const trimmedObj = {};
+    for (const key in obj) {
+      if (typeof obj[key] === 'string') {
+        trimmedObj[key] = obj[key].trim();
+      } else {
+        trimmedObj[key] = obj[key];
+      }
+    }
+    return trimmedObj;
+  }
+
+export { validateMealPlan, trimObjectValues };
