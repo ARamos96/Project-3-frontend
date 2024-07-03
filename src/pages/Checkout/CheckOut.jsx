@@ -9,6 +9,12 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Loading from "../../components/Loading/Loading.jsx";
 import Modal from "../../components/Modal/Modal.jsx";
+import {
+  validateAddress,
+  validateDeliveryDay,
+  validatePaymentMethod,
+  trimObjectValues,
+} from "../../utils/DataValidation.js";
 const { handleInputChange } = FormFunctions();
 
 function CheckOut() {
@@ -77,73 +83,6 @@ function CheckOut() {
       }
     }
     return changedFields;
-  };
-
-  const validatePaymentMethod = (paymentMethodForm) => {
-    const { method, number, expiration, CVV } = paymentMethodForm;
-
-    if (!method || !number || !expiration || !CVV) {
-      return { isValid: false, message: "All payment fields must be filled." };
-    }
-
-    const cardNumberPattern = /^\d{16}$/;
-    if (!cardNumberPattern.test(number)) {
-      return {
-        isValid: false,
-        message: "Card number must be 16 digits long and contain only numbers.",
-      };
-    }
-
-    const expirationPattern = /^(0[1-9]|1[0-2])\/\d{2}$/;
-    if (!expirationPattern.test(expiration)) {
-      return {
-        isValid: false,
-        message: "Expiration date must be in MM/YY format.",
-      };
-    }
-
-    const cvvPattern = /^\d{3}$/;
-    if (!cvvPattern.test(CVV)) {
-      return {
-        isValid: false,
-        message: "CVV must be 3 digits long and contain only numbers.",
-      };
-    }
-
-    return { isValid: true, message: "Payment method is valid." };
-  };
-
-  const validateAddress = (addressForm) => {
-    const { address, city, region, zipCode, country, phone } = addressForm;
-
-    if (!address || !city || !region || !zipCode || !country || !phone) {
-      return { isValid: false, message: "All fields must be filled." };
-    }
-
-    const zipCodePattern = /^\d+$/;
-    if (!zipCodePattern.test(zipCode)) {
-      return { isValid: false, message: "Zip Code must contain only numbers." };
-    }
-
-    const phonePattern = /^\d+$/;
-    if (!phonePattern.test(phone)) {
-      return {
-        isValid: false,
-        message: "Phone number must contain only numbers.",
-      };
-    }
-
-    return { isValid: true, message: "Address is valid." };
-  };
-
-  const validateDeliveryDay = (data) => {
-    if (data.length === 0) {
-      return {
-        isValid: false,
-        message: "You must select at least one delivery day.",
-      };
-    }
-    return { isValid: true, message: "Delivery day is valid." };
   };
 
   const showToast = (message) => {
@@ -233,32 +172,29 @@ function CheckOut() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const addressValidation = validateAddress(allForms.addressForm);
-    const paymentValidation = validatePaymentMethod(allForms.paymentMethodForm);
-    const deliveryDayValidation = validateDeliveryDay(allForms.deliveryDay);
-    if (
-      !addressValidation.isValid &&
-      !paymentValidation.isValid &&
-      !deliveryDayValidation.isValid
-    ) {
-      showToast([
-        ...addressValidation.message,
-        ...paymentValidation.message,
-        ...deliveryDayValidation.message,
-      ]);
-      return;
-    } else if (!addressValidation.isValid) {
-      showToast(addressValidation.message);
-      return;
-    } else if (!paymentValidation.isValid) {
-      showToast(paymentValidation.message);
-      return;
-    } else if (!deliveryDayValidation.isValid) {
-      showToast(deliveryDayValidation.message);
+    const checkOutValidations = {
+      address: validateAddress(allForms.addressForm),
+      payment: validatePaymentMethod(allForms.paymentMethodForm),
+      deliveryDay: validateDeliveryDay(allForms.deliveryDay),
+    };
+
+    Object.keys(checkOutValidations).forEach((key) => {
+      const validationMessage = checkOutValidations[key];
+      if (validationMessage) {
+        showToast(validationMessage, "warning");
+      }
+    });
+
+    // Continue only if there are no validation errors
+    const hasErrors = Object.values(checkOutValidations).some(
+      (msg) => msg.length > 0
+    );
+
+    if (hasErrors) {
       return;
     }
 
-    const subscriptionData = {
+    let subscriptionData = {
       shippingAddress: addressForm,
       mealPlan: mealPlan,
       user: user._id,
@@ -266,6 +202,8 @@ function CheckOut() {
       deliveryDay,
       paymentMethod: paymentMethodForm,
     };
+
+    subscriptionData = trimObjectValues(subscriptionData);
 
     // Compare changes between user data and forms
     const changesInAddress = getChangedFields(user.address, addressForm);
@@ -302,8 +240,7 @@ function CheckOut() {
         saveToUserCheckboxes.postPaymentToUser)
     ) {
       extraUserUpdates = "addAddressAndPaymentMethodToUser";
-    }
-    else if (
+    } else if (
       saveToUserCheckboxes.putAddressToUser ||
       saveToUserCheckboxes.postAddressToUser
     ) {
