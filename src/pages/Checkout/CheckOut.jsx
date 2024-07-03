@@ -6,9 +6,10 @@ import { CartContext } from "../../context/cart.context.jsx";
 import FormFunctions from "../../utils/FormFunctions";
 import authService from "../../services/auth.service.js";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { showToast } from "../../utils/Toast.js";
 import Loading from "../../components/Loading/Loading.jsx";
 import Modal from "../../components/Modal/Modal.jsx";
+import moment from "moment";
 import {
   validateAddress,
   validateDeliveryDay,
@@ -85,49 +86,15 @@ function CheckOut() {
     return changedFields;
   };
 
-  const showToast = (message) => {
-    if (typeof message === "string") {
-      toast.error(message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } else if (Array.isArray(message)) {
-      message.forEach((message) => {
-        toast.error(message, {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      });
-    }
-  };
-
   useEffect(() => {
     if (isActiveSubscriptionInUser()) {
       const reorderDate = getSubscriptionReorderDate(
         user.activeSubscription.createdAt
       );
 
-      toast.error(
+      showToast(
         `You already have an active subscription. You can start a new one on ${reorderDate} `,
-        {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
+        "error"
       );
 
       navigate("/profile");
@@ -136,15 +103,7 @@ function CheckOut() {
     }
     // When user is loaded, populate forms with user data if available
     else if (!user && !mealPlan) {
-      toast.error(`You need to log in and create a meal plan first!`, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      showToast(`You need to log in and create a meal plan first!`, "error");
 
       navigate("/");
 
@@ -230,6 +189,25 @@ function CheckOut() {
     setShowModal(true);
   };
 
+  const getClosestDeliveryDay = (deliveryDays) => {
+    const today = moment();
+    const validDeliveryDays = deliveryDays
+      .map((day) => moment().day(day)) // Convert delivery days to moment objects
+      .filter((day) => day.isAfter(today, "day")); // Filter out days that are today or earlier
+
+    if (validDeliveryDays.length === 0) {
+      return null; // No valid delivery days found
+    }
+
+    const closestDeliveryDay = validDeliveryDays.reduce((closest, current) => {
+      return current.diff(today, "days") < closest.diff(today, "days")
+        ? current
+        : closest;
+    });
+
+    return closestDeliveryDay.format("dddd"); // Return the name of the closest delivery day
+  };
+
   // Handle extra user updates - if user wants to add/edit payment or address
   const checkForExtraUserUpdates = () => {
     let extraUserUpdates = "";
@@ -268,16 +246,12 @@ function CheckOut() {
         extraUserUpdates
       );
 
-      toast.success("Your subscription has been confirmed!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
+      const closestDeliveryDay = getClosestDeliveryDay(deliveryDay);
+
+      showToast(
+        `Your subscription has been confirmed!\nIt will arrive on ${closestDeliveryDay}`,
+        "success"
+      );
 
       // Reset forms
       setAddressForm({
@@ -305,15 +279,7 @@ function CheckOut() {
         navigate("/profile");
       }, 2000);
     } catch (error) {
-      toast.error(`Oops! Something went wrong. Please try again`, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      showToast("Oops! Something went wrong. Please try again", "error");
     }
   };
 
@@ -322,15 +288,8 @@ function CheckOut() {
   }
 
   if (!mealPlan) {
-    return toast.error("Please choose a Meal Plan first!", {
-      position: "top-center",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    showToast("Please choose a Meal Plan first!", "warning");
+    return;
   }
 
   return (
