@@ -1,3 +1,4 @@
+import { showToast } from "../utils/Toast";
 import { toast } from "react-toastify";
 import React, { useState, useEffect } from "react";
 import authService from "../services/auth.service";
@@ -24,6 +25,7 @@ function AuthProviderWrapper(props) {
         const response = await authService.verify();
         // If the token is valid
         const user = response.data;
+        showToast(`Hello, ${user.name}!`, "info");
         setIsLoggedIn(true);
         setIsLoading(false);
         // If user is not in local storage, initialize user with JWT payload
@@ -61,29 +63,13 @@ function AuthProviderWrapper(props) {
           error.response?.data?.message ||
           "An error occurred. Please try again.";
         if (errorMessage === "jwt expired") {
-          toast.error("Your credentials expired: Please log in again", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          showToast("Your credentials expired: Please log in again", "warning");
           // remove stored information
           removeToken();
           localStorage.removeItem("user");
           removeFavDishes();
         } else {
-          toast.error("Oops! Something went wrong. Please try again", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          showToast("Something went wrong. Please try again", "error");
         }
         // Delete stored information in local storage
         removeFavDishes();
