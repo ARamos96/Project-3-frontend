@@ -96,10 +96,10 @@ function MealPlan() {
 
   const handleSubmit = () => {
 
-    // Returns an empty array or error messages in new lines
+    // Returns an empty string or a string with 1 error per new line
     const errorMessages = validateMealPlan(numPeople, numDishes, diet);
 
-    if (errorMessages.length > 0) {
+    if (errorMessages) {
       showToast(errorMessages, "error");
       return;
     }
