@@ -9,7 +9,16 @@ import { useNavigate } from "react-router-dom";
 import { showToast } from "../../utils/Toast.js";
 import Loading from "../../components/Loading/Loading.jsx";
 import Modal from "../../components/Modal/Modal.jsx";
-import { TextField, Checkbox, FormControl, InputLabel, Select, MenuItem, Button, Box } from '@mui/material';
+import {
+  TextField,
+  Checkbox,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
+  Box,
+} from "@mui/material";
 import moment from "moment";
 import {
   validateAddress,
@@ -132,10 +141,17 @@ function CheckOut() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Trim object values
+    const trimmedAddressForm = trimObjectValues(allForms.addressForm);
+    const trimmedPaymentMethodForm = trimObjectValues(
+      allForms.paymentMethodForm
+    );
+    const trimmedDeliveryDay = allForms.deliveryDay;
+
     const checkOutValidations = {
-      address: validateAddress(allForms.addressForm),
-      payment: validatePaymentMethod(allForms.paymentMethodForm),
-      deliveryDay: validateDeliveryDay(allForms.deliveryDay),
+      address: validateAddress(trimmedAddressForm),
+      payment: validatePaymentMethod(trimmedPaymentMethodForm),
+      deliveryDay: validateDeliveryDay(trimmedDeliveryDay),
     };
 
     Object.keys(checkOutValidations).forEach((key) => {
@@ -162,8 +178,6 @@ function CheckOut() {
       deliveryDay,
       paymentMethod: paymentMethodForm,
     };
-
-    subscriptionData = trimObjectValues(subscriptionData);
 
     // Compare changes between user data and forms
     const changesInAddress = getChangedFields(user.address, addressForm);
@@ -351,7 +365,7 @@ function CheckOut() {
       {user && (
         <div>
           <h3>Your details</h3>
-          <form onSubmit={handleSubmit} >
+          <form onSubmit={handleSubmit}>
             <h4>Address</h4>
             <div className="form-group">
               <TextField
@@ -491,9 +505,7 @@ function CheckOut() {
                     value="postAddressToUser"
                     checked={saveToUserCheckboxes.postAddressToUser}
                     onChange={handleCheckboxChange}
-
                   />
-
                   Save this address to my profile
                 </label>
               )}
@@ -549,23 +561,27 @@ function CheckOut() {
             </div>
 
             <h4>Payment method</h4>
-            <div className="payment-container" >
+            <div className="payment-container">
               <FormControl fullWidth margin="normal">
                 <InputLabel htmlFor="payment-method">Payment Method</InputLabel>
                 <Select
                   native
                   value={paymentMethodForm.method}
                   onChange={(e) =>
-                    handleInputChange(e, setPaymentMethodForm, paymentMethodForm)
+                    handleInputChange(
+                      e,
+                      setPaymentMethodForm,
+                      paymentMethodForm
+                    )
                   }
                   inputProps={{
-                    name: 'method',
-                    id: 'payment-method',
+                    name: "method",
+                    id: "payment-method",
                   }}
                   sx={{
                     backgroundColor: "white",
                     maxWidth: 400,
-                    width: '100%',
+                    width: "100%",
                   }}
                   InputProps={{
                     style: {
@@ -660,7 +676,6 @@ function CheckOut() {
                     checked={saveToUserCheckboxes.putPaymentToUser}
                     onChange={handleCheckboxChange}
                   />
-
                   Update my payment to this one
                 </label>
               ) : (
@@ -671,7 +686,6 @@ function CheckOut() {
                     checked={saveToUserCheckboxes.postPaymentToUser}
                     onChange={handleCheckboxChange}
                   />
-
                   Save this payment to my profile
                 </label>
               )}
@@ -698,10 +712,12 @@ function CheckOut() {
           Dishes per week: ${mealPlan.dishesPerWeek}
           Diet: ${mealPlan.diet}
           Price: ${mealPlan.price}
-          Address: ${addressForm.address}, ${addressForm.city}, ${addressForm.region
-          }, ${addressForm.zipCode}, ${addressForm.country}
+          Address: ${addressForm.address}, ${addressForm.city}, ${
+          addressForm.region
+        }, ${addressForm.zipCode}, ${addressForm.country}
           Phone: ${addressForm.phone}
-          Payment Method: ${paymentMethodForm.method
+          Payment Method: ${
+            paymentMethodForm.method
           } ending in ${paymentMethodForm.number.slice(-4)}
           Delivery Days: ${deliveryDay.join(", ")}`}
         confirmMessage="Confirm"
