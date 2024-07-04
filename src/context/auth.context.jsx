@@ -191,7 +191,11 @@ function AuthProviderWrapper(props) {
       }
       updateUserStateAndLocalStorage(response.data, updateType, isPost);
     } catch (error) {
-      showToast(`Error updating ${updateType}. Please try again`)
+      let message = `Error updating ${updateType}. Please try again`
+      if (error.response.data.message === "Previous password is not valid"){
+        message = "Previous password is not valid";
+      }
+      showToast(message, "error")
     }
   };
 
