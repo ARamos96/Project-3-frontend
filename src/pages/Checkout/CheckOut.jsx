@@ -629,10 +629,10 @@ function CheckOut() {
             </div>
             <div className="form-group">
               <TextField
-                label="Expiration Date (MM/YY)"
+                label="CVV"
                 type="text"
-                name="expiration"
-                value={paymentMethodForm.expiration}
+                name="CVV"
+                value={paymentMethodForm.CVV}
                 onChange={(e) =>
                   handleInputChange(e, setPaymentMethodForm, paymentMethodForm)
                 }
