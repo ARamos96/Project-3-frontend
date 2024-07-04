@@ -191,7 +191,7 @@ function AuthProviderWrapper(props) {
       }
       updateUserStateAndLocalStorage(response.data, updateType, isPost);
     } catch (error) {
-      console.error(`Error updating ${updateType}:`, error);
+      showToast(`Error updating ${updateType}. Please try again`)
     }
   };
 

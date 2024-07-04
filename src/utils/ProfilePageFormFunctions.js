@@ -1,7 +1,8 @@
+import { trimObjectValues, validatePersonalDetails } from "./DataValidation";
+import { showToast } from "./Toast";
 const ADDRESS_FIELDS = 6;
 const PAYMENT_FIELDS = 4;
 const PASSWORD_FIELDS = 2;
-
 function ProfilePageFormFunctions() {
   const isDataEmptyStrings = (data) => {
     return Object.values(data).every((value) => value === "");
@@ -152,6 +153,7 @@ function ProfilePageFormFunctions() {
     closeRelevantForm(confirmAction);
   };
 
+  // Called by PersonalForm. Handles changes of user.name, lastName and email fields
   const handlePersonalDetailsSubmit = (
     e,
     getChangedFields,
@@ -162,12 +164,29 @@ function ProfilePageFormFunctions() {
   ) => {
     e.preventDefault();
 
-    const changedFields = getChangedFields(userPersonalDetails, formData);
+    // Trim all empty strings from formData
+    const trimmedFormData = trimObjectValues(formData);
+
+    // Validate personal details data
+    const hasErrors = validatePersonalDetails(trimmedFormData);
+
+    // In case of errors, warn user and return
+    if (hasErrors) {
+      showToast(hasErrors, "warning");
+      return;
+    }
+
+    // Compare changes between user state and form data
+    const changedFields = getChangedFields(
+      userPersonalDetails,
+      trimmedFormData
+    );
     if (Object.keys(changedFields).length > 0) {
+      // If so, handle patch/post request
       handleUserUpdate(changedFields, "personalDetails");
     }
+    // If there are no changes, close form and do nothing
     setIsEditingPersonalDetails(false);
-    // Optionally update the user context here
   };
 
   const handleAddressSubmit = (

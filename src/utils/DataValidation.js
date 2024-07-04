@@ -68,23 +68,48 @@ const validatePaymentMethod = (paymentMethodForm) => {
 
 const validateAddress = (addressForm) => {
   const { address, city, region, zipCode, country, phone } = addressForm;
-  const messages = [];
+  let messages = "";
 
   if (!address || !city || !region || !zipCode || !country || !phone) {
-    messages.push("All fields must be filled.");
+    messages += "All fields must be filled.\n";
   }
 
   const zipCodePattern = /^\d+$/;
   if (zipCode && !zipCodePattern.test(zipCode)) {
-    messages.push("Zip Code must contain only numbers.");
+    messages += "Zip Code must contain only numbers.\n";
   }
 
   const phonePattern = /^\d+$/;
   if (phone && !phonePattern.test(phone)) {
-    messages.push("Phone number must contain only numbers.");
+    messages += "Phone number must contain only numbers.\n";
   }
 
-  return messages.join("\n").trim(); // Remove trailing newline
+  return messages.trim(); // Remove trailing newline
+};
+
+const validatePersonalDetails = (personalDetailsForm) => {
+  let { name, lastName, email } = personalDetailsForm;
+  let messages = "";
+
+  // Email validation using regex
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if (!emailPattern.test(email)) {
+    messages += "Invalid email format.\n";
+  } else if (email.trim() === "") {
+    messages += "Email cannot be empty.\n";
+  }
+
+  // Check if name is a non-empty string
+  if (typeof name !== "string" || name.trim() === "") {
+    messages += "Name cannot be empty.\n";
+  }
+
+  // Check if lastName is a non-empty string
+  if (typeof lastName !== "string" || lastName.trim() === "") {
+    messages += "Last name cannot be empty.\n";
+  }
+
+  return messages.trim(); // Remove the trailing newline;
 };
 
 // Gets an object and calls trim() on all string values, including arrays and nested values
@@ -114,4 +139,5 @@ export {
   validatePaymentMethod,
   validateDeliveryDay,
   validateAddress,
+  validatePersonalDetails,
 };
