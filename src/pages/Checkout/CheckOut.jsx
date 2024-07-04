@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { showToast } from "../../utils/Toast.js";
 import Loading from "../../components/Loading/Loading.jsx";
 import Modal from "../../components/Modal/Modal.jsx";
+import { TextField, Checkbox, FormControl, InputLabel, Select, MenuItem, Button, Box } from '@mui/material';
 import moment from "moment";
 import {
   validateAddress,
@@ -299,11 +300,25 @@ function CheckOut() {
       <h3>Your meal plan</h3>
 
       {mealPlan && (
-        <div>
-          <p>Number of People: {mealPlan.numberOfPeople}</p>
-          <p>Dishes per week: {mealPlan.dishesPerWeek}</p>
-          <p>Diet: {mealPlan.diet}</p>
-          <p>Price: {mealPlan.price}</p>
+        <div className="mealPlan-info">
+          <table class="meal-plan-table">
+            <tr>
+              <td>Number of People:</td>
+              <td>{mealPlan.numberOfPeople}</td>
+            </tr>
+            <tr>
+              <td>Dishes per week:</td>
+              <td>{mealPlan.dishesPerWeek}</td>
+            </tr>
+            <tr>
+              <td>Diet:</td>
+              <td>{mealPlan.diet}</td>
+            </tr>
+            <tr>
+              <td>Price:</td>
+              <td>{mealPlan.price}</td>
+            </tr>
+          </table>
         </div>
       )}
 
@@ -336,95 +351,131 @@ function CheckOut() {
       {user && (
         <div>
           <h3>Your details</h3>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} >
             <h4>Address</h4>
-            <div>
-              <label>
-                Address:
-                <input
-                  type="text"
-                  name="address"
-                  value={addressForm.address}
-                  onChange={(e) =>
-                    handleInputChange(e, setAddressForm, addressForm)
-                  }
-                  required
-                />
-              </label>
+            <div className="form-group">
+              <TextField
+                label="Address"
+                type="text"
+                name="address"
+                value={addressForm.address}
+                onChange={(e) => handleInputChange(e, setAddressForm)}
+                required
+                fullWidth
+                margin="normal"
+                sx={{ backgroundColor: "white" }}
+                InputProps={{
+                  style: {
+                    borderColor: "yellow",
+                  },
+                }}
+                variant="outlined"
+              />
             </div>
-            <div>
-              <label>
-                City:
-                <input
-                  type="text"
-                  name="city"
-                  value={addressForm.city}
-                  onChange={(e) =>
-                    handleInputChange(e, setAddressForm, addressForm)
-                  }
-                  required
-                />
-              </label>
+            <div className="form-group">
+              <TextField
+                label="City"
+                type="text"
+                name="city"
+                value={addressForm.city}
+                onChange={(e) => handleInputChange(e, setAddressForm)}
+                required
+                fullWidth
+                margin="normal"
+                sx={{ backgroundColor: "white" }}
+                InputProps={{
+                  style: {
+                    borderColor: "yellow",
+                  },
+                }}
+                variant="outlined"
+              />
             </div>
-            <div>
-              <label>
-                Region:
-                <input
-                  type="text"
-                  name="region"
-                  value={addressForm.region}
-                  onChange={(e) =>
-                    handleInputChange(e, setAddressForm, addressForm)
-                  }
-                  required
-                />
-              </label>
+            <div className="form-group">
+              <TextField
+                label="Region"
+                type="text"
+                name="region"
+                value={addressForm.region}
+                onChange={(e) => handleInputChange(e, setAddressForm)}
+                required
+                fullWidth
+                margin="normal"
+                sx={{ backgroundColor: "white" }}
+                InputProps={{
+                  style: {
+                    borderColor: "yellow",
+                  },
+                }}
+                variant="outlined"
+              />
             </div>
-            <div>
-              <label>
-                Zip Code:
-                <input
-                  type="text"
-                  name="zipCode"
-                  value={addressForm.zipCode}
-                  onChange={(e) =>
-                    handleInputChange(e, setAddressForm, addressForm)
-                  }
-                  required
-                />
-              </label>
+            <div className="form-group">
+              <TextField
+                label="Zip Code"
+                type="text"
+                name="zipCode"
+                value={addressForm.zipCode}
+                onChange={(e) => handleInputChange(e, setAddressForm)}
+                required
+                fullWidth
+                margin="normal"
+                sx={{ backgroundColor: "white" }}
+                InputProps={{
+                  style: {
+                    borderColor: "yellow",
+                  },
+                }}
+                variant="outlined"
+              />
             </div>
-            <div>
-              <label>
-                Country:
-                <input
-                  type="text"
-                  name="country"
-                  value={addressForm.country}
-                  onChange={(e) =>
-                    handleInputChange(e, setAddressForm, addressForm)
-                  }
-                  required
-                />
-              </label>
+            <div className="form-group">
+              <TextField
+                label="Country"
+                type="text"
+                name="country"
+                value={addressForm.country}
+                onChange={(e) => handleInputChange(e, setAddressForm)}
+                required
+                fullWidth
+                margin="normal"
+                sx={{ backgroundColor: "white" }}
+                InputProps={{
+                  style: {
+                    borderColor: "yellow",
+                  },
+                }}
+                variant="outlined"
+              />
             </div>
-            <div>
-              <label>
-                Phone:
-                <input
-                  type="text"
-                  name="phone"
-                  value={addressForm.phone}
-                  onChange={(e) =>
-                    handleInputChange(e, setAddressForm, addressForm)
-                  }
-                  required
-                />
-              </label>
+            <div className="form-group">
+              <TextField
+                label="Phone"
+                type="tel"
+                name="phone"
+                value={addressForm.phone}
+                onChange={(e) => handleInputChange(e, setAddressForm)}
+                required
+                fullWidth
+                margin="normal"
+                sx={{ backgroundColor: "white" }}
+                InputProps={{
+                  style: {
+                    borderColor: "yellow",
+                  },
+                }}
+                variant="outlined"
+              />
             </div>
             <div>
               {user?.address ? (
                 <label>
+                  <Checkbox
+                    name="putAddressToUser"
+                    value="putAddressToUser"
+                    checked={saveToUserCheckboxes.putAddressToUser}
+                    onChange={handleCheckboxChange}
+                  />
                   <input
                     type="checkbox"
                     name={"putAddressToUser"}
@@ -435,137 +486,192 @@ function CheckOut() {
                 </label>
               ) : (
                 <label>
-                  <input
-                    type="checkbox"
-                    name={"postAddressToUser"}
+                  <Checkbox
+                    name="postAddressToUser"
+                    value="postAddressToUser"
                     checked={saveToUserCheckboxes.postAddressToUser}
                     onChange={handleCheckboxChange}
+
                   />
+
                   Save this address to my profile
                 </label>
               )}
             </div>
 
             <h4>Choose a delivery day</h4>
-            <div>
-              {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map(
-                (day) => (
-                  <div key={day}>
-                    <label>
-                      <input
-                        type="checkbox"
-                        name="deliveryDay"
-                        value={day}
-                        checked={deliveryDay.includes(day)}
-                        onChange={handleDeliveryDayChange}
-                      />
-                      {day}
-                    </label>
-                  </div>
-                )
-              )}
+            <div className="form-group">
+              <label>
+                <Checkbox
+                  name="deliveryDay"
+                  value="Monday"
+                  checked={deliveryDay.includes("Monday")}
+                  onChange={handleDeliveryDayChange}
+                />
+                Monday
+              </label>
+              <label>
+                <Checkbox
+                  name="deliveryDay"
+                  value="Tuesday"
+                  checked={deliveryDay.includes("Tuesday")}
+                  onChange={handleDeliveryDayChange}
+                />
+                Tuesday
+              </label>
+              <label>
+                <Checkbox
+                  name="deliveryDay"
+                  value="Wednesday"
+                  checked={deliveryDay.includes("Wednesday")}
+                  onChange={handleDeliveryDayChange}
+                />
+                Wednesday
+              </label>
+              <label>
+                <Checkbox
+                  name="deliveryDay"
+                  value="Thursday"
+                  checked={deliveryDay.includes("Thursday")}
+                  onChange={handleDeliveryDayChange}
+                />
+                Thursday
+              </label>
+              <label>
+                <Checkbox
+                  name="deliveryDay"
+                  value="Friday"
+                  checked={deliveryDay.includes("Friday")}
+                  onChange={handleDeliveryDayChange}
+                />
+                Friday
+              </label>
             </div>
 
             <h4>Payment method</h4>
-            <div>
-              <label>
-                Payment Method:
-                <select
-                  name="method"
+            <div className="payment-container" >
+              <FormControl fullWidth margin="normal">
+                <InputLabel htmlFor="payment-method">Payment Method</InputLabel>
+                <Select
+                  native
                   value={paymentMethodForm.method}
                   onChange={(e) =>
-                    handleInputChange(
-                      e,
-                      setPaymentMethodForm,
-                      paymentMethodForm
-                    )
+                    handleInputChange(e, setPaymentMethodForm, paymentMethodForm)
                   }
+                  inputProps={{
+                    name: 'method',
+                    id: 'payment-method',
+                  }}
+                  sx={{
+                    backgroundColor: "white",
+                    maxWidth: 400,
+                    width: '100%',
+                  }}
+                  InputProps={{
+                    style: {
+                      borderColor: "yellow",
+                    },
+                  }}
                   required
                 >
                   <option value="Credit Card">Credit Card</option>
                   <option value="Debit Card">Debit Card</option>
-                </select>
-              </label>
+                </Select>
+              </FormControl>
             </div>
-            <div>
-              <label>
-                Card Number:
-                <input
-                  type="text"
-                  name="number"
-                  value={paymentMethodForm.number}
-                  onChange={(e) =>
-                    handleInputChange(
-                      e,
-                      setPaymentMethodForm,
-                      paymentMethodForm
-                    )
-                  }
-                  required
-                  minLength="16"
-                  maxLength="16"
-                />
-              </label>
+            <div className="form-group">
+              <TextField
+                label="Card Number"
+                type="text"
+                name="number"
+                value={paymentMethodForm.number}
+                onChange={(e) =>
+                  handleInputChange(e, setPaymentMethodForm, paymentMethodForm)
+                }
+                required
+                fullWidth
+                inputProps={{
+                  minLength: 16,
+                  maxLength: 16,
+                }}
+                sx={{ backgroundColor: "white" }}
+                InputProps={{
+                  style: {
+                    borderColor: "yellow",
+                  },
+                }}
+                variant="outlined"
+              />
             </div>
-            <div>
-              <label>
-                Expiration Date (MM/YY):
-                <input
-                  type="text"
-                  name="expiration"
-                  value={paymentMethodForm.expiration}
-                  onChange={(e) =>
-                    handleInputChange(
-                      e,
-                      setPaymentMethodForm,
-                      paymentMethodForm
-                    )
-                  }
-                  required
-                  minLength="5"
-                  maxLength="5"
-                />
-              </label>
+            <div className="form-group">
+              <TextField
+                label="Expiration Date (MM/YY)"
+                type="text"
+                name="expiration"
+                value={paymentMethodForm.expiration}
+                onChange={(e) =>
+                  handleInputChange(e, setPaymentMethodForm, paymentMethodForm)
+                }
+                required
+                fullWidth
+                inputProps={{
+                  minLength: 5,
+                  maxLength: 5,
+                }}
+                sx={{ backgroundColor: "white" }}
+                InputProps={{
+                  style: {
+                    borderColor: "yellow",
+                  },
+                }}
+                variant="outlined"
+              />
             </div>
-            <div>
-              <label>
-                CVV:
-                <input
-                  type="text"
-                  name="CVV"
-                  value={paymentMethodForm.CVV}
-                  onChange={(e) =>
-                    handleInputChange(
-                      e,
-                      setPaymentMethodForm,
-                      paymentMethodForm
-                    )
-                  }
-                  required
-                  minLength="3"
-                  maxLength="3"
-                />
-              </label>
+            <div className="form-group">
+              <TextField
+                label="Expiration Date (MM/YY)"
+                type="text"
+                name="expiration"
+                value={paymentMethodForm.expiration}
+                onChange={(e) =>
+                  handleInputChange(e, setPaymentMethodForm, paymentMethodForm)
+                }
+                required
+                fullWidth
+                inputProps={{
+                  minLength: 5,
+                  maxLength: 5,
+                }}
+                sx={{ backgroundColor: "white" }}
+                InputProps={{
+                  style: {
+                    borderColor: "yellow",
+                  },
+                }}
+                variant="outlined"
+              />
             </div>
             <div>
               {user?.paymentMethod ? (
                 <label>
-                  <input
-                    type="checkbox"
-                    name={"putPaymentToUser"}
+                  <Checkbox
+                    name="putPaymentToUser"
+                    value="putPaymentToUser"
                     checked={saveToUserCheckboxes.putPaymentToUser}
                     onChange={handleCheckboxChange}
                   />
+
                   Update my payment to this one
                 </label>
               ) : (
                 <label>
-                  <input
-                    type="checkbox"
-                    name={"postPaymentToUser"}
+                  <Checkbox
+                    name="postPaymentToUser"
+                    value="postPaymentToUser"
                     checked={saveToUserCheckboxes.postPaymentToUser}
                     onChange={handleCheckboxChange}
                   />
+
                   Save this payment to my profile
                 </label>
               )}
@@ -592,12 +698,10 @@ function CheckOut() {
           Dishes per week: ${mealPlan.dishesPerWeek}
           Diet: ${mealPlan.diet}
           Price: ${mealPlan.price}
-          Address: ${addressForm.address}, ${addressForm.city}, ${
-          addressForm.region
-        }, ${addressForm.zipCode}, ${addressForm.country}
+          Address: ${addressForm.address}, ${addressForm.city}, ${addressForm.region
+          }, ${addressForm.zipCode}, ${addressForm.country}
           Phone: ${addressForm.phone}
-          Payment Method: ${
-            paymentMethodForm.method
+          Payment Method: ${paymentMethodForm.method
           } ending in ${paymentMethodForm.number.slice(-4)}
           Delivery Days: ${deliveryDay.join(", ")}`}
         confirmMessage="Confirm"
