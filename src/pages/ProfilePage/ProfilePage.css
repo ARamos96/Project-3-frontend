@@ -3,29 +3,38 @@
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: black; /* Set background color to black */
+  /* background-color: black; */
   color: white; /* Set text color to white for contrast */
 }
 
-.profile-columns {
+.personal-details-card {
+  display:flex;
+  flex-direction: column;
+}
+
+.profile-page button {
+  height: 40px;
+  padding: 5px;
+  line-height: 0;
+  letter-spacing: 0;
+}
+
+.personal-details-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
-.profile-column {
-  width: 48%;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 20px;
-  background-color: #333; /* Dark background for the profile column */
+.profile-pic img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
 }
 
-.profile-item {
-  margin-bottom: 15px;
-}
-
-.profile-item strong {
-  margin-right: 10px;
+.profile-item p {
+  margin: 0px;
 }
 
 form .profile-item {
@@ -41,15 +50,6 @@ form .profile-item input {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  margin-bottom: 10px;
 }
 
 .button-profile {

@@ -6,10 +6,18 @@
 
 .profile-fav-dishes {
   display: flex;
+  flex-direction: column;
+}
+
+.fav-dishes-container {
+  display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-content: space-evenly;
+  justify-content: flex-start; /* Align items at the start */
+  align-content: flex-start; /* Align the flex container's lines at the start */
+  gap: 10px;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .profile-item-container a {
@@ -21,10 +29,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
   justify-content: center;
-  width: 150px;
-  height: 100px;
+  position: relative;
+  width: 40px;
+  height: 30px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   padding: 32px;
   overflow: hidden;
@@ -34,6 +42,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  flex: 0 0 auto; /* Prevent the items from shrinking or growing */
 }
 
 .profile-item-container > * > p {
@@ -47,3 +56,84 @@
   border-radius: 5px;
 }
 
+.mealplan-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.mealplan-details {
+  display: flex;
+  justify-content: space-evenly;
+	align-items: center;
+}
+
+.active-subscription-container {
+  display: flex;
+  justify-content: space-around;
+	align-items: center;
+}
+
+.subscription-details-container {
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+}
+
+.subscription-dishes-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-content: space-evenly
+}
+
+.delivery-details-container {
+  color: white;
+}
+
+.dish-thumbnail-mealplan{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100px;
+  height: 65px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;  
+}
+
+.dish-thumbnail-mealplan > * > p{
+  background: rgba(
+    69,
+    68,
+    62,
+    0.8
+  ); /* Semi-transparent background for readability */
+  padding: 10px;
+  border-radius: 5px;
+  
+}
+
+.dish-thumbnail-mealplan {
+  flex: 0 0 auto; /* Do not shrink, do not grow, maintain automatic size */
+  width: 150px; /* Fixed width, adjust as needed */
+  height: 150px; /* Fixed height, adjust as needed */
+  background-size: cover; /* Cover the background */
+  background-position: center; /* Center the background */
+  position: relative; /* Position context for child elements */
+  border-radius: 5px;
+}
+
+.dish-thumbnail-mealplan p {
+  position: absolute; /* Position within the parent container */
+  bottom: 0; /* Align at the bottom */
+  left: 0; /* Align at the left */
+  width: 100%; /* Full width */
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  color: white; /* Text color */
+  margin: 0; /* Remove default margin */
+  padding: 5px; /* Padding around the text */
+  text-align: center; /* Center align the text */
+}

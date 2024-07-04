@@ -8,6 +8,7 @@ import Footer from "./components/Footer/Footer";
 
 import HomePage from "./pages/HomePage/HomePage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import NewProfilePage from "./pages/ProfilePage/NewProfilePage";
 import SignupPage from "./pages/SignupPage/SignupPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import HowItWorksPage from "./pages/HowItWorksPage/HowItWorksPage";
@@ -43,11 +44,19 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
 
-        <Route
+        {/* <Route
           path="/profile"
           element={
             <IsPrivate>
               <ProfilePage />
+            </IsPrivate>
+          }
+        /> */}
+        <Route
+          path="/profile"
+          element={
+            <IsPrivate>
+              <NewProfilePage />
             </IsPrivate>
           }
         />
