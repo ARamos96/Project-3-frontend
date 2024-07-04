@@ -330,7 +330,7 @@ function CheckOut() {
             </tr>
             <tr>
               <td>Price:</td>
-              <td>{mealPlan.price}</td>
+              <td>{mealPlan.price} €</td>
             </tr>
           </table>
         </div>
@@ -339,24 +339,11 @@ function CheckOut() {
       <h3>Your choices</h3>
       <div className="item-menu">
         {cart.map((item) => (
-          <div
-            className="item-container"
-            key={item._id}
-            style={{
-              backgroundImage: `url(/${encodeURIComponent(item.name)}.jpg)`,
-            }}
+          <div className="item-menu-item"    
           >
             <Link to={`/recipes/${item._id}`}>
               <p>{item.name}</p>
-              <div className="item-info">
-                <p>
-                  <span className="pi pi-stopwatch" /> {item.cookingTime}'
-                </p>
-                <p>{item.nutritionalValuePerServing.calories}kcal</p>
-                <p>
-                  {item.rating} <span className="pi pi-star-fill" />
-                </p>
-              </div>
+              
             </Link>
           </div>
         ))}
@@ -366,7 +353,7 @@ function CheckOut() {
         <div>
           <h3>Your details</h3>
           <form onSubmit={handleSubmit}>
-            <h4>Address</h4>
+            <h4 className="details-titles">Address</h4>
             <div className="form-group">
               <TextField
                 label="Address"
@@ -496,7 +483,7 @@ function CheckOut() {
                     checked={saveToUserCheckboxes.putAddressToUser}
                     onChange={handleCheckboxChange}
                   />
-                  Update my address to this one
+                  <p>Update my address to this one</p>
                 </label>
               ) : (
                 <label>
@@ -506,12 +493,13 @@ function CheckOut() {
                     checked={saveToUserCheckboxes.postAddressToUser}
                     onChange={handleCheckboxChange}
                   />
-                  Save this address to my profile
+                  <p>Save this address to my profile</p>
                 </label>
               )}
             </div>
+            
 
-            <h4>Choose a delivery day</h4>
+            <h4 className="details-titles">Choose a delivery day</h4>
             <div className="form-group">
               <label>
                 <Checkbox
@@ -560,7 +548,7 @@ function CheckOut() {
               </label>
             </div>
 
-            <h4>Payment method</h4>
+            <h4 className="details-titles">Payment method</h4>
             <div className="payment-container">
               <FormControl fullWidth margin="normal">
                 <InputLabel htmlFor="payment-method">Payment Method</InputLabel>
@@ -667,16 +655,16 @@ function CheckOut() {
                 variant="outlined"
               />
             </div>
-            <div>
+            <div >
               {user?.paymentMethod ? (
-                <label>
+                <label className="checkboxes">
                   <Checkbox
                     name="putPaymentToUser"
                     value="putPaymentToUser"
                     checked={saveToUserCheckboxes.putPaymentToUser}
                     onChange={handleCheckboxChange}
                   />
-                  Update my payment to this one
+                  <p>Update my payment to this one</p>
                 </label>
               ) : (
                 <label>
@@ -686,7 +674,7 @@ function CheckOut() {
                     checked={saveToUserCheckboxes.postPaymentToUser}
                     onChange={handleCheckboxChange}
                   />
-                  Save this payment to my profile
+                 <p> Save this payment to my profile</p>
                 </label>
               )}
             </div>

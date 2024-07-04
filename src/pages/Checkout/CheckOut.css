@@ -1,39 +1,90 @@
 .form-group .MuiTextField-root {
-    max-width: 400px;
-    width: 100%;
-  }
+  max-width: 400px;
+  width: 100%;
+}
 
-  .meal-plan-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; 
-  }
-  
-  .meal-plan-table {
-    width: 400px;
-    border-collapse: collapse;
-    font-size: 20px;
-    font-family: "Lato", sans-serif;
-  }
-  
-  .meal-plan-table td {
-    padding: 8px;
-    text-align: left;
-    border: none;
-  }
-  
-  .meal-plan-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
-  
-  .meal-plan-table td:first-child {
-    font-weight: bold;
-  }
-  
-  .meal-plan-table td:nth-child(2) {
-    text-align: right;
-  }
+.meal-plan-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+  background-color: #f8f9fa; 
+}
 
-  
+.mealPlan-info{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.meal-plan-table {
+  width: 400px;
+  border-collapse: collapse;
+  font-size: 20px;
+  font-family: "Lato", sans-serif;
+}
+
+.meal-plan-table td {
+  padding: 8px;
+  text-align: left;
+  border: none;
+}
+
+.meal-plan-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.meal-plan-table td:first-child {
+  font-weight: bold;
+}
+
+.meal-plan-table td:nth-child(2) {
+  text-align: right;
+}
+
+
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.item-menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.item-menu a{
+  text-decoration: none;
+
+}
+.item-menu-item{
+  border: 1px solid grey;
+  padding: 10px;
+  border-radius: 20px;
+  background: rgba(228, 222, 196, 0.8)
+
+
+}
+
+
+.details-titles{
+  width: 600px;
+}
+
+.checkboxes{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+
