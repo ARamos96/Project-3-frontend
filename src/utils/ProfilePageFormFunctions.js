@@ -1,4 +1,9 @@
-import { trimObjectValues, validatePersonalDetails } from "./DataValidation";
+import {
+  trimObjectValues,
+  validatePersonalDetails,
+  validateAddress,
+  validatePassword,
+} from "./DataValidation";
 import { showToast } from "./Toast";
 const ADDRESS_FIELDS = 6;
 const PAYMENT_FIELDS = 4;
@@ -38,7 +43,10 @@ function ProfilePageFormFunctions() {
       isEditingAddress ||
       isEditingPaymentMethod
     ) {
-      alert("You must close the other forms before opening a new one");
+      showToast(
+        "You must close the other forms before opening a new one",
+        "warning"
+      );
       return true;
     }
     return false;
@@ -199,14 +207,26 @@ function ProfilePageFormFunctions() {
   ) => {
     e.preventDefault();
 
+    // Trim all empty strings from formData
+    const trimmedFormData = trimObjectValues(formData);
+
+    // Validate personal details data
+    const hasErrors = validateAddress(trimmedFormData);
+
+    // In case of errors, warn user and return
+    if (hasErrors) {
+      showToast(hasErrors, "warning");
+      return;
+    }
+
     let minimumFields = 0;
 
     let isPost = false;
 
-    let changedFields = getChangedFields(userAddress, formData);
+    let changedFields = getChangedFields(userAddress, trimmedFormData);
 
     if (changedFields === "isNewData") {
-      changedFields = formData;
+      changedFields = trimmedFormData;
       minimumFields = ADDRESS_FIELDS;
       isPost = true;
     }
@@ -231,14 +251,26 @@ function ProfilePageFormFunctions() {
   ) => {
     e.preventDefault();
 
+    // Trim all empty strings from formData
+    const trimmedFormData = trimObjectValues(formData);
+
+    // Validate personal details data
+    const hasErrors = validateAddress(trimmedFormData);
+
+    // In case of errors, warn user and return
+    if (hasErrors) {
+      showToast(hasErrors, "warning");
+      return;
+    }
+
     let minimumFields = 0;
 
     let isPost = false;
 
-    let changedFields = getChangedFields(userPaymentMethod, formData);
+    let changedFields = getChangedFields(userPaymentMethod, trimmedFormData);
 
     if (changedFields === "isNewData") {
-      changedFields = formData;
+      changedFields = trimmedFormData;
       minimumFields = PAYMENT_FIELDS;
       isPost = true;
     }
@@ -262,12 +294,25 @@ function ProfilePageFormFunctions() {
   ) => {
     e.preventDefault();
 
+    // Trim all empty strings from formData
+    const trimmedFormData = trimObjectValues(formData);
+
+    // Validate personal details data
+    const hasErrors = validatePassword(trimmedFormData);
+
+    // In case of errors, warn user and return
+    if (hasErrors) {
+      showToast(hasErrors, "warning");
+      setIsChangingPassword(false);
+      return;
+    }
+
     let minimumFields = 0;
 
-    let changedFields = getChangedFields(formData, "password");
+    let changedFields = getChangedFields(trimmedFormData, "password");
 
     if (changedFields === "isNewData") {
-      changedFields = formData;
+      changedFields = trimmedFormData;
       minimumFields = PASSWORD_FIELDS;
     }
 
@@ -293,7 +338,7 @@ function ProfilePageFormFunctions() {
       handleUserUpdate(changedFields, updateType, isPost);
       setIsEditingCallback(false);
     } else if (isPost) {
-      alert("Please fill out all the required fields");
+      showToast("Please fill out all the required fields", "warning");
       return;
     }
   };

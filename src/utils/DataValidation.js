@@ -74,9 +74,9 @@ const validateAddress = (addressForm) => {
     messages += "All fields must be filled.\n";
   }
 
-  const zipCodePattern = /^\d+$/;
+  const zipCodePattern = /\d/; // Checks if there's at least one digit
   if (zipCode && !zipCodePattern.test(zipCode)) {
-    messages += "Zip Code must contain only numbers.\n";
+    messages += "Zip Code must contain some numbers.\n";
   }
 
   const phonePattern = /^\d+$/;
@@ -112,6 +112,25 @@ const validatePersonalDetails = (personalDetailsForm) => {
   return messages.trim(); // Remove the trailing newline;
 };
 
+const validatePassword = (form) => {
+  let { oldPassword, newPassword } = form;
+  let messages = "";
+
+  if (oldPassword.trim() === "" || newPassword.trim() === "") {
+    messages += "Passwords cannot be empty.\n";
+    return messages;
+  }
+
+  const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+
+  if (!passwordRegex.test(newPassword)) {
+    messages +=
+      "New password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.";
+  }
+
+  return messages.trim(); // Remove the trailing newline;
+};
+
 // Gets an object and calls trim() on all string values, including arrays and nested values
 const trimObjectValues = (obj) => {
   const trimmedObject = {};
@@ -140,4 +159,5 @@ export {
   validateDeliveryDay,
   validateAddress,
   validatePersonalDetails,
+  validatePassword,
 };
