@@ -214,14 +214,15 @@ function RecipesList() {
                   </div>
                 </Link>
                 {isLoggedIn && (
-                  <IconButton
+                  <IconButton className="favbutton"
                     onClick={() => handleToggleFavorite(recipe)}
                     color="secondary"
+                    style={{ fontSize: '3rem' }}
                   >
                     {isInFavorites(recipe._id) ? (
-                      <Bookmark />
+                      <Bookmark style={{ fontSize: '3rem' }} />
                     ) : (
-                      <BookmarkBorder />
+                      <BookmarkBorder style={{ fontSize: '3rem' }}/>
                     )}
                   </IconButton>
                 )}

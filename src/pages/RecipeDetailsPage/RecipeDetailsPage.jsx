@@ -111,8 +111,9 @@ function RecipeDetailsPage() {
           <IconButton
             className="favorite-button"
             onClick={() => handleToggleFavorite(recipe)}
+            style={{ fontSize: '3rem' }}
           >
-            {isInFavorites(recipeId) ? <Bookmark /> : <BookmarkBorder />}
+            {isInFavorites(recipeId) ? <Bookmark style={{ fontSize: '3rem' }}/> : <BookmarkBorder style={{ fontSize: '3rem' }} />}
           </IconButton>
         )}
       </div>

@@ -158,3 +158,9 @@
   margin: 30px;
 }
 
+.favbutton{
+  --c: transparent; 
+  transform: none;
+  transition: none;
+  transition-delay: unset;
+}

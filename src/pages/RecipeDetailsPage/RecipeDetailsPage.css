@@ -119,4 +119,10 @@
     margin-bottom: 10px;
     padding: 10px;
   }
+  .favorite-button{
+    --c: transparent; 
+  transform: none;
+  transition: none;
+  transition-delay: unset;
+  }
   
