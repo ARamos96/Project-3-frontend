@@ -35,9 +35,12 @@ function HowItWorksPage() {
           </p>
         </div>
       </div>
-      <button onClick={() => navigate("/recipes")}>Let's get STARTED!
-        <span></span><span></span><span></span><span></span>
-
+      <button onClick={() => navigate("/recipes")}>
+        Let's get STARTED!
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
       <div className="FAQs">
         <h2>Frequently Asked Questions</h2>
