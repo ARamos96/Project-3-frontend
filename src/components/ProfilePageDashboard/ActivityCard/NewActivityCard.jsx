@@ -76,20 +76,6 @@ const NewActivityCard = ({ user }) => {
                           <Link to={`/recipes/${dish._id}`}>
                             <p>{dish.name}</p>
                           </Link>
-                          {/* - {dish.price}$ */}
-                          {/* <div>
-                      {dish.categories.origin.join(", ")},{" "}
-                      {dish.categories.diet.join(", ")}, Cooking time:{" "}
-                      {dish.cookingTime} minutes
-                    </div> */}
-                          {/* <div>
-                      Nutritional Value:{" "}
-                      {dish.nutritionalValuePerServing.calories} calories,{" "}
-                      {dish.nutritionalValuePerServing.fat}g fat,{" "}
-                      {dish.nutritionalValuePerServing.protein}g protein,{" "}
-                      {dish.nutritionalValuePerServing.carbohydrates}g carbs,{" "}
-                      {dish.nutritionalValuePerServing.fiber}g fiber
-                    </div> */}
                         </div>
                       ))}
                     </div>
@@ -107,74 +93,12 @@ const NewActivityCard = ({ user }) => {
                       {user.activeSubscription.shippingAddress.region},{" "}
                       {user.activeSubscription.shippingAddress.country}
                     </div>
-                    {/* <div>
-              Payment Method: {user.activeSubscription.paymentMethod.method}{" "}
-              ending in {user.activeSubscription.paymentMethod.number.slice(-4)}
-              , Exp: {user.activeSubscription.paymentMethod.expiration}
-            </div> */}
                   </div>
                 </div>
               )}
           </AccordionTab>
         </Accordion>
       </div>
-
-      {/* <h3>Previous Subscriptions:</h3>
-      {user?.previousSubscriptions?.length > 0 && (
-        <div className="profile-item">
-          {user.previousSubscriptions.map((subscription, index) => (
-            <div key={index}>
-              <div>Subscription ID: {subscription._id}</div>
-              <div>
-                Shipping Address: {subscription.shippingAddress.address},{" "}
-                {subscription.shippingAddress.city},{" "}
-                {subscription.shippingAddress.region},{" "}
-                {subscription.shippingAddress.zipCode},{" "}
-                {subscription.shippingAddress.country},{" "}
-                {subscription.shippingAddress.phone}
-              </div>
-              <div>
-                Meal Plan: {subscription.mealPlan.diet.join(", ")} for{" "}
-                {subscription.mealPlan.numberOfPeople} people,{" "}
-                {subscription.mealPlan.dishesPerWeek} dishes/week, $
-                {subscription.mealPlan.price}
-              </div>
-              <div>
-                Dishes:
-                <ul>
-                  {subscription.dishes.map((dish) => (
-                    <li key={dish._id}>
-                      <strong>{dish.name}</strong> - {dish.price}$
-                      <div>
-                        {dish.categories.origin.join(", ")},{" "}
-                        {dish.categories.diet.join(", ")}, Cooking time:{" "}
-                        {dish.cookingTime} minutes
-                      </div>
-                      <div>
-                        Nutritional Value:{" "}
-                        {dish.nutritionalValuePerServing.calories} calories,{" "}
-                        {dish.nutritionalValuePerServing.fat}g fat,{" "}
-                        {dish.nutritionalValuePerServing.protein}g protein,{" "}
-                        {dish.nutritionalValuePerServing.carbohydrates}g carbs,{" "}
-                        {dish.nutritionalValuePerServing.fiber}g fiber
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>Delivery Days: {subscription.deliveryDay.join(", ")}</div>
-              <div>
-                Payment Method: {subscription.paymentMethod.method} ending in{" "}
-                {subscription.paymentMethod.number.slice(-4)}, Exp:{" "}
-                {subscription.paymentMethod.expiration}
-              </div>
-              <div>
-                Created At: {new Date(subscription.createdAt).toLocaleString()}
-              </div>
-            </div>
-          ))}
-        </div>
-      )} */}
 
       <div className="accordion">
         <Accordion activeIndex={1}>
