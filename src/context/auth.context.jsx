@@ -93,9 +93,13 @@ function AuthProviderWrapper(props) {
   };
 
   const handleSignUp = async (requestBody) => {
-    const response = await authService.signup(requestBody);
-    storeToken(response.data.authToken);
-    authenticateUser();
+    try {
+      const response = await authService.signup(requestBody);
+      storeToken(response.data.authToken);
+      authenticateUser();
+    } catch (error) {
+      showToast(error.data.message, "error");
+    }
   };
 
   // If user has logged in and only contains token payload,
@@ -193,11 +197,11 @@ function AuthProviderWrapper(props) {
       }
       updateUserStateAndLocalStorage(response.data, updateType, isPost);
     } catch (error) {
-      let message = `Error updating ${updateType}. Please try again`
-      if (error.response.data.message === "Previous password is not valid"){
+      let message = `Error updating ${updateType}. Please try again`;
+      if (error.response.data.message === "Previous password is not valid") {
         message = "Previous password is not valid";
       }
-      showToast(message, "error")
+      showToast(message, "error");
     }
   };
 
@@ -389,9 +393,13 @@ function AuthProviderWrapper(props) {
   };
 
   const addFavoriteToDB = async (dishes) => {
-    const response = await authService.postFavDishes(dishes, user._id);
-    updateUserStateAndLocalStorage(response.data, "favDishes");
-    return response;
+    try {
+      const response = await authService.postFavDishes(dishes, user._id);
+      updateUserStateAndLocalStorage(response.data, "favDishes");
+      return response;
+    } catch (error) {
+      showToast(error.data.message, "error");
+    }
   };
 
   const saveDishesInStateAndStorage = (dishes) => {
@@ -449,7 +457,7 @@ function AuthProviderWrapper(props) {
         // set fav dishes in state and storage
         saveDishesInStateAndStorage(response.data.favDishes);
       } catch (error) {
-        console.log(error);
+        showToast(error.data.message, "error");
       }
     }
   };

@@ -171,12 +171,12 @@ function CheckOut() {
     }
 
     let subscriptionData = {
-      shippingAddress: addressForm,
+      shippingAddress: trimmedAddressForm,
       mealPlan: mealPlan,
       user: user._id,
       dishes: cart.map((item) => item._id),
       deliveryDay,
-      paymentMethod: paymentMethodForm,
+      paymentMethod: trimmedPaymentMethodForm,
     };
 
     // Compare changes between user data and forms
@@ -339,11 +339,9 @@ function CheckOut() {
       <h3>Your choices</h3>
       <div className="item-menu">
         {cart.map((item) => (
-          <div className="item-menu-item"    
-          >
+          <div className="item-menu-item">
             <Link to={`/recipes/${item._id}`}>
               <p>{item.name}</p>
-              
             </Link>
           </div>
         ))}
@@ -360,7 +358,9 @@ function CheckOut() {
                 type="text"
                 name="address"
                 value={addressForm.address}
-                onChange={(e) => handleInputChange(e, setAddressForm)}
+                onChange={(e) =>
+                  handleInputChange(e, setAddressForm, addressForm)
+                }
                 required
                 fullWidth
                 margin="normal"
@@ -379,7 +379,9 @@ function CheckOut() {
                 type="text"
                 name="city"
                 value={addressForm.city}
-                onChange={(e) => handleInputChange(e, setAddressForm)}
+                onChange={(e) =>
+                  handleInputChange(e, setAddressForm, addressForm)
+                }
                 required
                 fullWidth
                 margin="normal"
@@ -398,7 +400,9 @@ function CheckOut() {
                 type="text"
                 name="region"
                 value={addressForm.region}
-                onChange={(e) => handleInputChange(e, setAddressForm)}
+                onChange={(e) =>
+                  handleInputChange(e, setAddressForm, addressForm)
+                }
                 required
                 fullWidth
                 margin="normal"
@@ -417,7 +421,9 @@ function CheckOut() {
                 type="text"
                 name="zipCode"
                 value={addressForm.zipCode}
-                onChange={(e) => handleInputChange(e, setAddressForm)}
+                onChange={(e) =>
+                  handleInputChange(e, setAddressForm, addressForm)
+                }
                 required
                 fullWidth
                 margin="normal"
@@ -436,7 +442,9 @@ function CheckOut() {
                 type="text"
                 name="country"
                 value={addressForm.country}
-                onChange={(e) => handleInputChange(e, setAddressForm)}
+                onChange={(e) =>
+                  handleInputChange(e, setAddressForm, addressForm)
+                }
                 required
                 fullWidth
                 margin="normal"
@@ -455,7 +463,9 @@ function CheckOut() {
                 type="tel"
                 name="phone"
                 value={addressForm.phone}
-                onChange={(e) => handleInputChange(e, setAddressForm)}
+                onChange={(e) =>
+                  handleInputChange(e, setAddressForm, addressForm)
+                }
                 required
                 fullWidth
                 margin="normal"
@@ -497,7 +507,6 @@ function CheckOut() {
                 </label>
               )}
             </div>
-            
 
             <h4 className="details-titles">Choose a delivery day</h4>
             <div className="form-group">
@@ -555,6 +564,7 @@ function CheckOut() {
                 <Select
                   native
                   value={paymentMethodForm.method}
+                  default={"Credit Card"}
                   onChange={(e) =>
                     handleInputChange(
                       e,
@@ -643,8 +653,8 @@ function CheckOut() {
                 required
                 fullWidth
                 inputProps={{
-                  minLength: 5,
-                  maxLength: 5,
+                  minLength: 3,
+                  maxLength: 3,
                 }}
                 sx={{ backgroundColor: "white" }}
                 InputProps={{
@@ -655,7 +665,7 @@ function CheckOut() {
                 variant="outlined"
               />
             </div>
-            <div >
+            <div>
               {user?.paymentMethod ? (
                 <label className="checkboxes">
                   <Checkbox
@@ -674,7 +684,7 @@ function CheckOut() {
                     checked={saveToUserCheckboxes.postPaymentToUser}
                     onChange={handleCheckboxChange}
                   />
-                 <p> Save this payment to my profile</p>
+                  <p> Save this payment to my profile</p>
                 </label>
               )}
             </div>
@@ -695,19 +705,7 @@ function CheckOut() {
         handleClose={() => setShowModal(false)}
         handleConfirm={handleConfirmPurchase}
         heading="Please confirm your purchase"
-        message={`Meal Plan Details:
-          Number of People: ${mealPlan.numberOfPeople}
-          Dishes per week: ${mealPlan.dishesPerWeek}
-          Diet: ${mealPlan.diet}
-          Price: ${mealPlan.price}
-          Address: ${addressForm.address}, ${addressForm.city}, ${
-          addressForm.region
-        }, ${addressForm.zipCode}, ${addressForm.country}
-          Phone: ${addressForm.phone}
-          Payment Method: ${
-            paymentMethodForm.method
-          } ending in ${paymentMethodForm.number.slice(-4)}
-          Delivery Days: ${deliveryDay.join(", ")}`}
+        message={`Meal Plan for ${mealPlan.numberOfPeople} people`}
         confirmMessage="Confirm"
         closeMessage="Cancel"
       />
