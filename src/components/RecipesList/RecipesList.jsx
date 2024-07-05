@@ -61,27 +61,28 @@ function RecipesList() {
     // Start with all recipes for filtering
     let recipesToFilter = recipes;
 
-    // If there are selected origins, filter recipes by these origins
-    if (selectedOrigins.length > 0) {
-      recipesToFilter = recipesToFilter.filter((recipe) =>
-        selectedOrigins.some((origin) =>
-          recipe.categories.origin.includes(origin)
-        )
-      );
-    }
-
-    // If there are selected diets, filter recipes by these diets
-    if (selectedDiets.length > 0) {
-      recipesToFilter = recipesToFilter.filter((recipe) =>
-        selectedDiets.some((diet) => recipe.categories.diet.includes(diet))
-      );
-    }
-
-    // If there is a search term, filter recipes by the search term
     if (searchTerm) {
+      // If there is a search term, filter recipes by the search term first
       recipesToFilter = recipesToFilter.filter((recipe) =>
         recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
+      // If there is no search term, filter recipes by the selected origins and diets
+    } else {
+      // If there are selected origins, filter recipes by these origins
+      if (selectedOrigins.length > 0) {
+        recipesToFilter = recipesToFilter.filter((recipe) =>
+          selectedOrigins.some((origin) =>
+            recipe.categories.origin.includes(origin)
+          )
+        );
+      }
+
+      // If there are selected diets, filter recipes by these diets
+      if (selectedDiets.length > 0) {
+        recipesToFilter = recipesToFilter.filter((recipe) =>
+          selectedDiets.some((diet) => recipe.categories.diet.includes(diet))
+        );
+      }
     }
 
     // Update the filtered recipes state and reset the current page to 1
