@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import authService from "../services/auth.service";
 import { AuthContext } from "./auth.context";
+import { showToast } from "../utils/Toast";
 
 const CartContext = React.createContext();
 
@@ -21,11 +22,12 @@ function CartProviderWrapper(props) {
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [hasFetchedRecipes, setHasFetchedRecipes] = useState(false);
+  const [isToastDisplayed, setIsToastDisplayed] = useState(false);
 
   // On user loading, if user has less than 6 fields (just signed up, token payload),
   // load all user data
   useEffect(() => {
-      const storedMealPlan = JSON.parse(localStorage.getItem("mealPlan"));
+    const storedMealPlan = JSON.parse(localStorage.getItem("mealPlan"));
 
     if (!isMealPlanLoaded && storedMealPlan !== null) {
       setMealPlan(storedMealPlan);
@@ -66,7 +68,7 @@ function CartProviderWrapper(props) {
       isMealPlan = true;
     }
 
-    return {}
+    return {};
   };
 
   // Add dish object, including duplicates
@@ -75,15 +77,17 @@ function CartProviderWrapper(props) {
     console.log("This is the product: ", JSON.stringify(dish));
 
     if (isCartFull()) {
-      toast.warning("You have reached the maximum number of dishes per week", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      if (!isToastDisplayed) {
+        showToast(
+          "You have reached the maximum number of dishes per week",
+          "warning"
+        );
+        setIsToastDisplayed(true);
+
+        setTimeout(() => {
+          setIsToastDisplayed(false);
+        }, 3000); // 3 second timeout to avoid multiple toasts triggered
+      }
       return;
     } else {
       // Update the cart state with the new dish
