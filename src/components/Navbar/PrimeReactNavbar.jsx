@@ -4,13 +4,12 @@ import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
 import { Menubar } from "primereact/menubar";
 import { Badge } from "primereact/badge";
-import { Avatar } from "primereact/avatar";
 import ShoppingCart from "../ShoppingCart/ShoppingCart";
 import "./Navbar.css"; // Import your custom CSS file for Navbar styling
 
 export default function Navbar() {
   const { isLoggedIn, logOutUser } = useContext(AuthContext);
-  const { deleteMealPlan, emptyCart } = useContext(CartContext);
+  const { setMealPlan, setCart } = useContext(CartContext);
 
   const navigate = useNavigate();
 
@@ -62,7 +61,7 @@ export default function Navbar() {
           label: "Logout",
           icon: "pi pi-sign-out",
           command: () => {
-            logOutUser(deleteMealPlan, emptyCart);
+            logOutUser(setMealPlan, setCart);
           },
           template: itemRenderer,
         },
@@ -84,21 +83,15 @@ export default function Navbar() {
     <div className="flex items-center gap-2 ml-auto w-300px">
       {isLoggedIn ? (
         <>
-          <Avatar
-            image="https://static-00.iconduck.com/assets.00/user-avatar-icon-2048x2048-wpp8os2d.png" // Adjust the path to your avatar image
-            shape="circle"
-          />
           <ShoppingCart />
         </>
       ) : (
         <>
           <Link to="/signup">
-            <button className="log-in-button">Sign In</button>
+            <button className="log-in-button">Sign Up</button>
           </Link>
           <Link to="/login">
-            <button className="log-in-button">
-              Log In
-            </button>
+            <button className="log-in-button">Log In</button>
           </Link>
         </>
       )}

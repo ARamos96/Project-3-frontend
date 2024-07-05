@@ -37,7 +37,7 @@ function MealPlan() {
       }, 1000);
 
       return;
-    } else if (isMealPlanLoaded && !isMealPlanInComponent) {
+    } else if (mealPlan && isMealPlanLoaded && !isMealPlanInComponent) {
       setNumPeople(mealPlan.numberOfPeople);
       setNumDishes(mealPlan.dishesPerWeek);
       setDiet(mealPlan.diet);
@@ -95,7 +95,6 @@ function MealPlan() {
   };
 
   const handleSubmit = () => {
-
     // Returns an empty string or a string with 1 error per new line
     const errorMessages = validateMealPlan(numPeople, numDishes, diet);
 
@@ -145,7 +144,9 @@ function MealPlan() {
             <button
               key={num}
               onClick={() => handlePeopleClick(num)}
-              className={numPeople === num ? "selected" : ""}
+              className={
+                numPeople !== undefined && numPeople === num ? "selected" : ""
+              }
             >
               {num}
               <span></span>
@@ -162,7 +163,9 @@ function MealPlan() {
             <button
               key={num}
               onClick={() => handleDishesClick(num)}
-              className={numDishes === num ? "selected" : ""}
+              className={
+                numDishes !== undefined && numDishes === num ? "selected" : ""
+              }
             >
               {num}
               <span></span>

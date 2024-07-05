@@ -27,11 +27,19 @@ function CartProviderWrapper(props) {
   // On user loading, if user has less than 6 fields (just signed up, token payload),
   // load all user data
   useEffect(() => {
-    const storedMealPlan = JSON.parse(localStorage.getItem("mealPlan"));
+    const isMealPlanOrCart = checkSavedCartOrMealPlan();
+    if (user) {
+      if (isMealPlanOrCart.isMealPlan) {
+        const storedMealPlan = JSON.parse(localStorage.getItem("mealPlan"));
+        setMealPlan(storedMealPlan);
+        setIsMealPlanLoaded(true);
+      }
 
-    if (!isMealPlanLoaded && storedMealPlan !== null) {
-      setMealPlan(storedMealPlan);
-      setIsMealPlanLoaded(true);
+      if (isMealPlanOrCart.isCart) {
+        const storedCart = JSON.parse(localStorage.getItem("cart"));
+        setCart(storedCart);
+        setBadge(storedCart.length);
+      }
     }
   }, [
     user,
@@ -50,8 +58,8 @@ function CartProviderWrapper(props) {
 
   const checkSavedCartOrMealPlan = () => {
     // Initialize flags to false to indicate if a cart or meal plan is saved
-    const isCart = false;
-    const isMealPlan = false;
+    let isCart = false;
+    let isMealPlan = false;
 
     // Retrieve the cart if it exists
     const storedCart = JSON.parse(localStorage.getItem("cart"));
@@ -68,7 +76,7 @@ function CartProviderWrapper(props) {
       isMealPlan = true;
     }
 
-    return {};
+    return { isCart: isCart, isMealPlan: isMealPlan };
   };
 
   // Add dish object, including duplicates
@@ -212,7 +220,7 @@ function CartProviderWrapper(props) {
       setFilteredRecipes(response.data); // Set initial filtered recipes to all recipes
       setHasFetchedRecipes(true);
     } catch (error) {
-      console.error("Error fetching recipes:", error);
+      showToast(error.data.message, "error");
     }
   };
 
@@ -222,6 +230,7 @@ function CartProviderWrapper(props) {
         cart,
         badge,
         mealPlan,
+        setMealPlan,
         isMealPlanLoaded,
         setCart,
         addToCart,
