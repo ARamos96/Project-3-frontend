@@ -28,17 +28,18 @@ function CartProviderWrapper(props) {
   // load all user data
   useEffect(() => {
     const isMealPlanOrCart = checkSavedCartOrMealPlan();
+    if (user) {
+      if (isMealPlanOrCart.isMealPlan) {
+        const storedMealPlan = JSON.parse(localStorage.getItem("mealPlan"));
+        setMealPlan(storedMealPlan);
+        setIsMealPlanLoaded(true);
+      }
 
-    if (isMealPlanOrCart.isMealPlan) {
-      const storedMealPlan = JSON.parse(localStorage.getItem("mealPlan"));
-      setMealPlan(storedMealPlan);
-      setIsMealPlanLoaded(true);
-    }
-
-    if (isMealPlanOrCart.isCart) {
-      const storedCart = JSON.parse(localStorage.getItem("cart"));
-      setCart(storedCart);
-      setBadge(storedCart.length);
+      if (isMealPlanOrCart.isCart) {
+        const storedCart = JSON.parse(localStorage.getItem("cart"));
+        setCart(storedCart);
+        setBadge(storedCart.length);
+      }
     }
   }, [
     user,
