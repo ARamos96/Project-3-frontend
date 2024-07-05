@@ -27,7 +27,6 @@ function RecipeDetailsPage() {
   const { recipeId } = useParams();
 
   useEffect(() => {
-    if (user && isUserLoaded) checkIfUserDataIsLoaded();
     // find dish in dishes array by id
     const dish = recipes.find((dish) => dish._id === recipeId);
     setRecipe(dish);
@@ -49,16 +48,6 @@ function RecipeDetailsPage() {
       navigate("/mealplan");
     } else {
       addToCart(recipe);
-      toast.success("Dish added to the cart!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
     }
   };
 

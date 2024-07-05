@@ -55,7 +55,7 @@ function AuthProviderWrapper(props) {
               await addFavoriteToDB(getNewFavDishesFromStorage());
               saveDishesInStateAndStorage(getNewFavDishesFromStorage());
             }
-            saveDishesInStateAndStorage(getNewFavDishesFromStorage());
+            saveDishesInStateAndStorage(userInStorage.favDishes);
           }
           setIsUserLoaded(true);
         }

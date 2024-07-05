@@ -24,18 +24,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      // save the cart, mealplan to user
-      // Perform your global cleanup actions here
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
   return (
     <div className="App">
       <PrimeReactNavbar />

@@ -21,13 +21,8 @@ function RecipesList() {
     handleToggleFavorite,
     isFavDishUpdating,
   } = useContext(AuthContext);
-  const {
-    addToCart,
-    mealPlan,
-    recipes,
-    filteredRecipes,
-    setFilteredRecipes,
-  } = useContext(CartContext);
+  const { addToCart, mealPlan, recipes, filteredRecipes, setFilteredRecipes } =
+    useContext(CartContext);
   const navigate = useNavigate();
 
   const [selectedOrigins, setSelectedOrigins] = useState([]);
@@ -41,7 +36,9 @@ function RecipesList() {
   useEffect(() => {
     // On unmount, check if favDishes has changed and update changes
     return () => {
-      isFavDishUpdating();
+      if (user && JSON.parse(localStorage.getItem("user")) !== null) {
+        isFavDishUpdating();
+      }
     };
   }, [isFavDishUpdating, user]);
 
@@ -214,15 +211,16 @@ function RecipesList() {
                   </div>
                 </Link>
                 {isLoggedIn && (
-                  <IconButton className="favbutton"
+                  <IconButton
+                    className="favbutton"
                     onClick={() => handleToggleFavorite(recipe)}
                     color="secondary"
-                    style={{ fontSize: '3rem' }}
+                    style={{ fontSize: "3rem" }}
                   >
                     {isInFavorites(recipe._id) ? (
-                      <Bookmark style={{ fontSize: '3rem' }} />
+                      <Bookmark style={{ fontSize: "3rem" }} />
                     ) : (
-                      <BookmarkBorder style={{ fontSize: '3rem' }}/>
+                      <BookmarkBorder style={{ fontSize: "3rem" }} />
                     )}
                   </IconButton>
                 )}
