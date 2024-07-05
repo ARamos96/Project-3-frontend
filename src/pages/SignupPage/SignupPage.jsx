@@ -8,84 +8,93 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import Box from "@mui/material/Box";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { AuthContext } from "../../context/auth.context";
+import { showToast } from "../../utils/Toast";
+import {
+  trimObjectValues,
+  validatePersonalDetails,
+  validatePassword,
+} from "../../utils/DataValidation";
+import FormFunctions from "../../utils/FormFunctions";
+const { handleInputChange } = FormFunctions();
 
 function SignupPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
     useState(false);
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [errorMessage, setErrorMessage] = useState(undefined);
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [passwordConfirmationError, setPasswordConfirmationError] =
-    useState(false);
+  useState(false);
   const { handleSignUp } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
-  const handleEmail = (e) => {
-    setEmail(e.target.value);
-    setEmailError(false);
-  };
-
-  const handlePassword = (e) => {
-    setPassword(e.target.value);
-    setPasswordError(false);
-  };
-
-  const handleName = (e) => setName(e.target.value);
-  const handleLastName = (e) => setLastName(e.target.value);
-
   const handlePasswordConfirmation = (e) => {
     setPasswordConfirmation(e.target.value);
-    setPasswordConfirmationError(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let valid = true;
 
-    if (!email) {
-      setEmailError(true);
-      valid = false;
+    // Trim all empty strings from formData
+    const trimmedFormData = trimObjectValues(formData);
+
+    const personalDetails = {
+      name: trimmedFormData.name,
+      lastName: trimmedFormData.lastName,
+      email: trimmedFormData.email,
+    };
+
+    const passwordForm = {
+      oldPassword: trimmedFormData.password,
+      newPassword: passwordConfirmation,
+    };
+
+    // Validate personal details data
+    let hasErrorsPersonal = validatePersonalDetails(personalDetails);
+
+    // Validate password
+    let hasErrorsPassword = validatePassword(passwordForm);
+
+    // Compare password with confirmed password
+    if (trimmedFormData.password !== passwordConfirmation) {
+      hasErrorsPassword =
+        hasErrorsPassword +
+        "\n" +
+        "New password and confirm password must match exactly.\n".trim();
     }
 
-    if (!password) {
-      setPasswordError(true);
-      valid = false;
-    }
-
-    if (password !== passwordConfirmation) {
-      setPasswordConfirmationError(true);
-      valid = false;
-    }
-
-    if (!valid) {
+    // In case of errors, warn user and return
+    if (hasErrorsPersonal && hasErrorsPassword) {
+      const bothErrors = hasErrorsPersonal + "\n" + hasErrorsPassword;
+      showToast(bothErrors, "warning");
+      return;
+    } else if (hasErrorsPersonal) {
+      showToast(hasErrorsPersonal, "warning");
+      return;
+    } else if (hasErrorsPassword) {
+      showToast(hasErrorsPassword, "warning");
       return;
     }
 
     try {
-      const requestBody = { email, password, name, lastName };
-      handleSignUp(requestBody);
+      handleSignUp(trimmedFormData);
       navigate("/mealplan");
     } catch (error) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        const errorDescription = error.response.data.message;
-        setErrorMessage(errorDescription);
+      const errorMessage =
+        error.response?.data?.message || "An error occurred. Please try again.";
+      if (errorMessage === "User already exists.") {
+        showToast(errorMessage, "error");
       } else {
-        setErrorMessage("Something went wrong. Please try again later.");
+        showToast("Something went wrong. Please try again later.", "error");
       }
     }
   };
@@ -107,12 +116,11 @@ function SignupPage() {
       <h1>Sign Up</h1>
       <form onSubmit={handleSubmit} className="form-control">
         <TextField
-          error={emailError}
           label="Email"
           type="email"
           name="email"
-          value={email}
-          onChange={handleEmail}
+          value={formData.email}
+          onChange={(e) => handleInputChange(e, setFormData, formData)}
           fullWidth
           margin="normal"
           sx={{ backgroundColor: "white" }}
@@ -131,8 +139,9 @@ function SignupPage() {
           <OutlinedInput
             id="outlined-adornment-password"
             type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={handlePassword}
+            value={formData.password}
+            name="password"
+            onChange={(e) => handleInputChange(e, setFormData, formData)}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -148,7 +157,7 @@ function SignupPage() {
             label="Password"
             sx={{ backgroundColor: "white" }}
             variant="outlined"
-            inputProps={{ sx: { border: '1px solid white' } }}
+            inputProps={{ sx: { border: "1px solid white" } }}
           />
         </FormControl>
         <FormControl
@@ -184,15 +193,15 @@ function SignupPage() {
             label="Confirm Password"
             sx={{ backgroundColor: "white" }}
             variant="outlined"
-            inputProps={{ sx: { border: '1px solid white' } }}
+            inputProps={{ sx: { border: "1px solid white" } }}
           />
         </FormControl>
         <TextField
           label="Name"
           type="text"
           name="name"
-          value={name}
-          onChange={handleName}
+          value={formData.name}
+          onChange={(e) => handleInputChange(e, setFormData, formData)}
           fullWidth
           margin="normal"
           sx={{ backgroundColor: "white" }}
@@ -203,8 +212,8 @@ function SignupPage() {
           label="Last Name"
           type="text"
           name="lastName"
-          value={lastName}
-          onChange={handleLastName}
+          value={formData.lastName}
+          onChange={(e) => handleInputChange(e, setFormData, formData)}
           fullWidth
           margin="normal"
           sx={{ backgroundColor: "white" }}
@@ -213,10 +222,12 @@ function SignupPage() {
         />
         <button type="submit" className="submit-button">
           Sign Up
-          <span></span><span></span><span></span><span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
       </form>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
       <p>
         Already have an account? <Link to={"/login"}>Login</Link>
       </p>

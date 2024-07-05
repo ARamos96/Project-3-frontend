@@ -125,7 +125,7 @@ const validatePassword = (form) => {
 
   if (!passwordRegex.test(newPassword)) {
     messages +=
-      "New password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.";
+      "New password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.\n";
   }
 
   return messages.trim(); // Remove the trailing newline;

@@ -294,7 +294,7 @@ function CheckOut() {
         navigate("/profile");
       }, 2000);
     } catch (error) {
-      showToast("Oops! Something went wrong. Please try again", "error");
+      showToast("Something went wrong. Please try again", "error");
     }
   };
 
