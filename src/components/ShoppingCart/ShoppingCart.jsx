@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Badge from "@mui/material/Badge";
@@ -7,7 +7,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import DishInCart from "../DishInCart/DishInCart";
-
 import { CartContext } from "../../context/cart.context";
 import "./ShoppingCart.css"; // Import your custom styles
 
@@ -15,6 +14,18 @@ function ShoppingCart() {
   const { badge, cart, getDishesAndQuantity, mealPlan, emptyCart } =
     useContext(CartContext);
   const [state, setState] = useState({ right: false });
+  const [isBouncing, setIsBouncing] = useState(false);
+
+  useEffect(() => {
+    if (badge > 0) {
+      setIsBouncing(true);
+      const timer = setTimeout(() => {
+        setIsBouncing(false);
+      }, 500); // Duration of the bounce animation
+
+      return () => clearTimeout(timer);
+    }
+  }, [badge]);
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -49,29 +60,32 @@ function ShoppingCart() {
               mt: 2,
               display: "flex",
               justifyContent: "space-between",
-              padding: "10px", 
+              padding: "10px",
             }}
           >
             <ListItem>
               <Link to="/checkout" style={{ textDecoration: "none" }}>
                 <button
-                  className="checkoutButton" 
+                  className="checkoutButton"
                   onClick={toggleDrawer("right", false)}
                 >
                   Checkout
-                  <span></span><span></span><span></span><span></span><span></span>
-
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </button>
               </Link>
             </ListItem>
             <ListItem>
-              <button
-                className="emptyCartButton" 
-                onClick={emptyCart}
-              >
+              <button className="emptyCartButton" onClick={emptyCart}>
                 Empty Cart
-                <span></span><span></span><span></span><span></span><span></span>
-
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
               </button>
             </ListItem>
           </List>
@@ -84,7 +98,7 @@ function ShoppingCart() {
             mt: 2,
             display: "flex",
             justifyContent: "center",
-            padding: "10px", 
+            padding: "10px",
           }}
         >
           <ListItem>
@@ -118,7 +132,11 @@ function ShoppingCart() {
       }}
     >
       <div>
-        <Badge color="secondary" badgeContent={badge}>
+        <Badge
+          color="secondary"
+          badgeContent={badge}
+          className={isBouncing ? "bounce" : ""}
+        >
           <i
             className="pi pi-shopping-cart pi-large"
             onClick={toggleDrawer("right", true)}
@@ -142,7 +160,7 @@ function ShoppingCart() {
         <Box
           sx={{ width: 500 }}
           role="presentation"
-          onClick={(event) => event.stopPropagation()} 
+          onClick={(event) => event.stopPropagation()}
         >
           {list("right")}
         </Box>
