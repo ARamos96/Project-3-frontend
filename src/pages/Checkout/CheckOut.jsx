@@ -326,7 +326,7 @@ function CheckOut() {
             </tr>
             <tr>
               <td>Diet:</td>
-              <td>{mealPlan.diet}</td>
+              <td>{mealPlan.diet.join(", ")}</td>
             </tr>
             <tr>
               <td>Price:</td>

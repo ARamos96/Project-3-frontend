@@ -41,6 +41,8 @@ function AuthProviderWrapper(props) {
             ...prevUser,
             ...userInStorage,
           }));
+          // Check if all data is loaded from database
+          await checkIfUserDataIsLoaded();
           // If there is a newFavDishes in local storage and it´s different
           // from the favDishes key in user local storage, POST to database and
           // update user state
