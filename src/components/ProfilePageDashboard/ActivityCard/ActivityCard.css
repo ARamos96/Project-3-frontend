@@ -97,6 +97,10 @@ h5 {
   padding: 7px;
 }
 
+a {
+  text-decoration: none;
+}
+
 .dish-thumbnail-mealplan > * > p{
   background: rgba(
     69,
