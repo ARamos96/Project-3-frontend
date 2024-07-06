@@ -326,7 +326,11 @@ function CheckOut() {
             </tr>
             <tr>
               <td>Diet:</td>
-              <td>{mealPlan.diet.join(", ")}</td>
+              <td>
+                {mealPlan.diet && mealPlan.diet.length > 0
+                  ? mealPlan.diet.join(", ")
+                  : "No diet selected"}
+              </td>
             </tr>
             <tr>
               <td>Price:</td>
