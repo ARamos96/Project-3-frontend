@@ -81,9 +81,6 @@ function CartProviderWrapper(props) {
 
   // Add dish object, including duplicates
   const addToCart = (dish) => {
-    // Log the product to be added
-    console.log("This is the product: ", JSON.stringify(dish));
-
     if (isCartFull()) {
       if (!isToastDisplayed) {
         showToast(
@@ -104,9 +101,6 @@ function CartProviderWrapper(props) {
 
         // Update localStorage with the new cart
         localStorage.setItem("cart", JSON.stringify(newCart));
-
-        // Log the new cart
-        console.log("This is the new cart:", newCart);
 
         // Update badge
         updateBadge(newCart.length);
