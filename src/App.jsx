@@ -31,15 +31,6 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-
-        {/* <Route
-          path="/profile"
-          element={
-            <IsPrivate>
-              <ProfilePage />
-            </IsPrivate>
-          }
-        /> */}
         <Route
           path="/profile"
           element={

@@ -50,7 +50,6 @@ function DishesCarrousel() {
                       )}.jpg)`,
                     }}
                   >
-                    {/* <img src={`/${recipe.name}.jpg`} alt={`${recipe.name}`}></img> */}
                     <h4>{recipe.name}</h4>
                   </div>
                 </Link>

@@ -199,7 +199,6 @@ function RecipesList() {
                 }}
               >
                 <Link to={`/recipes/${recipe._id}`}>
-                  {/* <img src={`/${recipe.name}.jpg`} alt={`${recipe.name}`} /> */}
                   <p>{recipe.name}</p>
                   <div className="recipe-info">
                     <p>
