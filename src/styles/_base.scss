@@ -1,0 +1,57 @@
+@use 'variables';
+
+body {
+  margin: 0;
+  color: aliceblue;
+  background: variables.$gradient-bg;
+}
+
+.App {
+  text-align: center;
+}
+
+h1, h2, h3, h4, h5 {
+  color: white;
+  text-align: center;
+  font-family: variables.$heading-font;
+  border-radius: 10px;
+}
+
+h1 {
+  font-size: 90px;
+}
+
+h2, h3 {
+  font-size: 30px;
+  background: variables.$gradient-orange;
+}
+
+h3 {
+  font-size: 20px;
+}
+
+h4, h5 {
+  font-size: 20px;
+  background-color: variables.$primary-color;
+}
+
+p {
+  color: white;
+  text-align: center;
+  font-size: 20px;
+  font-family: variables.$body-font;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+.selected {
+  background-color: variables.$primary-color;
+  color: white;
+}
