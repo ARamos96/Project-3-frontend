@@ -5,7 +5,7 @@ import { CartContext } from "../../context/cart.context";
 import { Menubar } from "primereact/menubar";
 import { Badge } from "primereact/badge";
 import ShoppingCart from "../ShoppingCart/ShoppingCart";
-import "./Navbar.css"; // Import your custom CSS file for Navbar styling
+import "./Navbar.scss";
 
 export default function Navbar() {
   const { isLoggedIn, logOutUser } = useContext(AuthContext);

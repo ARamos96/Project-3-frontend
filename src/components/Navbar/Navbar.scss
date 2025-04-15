@@ -1,0 +1,110 @@
+@use "../../styles/variables" as variables;
+@use "../../styles/mixins" as mixins;
+.navbar-container {
+  position: sticky;
+  top: 0;
+  padding: 5px 15px;
+  z-index: 2;
+  border: none;
+  background: variables.$gradient-bg;
+
+  nav {
+    @include mixins.flex-center(15px);
+
+    a {
+      text-decoration: none;
+      margin-right: 15px;
+    }
+
+    .right-section {
+      display: flex;
+      align-items: center;
+    }
+
+    .shopping-cart-icon {
+      font-size: 36px;
+      color: white;
+      margin-left: 15px;
+    }
+  }
+
+  .p-menubar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 60px;
+
+    img {
+      border-radius: 8px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .p-menubar-root-list {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      width: 800px;
+      margin-top: 10px;
+
+      li {
+        align-content: center;
+      }
+    }
+
+    .p-menuitem-link {
+      color: white;
+      height: 32px;
+      font-size: 18px;
+      padding: 8px 16px;
+      border-radius: 10px;
+
+      &:hover {
+        color: variables.$primary-color;
+        border: 0.1em solid variables.$primary-color;
+        border-radius: 0.5em;
+      }
+    }
+
+    .p-menuitem-text {
+      font-size: 20px;
+      margin: 10px;
+    }
+  }
+
+  .ml-auto {
+    margin-left: auto;
+  }
+
+  .w-300px {
+    width: 300px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-right: 25px;
+  }
+
+  .log-in-button {
+    color: white;
+    width: 125px;
+    padding: 5px 10px;
+    border: none;
+    font-size: 18px;
+    font-weight: normal;
+    letter-spacing: 0.05em;
+    text-align: center;
+    line-height: normal;
+    background: none;
+    transition: 0s;
+
+    &:hover {
+      color: variables.$primary-color;
+      border: 0.1em solid variables.$primary-color;
+      border-radius: 0.5em;
+      background-color: transparent;
+    }
+  }
+}

@@ -1,13 +1,11 @@
 import "./styles/main.scss";
 import { Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
 
 import PrimeReactNavbar from "./components/Navbar/PrimeReactNavbar";
 
 import Footer from "./components/Footer/Footer";
 
 import HomePage from "./pages/HomePage/HomePage";
-import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import NewProfilePage from "./pages/ProfilePage/NewProfilePage";
 import SignupPage from "./pages/SignupPage/SignupPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
