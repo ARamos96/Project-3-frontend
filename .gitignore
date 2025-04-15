@@ -18,6 +18,8 @@
 .env.test.local
 .env.production.local
 .env
+pnpm-lock.yaml
+pnpm-workspace.yaml
 
 npm-debug.log*
 yarn-debug.log*
