@@ -1,4 +1,4 @@
-import "./styles/main.scss"
+import "./styles/main.scss";
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -26,48 +26,50 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
     <div className="App">
-      <PrimeReactNavbar />
-      <ToastContainer />
+      <div className="page-container">
+        <PrimeReactNavbar />
+        <ToastContainer />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route
-          path="/profile"
-          element={
-            <IsPrivate>
-              <NewProfilePage />
-            </IsPrivate>
-          }
-        />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/profile"
+            element={
+              <IsPrivate>
+                <NewProfilePage />
+              </IsPrivate>
+            }
+          />
 
-        <Route
-          path="/signup"
-          element={
-            <IsAnon>
-              <SignupPage />
-            </IsAnon>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <IsAnon>
-              <LoginPage />
-            </IsAnon>
-          }
-        />
+          <Route
+            path="/signup"
+            element={
+              <IsAnon>
+                <SignupPage />
+              </IsAnon>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <IsAnon>
+                <LoginPage />
+              </IsAnon>
+            }
+          />
 
-        <Route path="/mealplan" element={<MealPlan />} />
+          <Route path="/mealplan" element={<MealPlan />} />
 
-        <Route path="/checkout" element={<CheckOut />} />
+          <Route path="/checkout" element={<CheckOut />} />
 
-        <Route path="/howitworks" element={<HowItWorksPage />} />
+          <Route path="/howitworks" element={<HowItWorksPage />} />
 
-        <Route path="/recipes" element={<RecipesPage />} />
-        <Route path="/recipes/:recipeId" element={<RecipeDetailsPage />} />
-      </Routes>
+          <Route path="/recipes" element={<RecipesPage />} />
+          <Route path="/recipes/:recipeId" element={<RecipeDetailsPage />} />
+        </Routes>
 
-      <Footer />
+        <Footer />
+      </div>
     </div>
   );
 }

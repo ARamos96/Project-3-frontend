@@ -1,4 +1,4 @@
-@use 'variables';
+@use "variables";
 
 body {
   margin: 0;
@@ -10,7 +10,11 @@ body {
   text-align: center;
 }
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   color: white;
   text-align: center;
   font-family: variables.$heading-font;
@@ -21,7 +25,8 @@ h1 {
   font-size: 90px;
 }
 
-h2, h3 {
+h2,
+h3 {
   font-size: 30px;
   background: variables.$gradient-orange;
 }
@@ -30,7 +35,8 @@ h3 {
   font-size: 20px;
 }
 
-h4, h5 {
+h4,
+h5 {
   font-size: 20px;
   background-color: variables.$primary-color;
 }
@@ -54,4 +60,22 @@ li {
 .selected {
   background-color: variables.$primary-color;
   color: white;
+}
+
+.page-container {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// Responsive padding on small screens
+@media (max-width: 600px) {
+  .page-container {
+    padding: 20px;
+  }
 }
