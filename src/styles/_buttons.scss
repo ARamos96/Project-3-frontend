@@ -1,0 +1,45 @@
+@use 'variables';
+
+button {
+  --c: rgb(218, 165, 32); // keep for now unless you want to convert to a SCSS variable
+  color: var(--c);
+  font-size: 16px;
+  border: 0.3em solid var(--c);
+  border-radius: 0.5em;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  text-align: center;
+  line-height: 3em;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: 0.5s;
+  background: none;
+  cursor: pointer;
+  padding: 10px 30px;
+  margin: 10px;
+
+  span {
+    position: absolute;
+    width: 25%;
+    height: 100%;
+    background-color: var(--c);
+    transform: translateY(150%);
+    border-radius: 50%;
+    transition: 0.5s;
+    z-index: -1;
+  }
+
+  &:hover {
+    color: black;
+
+    span {
+      transform: translateY(0) scale(2);
+    }
+  }
+
+  span:nth-child(2) { --n: 1; left: 0%; transition-delay: 0s; }
+  span:nth-child(3) { --n: 2; left: 25%; transition-delay: 0.1s; }
+  span:nth-child(4) { --n: 3; left: 50%; transition-delay: 0.2s; }
+  span:nth-child(5) { --n: 4; left: 75%; transition-delay: 0.3s; }
+}
