@@ -80,27 +80,45 @@ export default function Navbar() {
   );
 
   const end = (
-    <div className="flex items-center gap-2 ml-auto w-300px">
-      {isLoggedIn ? (
-        <>
+    <div className="navbar-end">
+        {isLoggedIn ? (
           <ShoppingCart />
-        </>
-      ) : (
-        <>
-          <Link to="/signup">
-            <button className="log-in-button">Sign Up</button>
-          </Link>
-          <Link to="/login">
-            <button className="log-in-button">Log In</button>
-          </Link>
-        </>
-      )}
+        ) : (
+          <>
+            <Link to="/signup">
+              <button className="log-in-button">Sign Up</button>
+            </Link>
+            <Link to="/login">
+              <button className="log-in-button">Log In</button>
+            </Link>
+          </>
+        )}
     </div>
   );
 
   return (
     <div className="navbar-container">
-      <Menubar model={items} start={start} end={end} />
+      {/* Desktop navbar */}
+      <div className="navbar-desktop">
+        <Menubar model={items} start={start} end={end} />
+      </div>
+  
+      {/* Mobile navbar */}
+      <div className="navbar-mobile">
+        <i className="pi pi-bars" onClick={() => console.log("open drawer")} />
+        <img
+          src="/SavorSwift.jpg"
+          alt="logo"
+          height="40"
+          className="navbar-logo"
+          onClick={() => navigate("/")}
+        />
+        <i
+          className="pi pi-user"
+          onClick={() => navigate(isLoggedIn ? "/profile" : "/login")}
+        />
+      </div>
     </div>
   );
+  
 }

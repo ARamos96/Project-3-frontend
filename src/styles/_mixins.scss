@@ -25,7 +25,6 @@
       border: 0.1em solid $color;
       border-radius: $border-radius;
       z-index: -1;
-  
       transform: scaleY(0);
       transform-origin: right;
       transition: transform $duration ease;

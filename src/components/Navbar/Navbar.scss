@@ -8,7 +8,7 @@
   border: outset 0.01em variables.$primary-color;
   background: variables.$gradient-bg;
   border-radius: 15px;
-  
+
   nav {
     @include mixins.flex-center(15px);
 
@@ -64,7 +64,6 @@
       border-radius: 10px;
       border: 0.1em solid transparent;
       @include mixins.hover-navbar(variables.$primary-color);
-
     }
 
     .p-menuitem-text {
@@ -100,4 +99,40 @@
     border: 0.1em solid transparent;
     @include mixins.hover-navbar(variables.$primary-color);
   }
+
+  .navbar-end {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-mobile {
+    display: none;
+  }
+  
+  @media (max-width: 1090px) {
+    .navbar-desktop {
+      display: none;
+    }
+  
+    .navbar-mobile {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: variables.$gradient-bg;
+      border-radius: 15px;
+  
+      i {
+        font-size: 1.5rem;
+        color: white;
+        cursor: pointer;
+      }
+  
+      img.navbar-logo {
+        height: 40px;
+        cursor: pointer;
+      }
+    }
+  }
+  
 }
