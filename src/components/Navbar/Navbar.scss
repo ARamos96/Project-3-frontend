@@ -5,9 +5,10 @@
   top: 0;
   padding: 5px 15px;
   z-index: 2;
-  border: none;
+  border: outset 0.01em variables.$primary-color;
   background: variables.$gradient-bg;
-
+  border-radius: 15px;
+  
   nav {
     @include mixins.flex-center(15px);
 
@@ -61,12 +62,9 @@
       font-size: 18px;
       padding: 8px 16px;
       border-radius: 10px;
+      border: 0.1em solid transparent;
+      @include mixins.hover-navbar(variables.$primary-color);
 
-      &:hover {
-        color: variables.$primary-color;
-        border: 0.1em solid variables.$primary-color;
-        border-radius: 0.5em;
-      }
     }
 
     .p-menuitem-text {
@@ -99,12 +97,7 @@
     line-height: normal;
     background: none;
     transition: 0s;
-
-    &:hover {
-      color: variables.$primary-color;
-      border: 0.1em solid variables.$primary-color;
-      border-radius: 0.5em;
-      background-color: transparent;
-    }
+    border: 0.1em solid transparent;
+    @include mixins.hover-navbar(variables.$primary-color);
   }
 }
