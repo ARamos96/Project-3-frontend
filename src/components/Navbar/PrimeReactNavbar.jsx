@@ -1,15 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context";
 import { Menubar } from "primereact/menubar";
 import { Badge } from "primereact/badge";
+import { Sidebar } from "primereact/sidebar";
+import { Button } from "primereact/button";
 import ShoppingCart from "../ShoppingCart/ShoppingCart";
 import "./Navbar.scss";
 
 export default function Navbar() {
   const { isLoggedIn, logOutUser } = useContext(AuthContext);
   const { setMealPlan, setCart } = useContext(CartContext);
+  const [visible, setVisible] = useState(false);
 
   const navigate = useNavigate();
 
@@ -81,31 +84,43 @@ export default function Navbar() {
 
   const end = (
     <div className="navbar-end">
-        {isLoggedIn ? (
-          <ShoppingCart />
-        ) : (
-          <>
-            <Link to="/signup">
-              <button className="log-in-button">Sign Up</button>
-            </Link>
-            <Link to="/login">
-              <button className="log-in-button">Log In</button>
-            </Link>
-          </>
-        )}
+      {isLoggedIn ? (
+        <ShoppingCart />
+      ) : (
+        <>
+          <Link to="/signup">
+            <button className="log-in-button">Sign Up</button>
+          </Link>
+          <Link to="/login">
+            <button className="log-in-button">Log In</button>
+          </Link>
+        </>
+      )}
     </div>
   );
 
   return (
     <div className="navbar-container">
+      {/* Sidebar drawer (mobile) */}
+      <Sidebar visible={visible} onHide={() => setVisible(false)}>
+        <h2>Menu</h2>
+        <ul>
+          <li>Lorem ipsum dolor sit amet</li>
+          <li>Consectetur adipiscing elit</li>
+          <li>Sed do eiusmod tempor incididunt</li>
+          <li>Ut labore et dolore magna aliqua</li>
+          <li>Ut enim ad minim veniam</li>
+        </ul>
+      </Sidebar>
+
       {/* Desktop navbar */}
       <div className="navbar-desktop">
         <Menubar model={items} start={start} end={end} />
       </div>
-  
+
       {/* Mobile navbar */}
       <div className="navbar-mobile">
-        <i className="pi pi-bars" onClick={() => console.log("open drawer")} />
+        <i className="pi pi-bars" onClick={() => setVisible(true)} />
         <img
           src="/SavorSwift.jpg"
           alt="logo"
@@ -120,5 +135,4 @@ export default function Navbar() {
       </div>
     </div>
   );
-  
 }
