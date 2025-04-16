@@ -72,7 +72,7 @@ export default function Navbar() {
   const start = (
     <img
       alt="logo"
-      src="/SavourSwift.jpg"
+      src="/SavorSwift.jpg"
       height="40"
       className="mr-2"
       onClick={() => navigate("/")}
