@@ -13,8 +13,7 @@
   align-items: center;
   position: relative;
   justify-content: center;
-  height: 200px;
-  width: 320px;
+  
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   padding: 32px;
   overflow: hidden;

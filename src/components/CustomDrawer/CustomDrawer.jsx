@@ -2,7 +2,7 @@ import React from "react";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Box from "@mui/material/Box";
 
-export default function Sidebar({ anchor = "right", isOpen, toggleDrawer, width = 500, children }) {
+export default function CustomDrawer({ anchor = "right", isOpen, toggleDrawer, width = 500, children }) {
   return (
     <SwipeableDrawer
       anchor={anchor}

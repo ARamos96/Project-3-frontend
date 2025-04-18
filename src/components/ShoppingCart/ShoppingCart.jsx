@@ -7,7 +7,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import DishInCart from "../DishInCart/DishInCart";
 import { CartContext } from "../../context/cart.context";
-import Sidebar from "../Sidebar/Sidebar";
+import CustomDrawer from "../CustomDrawer/CustomDrawer";
 import "./ShoppingCart.css";
 
 function ShoppingCart() {
@@ -117,13 +117,13 @@ function ShoppingCart() {
         </Badge>
       </div>
 
-      <Sidebar
+      <CustomDrawer
         anchor="right"
         isOpen={state.right}
         toggleDrawer={toggleDrawer}
       >
         {renderCartList()}
-      </Sidebar>
+      </CustomDrawer>
     </Box>
   );
 }

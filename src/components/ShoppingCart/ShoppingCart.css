@@ -27,6 +27,7 @@
 
 .pi-shopping-cart {
   color: white;
+  margin-top: 5px;
 }
 
 .emptyCartButton:focus {

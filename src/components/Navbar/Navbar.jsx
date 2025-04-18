@@ -7,12 +7,15 @@ import { Badge } from "primereact/badge";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import ShoppingCart from "../ShoppingCart/ShoppingCart";
+import MobileDrawerMenu from "./MobileDrawerMenu";
+
 import "./Navbar.scss";
+import CustomDrawer from "../CustomDrawer/CustomDrawer";
 
 export default function Navbar() {
   const { isLoggedIn, logOutUser } = useContext(AuthContext);
   const { setMealPlan, setCart } = useContext(CartContext);
-  const [visible, setVisible] = useState(false);
+  const [drawerState, setDrawerState] = useState({ left: false });
 
   const navigate = useNavigate();
 
@@ -53,6 +56,7 @@ export default function Navbar() {
     isLoggedIn && {
       label: "My Account",
       icon: "pi pi-user",
+      style: { marginLeft: "auto" }, // ← pushes this one to the right
       items: [
         {
           label: "Profile",
@@ -70,7 +74,7 @@ export default function Navbar() {
         },
       ],
     },
-  ].filter(Boolean); // Filter out any false values
+  ].filter(Boolean);
 
   const start = (
     <img
@@ -84,9 +88,8 @@ export default function Navbar() {
 
   const end = (
     <div className="navbar-end">
-      {isLoggedIn ? (
-        <ShoppingCart />
-      ) : (
+      {isLoggedIn && <ShoppingCart />}
+      {!isLoggedIn && (
         <>
           <Link to="/signup">
             <button className="log-in-button">Sign Up</button>
@@ -99,19 +102,50 @@ export default function Navbar() {
     </div>
   );
 
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event &&
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    )
+      return;
+
+    setDrawerState({ ...drawerState, [anchor]: open });
+  };
+
+  const mobileMenuItems = [
+    { label: "Home", icon: "pi-home", action: () => navigate("/") },
+    {
+      label: "Our Dishes",
+      icon: "pi pi-book",
+      action: () => navigate("/recipes"),
+    },
+    {
+      label: "How It Works",
+      icon: "pi pi-question",
+      action: () => navigate("/howitworks"),
+    },
+    {
+      label: "Meal Plan",
+      icon: "pi pi-calculator",
+      action: () => navigate("/mealplan"),
+    },
+  ];
+
   return (
     <div className="navbar-container">
-      {/* Sidebar drawer (mobile) */}
-      <Sidebar visible={visible} onHide={() => setVisible(false)}>
-        <h2>Menu</h2>
-        <ul>
-          <li>Lorem ipsum dolor sit amet</li>
-          <li>Consectetur adipiscing elit</li>
-          <li>Sed do eiusmod tempor incididunt</li>
-          <li>Ut labore et dolore magna aliqua</li>
-          <li>Ut enim ad minim veniam</li>
-        </ul>
-      </Sidebar>
+      <CustomDrawer
+        anchor="left"
+        isOpen={drawerState.left}
+        toggleDrawer={toggleDrawer}
+        width={260}
+        disableEnforceFocus={true}
+      >
+        <MobileDrawerMenu
+          menuItems={mobileMenuItems}
+          onClose={toggleDrawer("left", false)}
+        />
+      </CustomDrawer>
 
       {/* Desktop navbar */}
       <div className="navbar-desktop">
@@ -120,7 +154,8 @@ export default function Navbar() {
 
       {/* Mobile navbar */}
       <div className="navbar-mobile">
-        <i className="pi pi-bars" onClick={() => setVisible(true)} />
+        <i className="pi pi-bars" onClick={toggleDrawer("left", true)} />
+
         <img
           src="/SavorSwift.jpg"
           alt="logo"
@@ -128,10 +163,13 @@ export default function Navbar() {
           className="navbar-logo"
           onClick={() => navigate("/")}
         />
-        <i
-          className="pi pi-user"
-          onClick={() => navigate(isLoggedIn ? "/profile" : "/login")}
-        />
+        <div>
+          <i
+            className="pi pi-user"
+            onClick={() => navigate(isLoggedIn ? "/profile" : "/login")}
+          />
+          {isLoggedIn && <ShoppingCart />}
+        </div>
       </div>
     </div>
   );

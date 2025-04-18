@@ -30,30 +30,28 @@
   }
 
   .p-menubar {
-    width: 100%;
     display: flex;
     align-items: center;
-    gap: 5px;
-    height: 60px;
+    justify-content: space-between; // ensure even spacing
+    width: 100%;
 
-    img {
-      border-radius: 8px;
-
-      &:hover {
-        cursor: pointer;
-      }
+    .p-menubar-start,
+    .p-menubar-end {
+      flex-shrink: 0;
     }
 
     .p-menubar-root-list {
+      flex: 1;
       display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      width: 800px;
-      margin-top: 10px;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: nowrap; // prevent wrapping
+      overflow: visible;
+      padding-top: 15px;
+    }
 
-      li {
-        align-content: center;
-      }
+    .p-menuitem {
+      white-space: nowrap; // prevent wrapping of "My Account"
     }
 
     .p-menuitem-link {
@@ -70,8 +68,19 @@
       font-size: 20px;
       margin: 10px;
     }
+
+    img {
+      border-radius: 8px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
   }
 
+  .p-submenu-list {
+    margin-top: 20px; // 👈 adds space between the parent and the dropdown
+  }
   .ml-auto {
     margin-left: auto;
   }
@@ -105,9 +114,102 @@
     align-items: center;
   }
 
+  .account-menu {
+    position: relative;
+
+    .account-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      user-select: none;
+
+      i,
+      span {
+        color: white;
+      }
+    }
+
+    .account-dropdown {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: variables.$gradient-bg;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      min-width: 150px;
+      z-index: 100;
+
+      li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        cursor: pointer;
+        color: white;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: variables.$primary-color;
+        }
+      }
+    }
+
+    &.active {
+      .account-dropdown {
+        display: flex;
+      }
+    }
+  }
+
   .navbar-mobile {
     display: none;
+  
+    > div {
+      display: flex;
+      align-items: flex-end; 
+      gap: 3rem; 
+    }
+  
+    .pi-user {
+      font-size: 1.6rem;
+      color: white;
+      cursor: pointer;
+      margin-bottom: 20px; // lift it slightly
+    }
+  
+    .pi-shopping-cart {
+      font-size: 2rem;
+      color: white;
+    }
   }
+
+  .sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: white;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: variables.$primary-color;
+    }
+  }
+}
+
 
   @media (max-width: 1090px) {
     .navbar-desktop {
@@ -134,5 +236,4 @@
       }
     }
   }
-
 }
