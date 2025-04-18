@@ -25,6 +25,10 @@
   z-index: -1;
 }
 
+.pi-shopping-cart {
+  color: white;
+}
+
 .emptyCartButton:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
