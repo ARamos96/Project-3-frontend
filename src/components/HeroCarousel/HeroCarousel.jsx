@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./HeroCarousel.module.scss";
 
 const images = [
@@ -29,13 +29,12 @@ const HeroCarousel = () => {
               index === currentIndex ? styles.active : ""
             }`}
           >
-            {index === currentIndex && (
-              <img
-                key={`active-${index}`}
-                src={src}
-                alt={`SavorSwift dish ${index + 1}`}
-              />
-            )}
+            <img
+              src={src}
+              alt={`SavorSwift dish ${index + 1}`}
+              loading="eager"
+              className={index === currentIndex ? styles.visible : styles.hidden}
+            />
           </div>
         ))}
       </div>
