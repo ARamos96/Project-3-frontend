@@ -30,6 +30,7 @@ const HeroCarousel = () => {
             }`}
           >
             <img
+              key={`slide-${currentIndex}`}
               src={src}
               alt={`SavorSwift dish ${index + 1}`}
               loading="eager"
