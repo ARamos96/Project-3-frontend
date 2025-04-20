@@ -167,23 +167,7 @@
   .navbar-mobile {
     display: none;
   
-    > div {
-      display: flex;
-      align-items: flex-end; 
-      gap: 3rem; 
-    }
-  
-    .pi-user {
-      font-size: 1.6rem;
-      color: white;
-      cursor: pointer;
-      margin-bottom: 20px; // lift it slightly
-    }
-  
-    .pi-shopping-cart {
-      font-size: 2rem;
-      color: white;
-    }
+    
   }
 
   .sidebar-menu {
@@ -233,6 +217,24 @@
       img.navbar-logo {
         height: 40px;
         cursor: pointer;
+      }
+
+      > div {
+        display: flex;
+        align-items: flex-end; 
+        gap: 3rem; 
+      }
+    
+      .pi-user {
+        font-size: 1.6rem;
+        color: white;
+        cursor: pointer;
+        margin-bottom: 20px; 
+      }
+    
+      .pi-shopping-cart {
+        font-size: 2rem;
+        color: white;
       }
     }
   }
