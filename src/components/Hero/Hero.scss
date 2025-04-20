@@ -1,0 +1,49 @@
+@use "../../styles/_variables" as variables;
+@use "../../styles/_base" as base;
+@use "../../styles/_buttons" as buttons;
+
+.hero {
+  display: flex;
+  align-items: center;
+  padding: 4 * variables.$spacing-unit 2 * variables.$spacing-unit;
+
+  &__image {
+    flex: 1;
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: variables.$border-radius-lg;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    padding: 2 * variables.$spacing-unit;
+
+    h1 {
+      font-size: 2.5 * variables.$font-scale;
+      margin-bottom: 1 * variables.$spacing-unit;
+      color: variables.$primary-color;
+    }
+
+    p {
+      font-size: 1.2 * variables.$font-scale;
+      margin-bottom: 1.5 * variables.$spacing-unit;
+      color: variables.$white;
+    }
+  }
+  @media (max-width: 980px) {
+    flex-direction: column;
+
+    .hero__image {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+.hero__buttons {
+  display: flex;
+  gap: 1 * variables.$spacing-unit;
+  justify-content: space-around;
+}

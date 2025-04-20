@@ -3,7 +3,22 @@ $primary-color: rgb(255, 165, 0);
 $secondary-color: rgb(255, 124, 0);
 $gradient-orange: linear-gradient(109.6deg, rgb(255, 194, 48) 11.2%, $secondary-color 100.2%);
 $gradient-bg: linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%);
+$white: #ffffff;
+$gray-light: #eeeeee;
+$text-primary: #333333;
+$text-secondary: #555555;
 
 // FONTS
 $heading-font: "Kalam", cursive;
 $body-font: "Lato", sans-serif;
+
+// SPACING
+$spacing-unit: 8px; // 1 unit = 8px (scale for margins/padding)
+
+// FONT SCALE
+$font-scale: 1rem; // multiply by this to size text (e.g., 1.2 * $font-scale)
+
+// BORDER RADIUS
+$border-radius-sm: 0.25rem;
+$border-radius-md: 0.5rem;
+$border-radius-lg: 1rem;

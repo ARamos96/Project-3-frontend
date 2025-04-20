@@ -1,25 +1,12 @@
 import "./HomePage.css";
-//import "../HowitWorks/HowitWorks"
+import Hero from "../../components/Hero/Hero.jsx";
 import { Link } from "react-router-dom";
 import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
 
 function HomePage() {
   return (
     <div className="HomePage-container">
-      <section>
-        <h1>Savor Swift</h1>
-      </section>
-
-      <section className="what-is-container">
-        <h2>What is Savor Swift?</h2>
-        <p>
-          SavorSwift is a meal subscription service that provides
-          nutritionist-designed recipes, allowing you to mix and match meals to
-          fit your lifestyle. We deliver quality ingredients right to your
-          doorstep, making healthy eating easy and convenient.
-        </p>
-      </section>
-
+      <Hero />
       <section className="howitworks-container">
         <h2>How it works?</h2>
         <div className="HowItWorksstepper">
@@ -53,8 +40,13 @@ function HomePage() {
         </div>
 
         <Link to="/howitworks">
-          <button> See more! 
-          <span></span><span></span><span></span><span></span>
+          <button>
+            {" "}
+            See more!
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
         </Link>
       </section>
@@ -63,9 +55,13 @@ function HomePage() {
         <h2>Dishes</h2>
         <DishesCarrousel />
         <Link to="/recipes">
-          <button> Take a look at our meals! 
-          <span></span><span></span><span></span><span></span>
-
+          <button>
+            {" "}
+            Take a look at our meals!
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
         </Link>
       </section>
