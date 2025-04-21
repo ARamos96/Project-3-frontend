@@ -1,7 +1,7 @@
 import "./HomePage.css";
 import Hero from "../../components/Hero/Hero.jsx";
 import { Link } from "react-router-dom";
-import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
+import DishesCarousel from "../../components/DishesCarousel/DishesCarousel";
 
 function HomePage() {
   return (
@@ -53,7 +53,7 @@ function HomePage() {
 
       <section className="dishes-container">
         <h2>Dishes</h2>
-        <DishesCarrousel />
+        <DishesCarousel />
         <Link to="/recipes">
           <button>
             {" "}

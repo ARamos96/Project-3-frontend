@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from "react";
-import "./DishesCarrousel.css";
+import "./DishesCarousel.css";
 import { CartContext } from "../../context/cart.context";
 import Loading from "../Loading/Loading";
 import { Link } from "react-router-dom";
 
-function DishesCarrousel() {
+function DishesCarousel() {
   // Define recipes
   const [showRecipes, setShowRecipes] = useState([]);
   const { recipes } = useContext(CartContext);
@@ -61,4 +61,4 @@ function DishesCarrousel() {
   );
 }
 
-export default DishesCarrousel;
+export default DishesCarousel;

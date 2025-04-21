@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import DishesCarrousel from "../../components/DishesCarrousel/DishesCarrousel";
+import DishesCarousel from "../../components/DishesCarousel/DishesCarousel";
 import "./MealPlan.css";
 import { AuthContext } from "../../context/auth.context";
 import { CartContext } from "../../context/cart.context.jsx";
@@ -231,7 +231,7 @@ function MealPlan() {
           </div>
         )}
 
-        <DishesCarrousel />
+        <DishesCarousel />
       </section>
     </div>
   );
