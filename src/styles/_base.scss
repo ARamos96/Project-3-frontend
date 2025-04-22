@@ -79,8 +79,7 @@ li {
   border-right: 0.15em solid #333; // The blinking cursor
   white-space: nowrap;
   letter-spacing: 0.08em;
-  animation: typing 2.5s steps(11, end),
-    // Adjust 22 to the number of characters in your text
+  animation: typing 1s steps(11, end),
     blink-caret 0.75s step-end infinite;
 }
 
@@ -89,7 +88,7 @@ li {
     width: 0;
   }
   to {
-    width: 100%;
+    width: 35%;
   }
 }
 
