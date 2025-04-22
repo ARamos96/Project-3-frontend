@@ -1,6 +1,7 @@
 @use "../../styles/_variables" as variables;
 @use "../../styles/_base" as base;
 @use "../../styles/_buttons" as buttons;
+@use "../../styles/mixins" as mixins;
 
 .howitworks-container {
   padding: 2rem;
@@ -23,78 +24,21 @@
       gap: 1rem;
 
       .tab-button {
-        // Sizing for a perfect circle
+        @include mixins.ripple-effect(white);
+    
         width: 60px;
         height: 60px;
         border-radius: 50%;
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
         padding: 0;
         line-height: 60px;
-        text-align: center;
-
-        // Inherit button base styles
-        font-size: 16px;
-        font-weight: bold;
         letter-spacing: 0.1em;
-        color: variables.$button-color;
-        --c: white; // 👈 override the hover span color here
         background: none;
-        border: 0.3em solid var(--c);
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
         cursor: pointer;
-        transition: 0.5s;
-
-        // Create the animated background spans
-        span {
-          position: absolute;
-          width: 25%;
-          height: 100%;
-          background-color: var(--c);
-          transform: translateY(150%);
-          border-radius: 50%;
-          transition: 0.5s;
-          z-index: -1;
-        }
-
-        &:hover {
-          color: black;
-
-          span {
-            transform: translateY(0) scale(2);
-          }
-        }
-
-        // Each span appears one after another
-        span:nth-child(2) {
-          --n: 1;
-          left: 0%;
-          transition-delay: 0s;
-        }
-
-        span:nth-child(3) {
-          --n: 2;
-          left: 25%;
-          transition-delay: 0.1s;
-        }
-
-        span:nth-child(4) {
-          --n: 3;
-          left: 50%;
-          transition-delay: 0.2s;
-        }
-
-        span:nth-child(5) {
-          --n: 4;
-          left: 75%;
-          transition-delay: 0.3s;
-        }
-
-        &.active {
-          border-color: white;
-          color: white;
-        }
       }
+      
     }
 
     .step-title-indicator {

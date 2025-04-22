@@ -46,3 +46,49 @@
 @mixin font-size($size) {
   font-size: $size * 1rem;
 }
+
+@mixin ripple-effect($color) {
+  --c: #{$color};
+  border: 0.3em solid var(--c);
+  color: var(--c);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: 0.5s;
+
+  span {
+    position: absolute;
+    width: 25%;
+    height: 100%;
+    background-color: var(--c);
+    transform: translateY(150%);
+    border-radius: 50%;
+    transition: 0.5s;
+    z-index: -1;
+  }
+
+  &:hover {
+    color: black;
+
+    span {
+      transform: translateY(0) scale(2);
+    }
+  }
+
+  span:nth-child(2) {
+    left: 0%;
+    transition-delay: 0s;
+  }
+  span:nth-child(3) {
+    left: 25%;
+    transition-delay: 0.1s;
+  }
+  span:nth-child(4) {
+    left: 50%;
+    transition-delay: 0.2s;
+  }
+  span:nth-child(5) {
+    left: 75%;
+    transition-delay: 0.3s;
+  }
+}
