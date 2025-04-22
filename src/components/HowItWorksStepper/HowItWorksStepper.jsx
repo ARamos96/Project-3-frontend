@@ -64,13 +64,14 @@ function HowItWorksStepper() {
         </div>
 
         {/* RIGHT: CONTENT */}
-        <div className="step-content">
+        <div key={activeStep} className="step-content fade-in">
           <img
             className="step-thumbnail"
             src={steps[activeStep].image}
             alt={steps[activeStep].heading}
           />
           <div className="step-text">
+            <h2>{steps[activeStep].heading}</h2>
             <p>{steps[activeStep].description}</p>
           </div>
         </div>
