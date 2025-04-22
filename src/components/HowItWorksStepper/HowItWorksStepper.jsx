@@ -71,7 +71,6 @@ function HowItWorksStepper() {
             alt={steps[activeStep].heading}
           />
           <div className="step-text">
-            <h2>{steps[activeStep].heading}</h2>
             <p>{steps[activeStep].description}</p>
           </div>
         </div>
