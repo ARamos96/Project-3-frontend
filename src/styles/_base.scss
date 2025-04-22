@@ -22,7 +22,7 @@ h5 {
 }
 
 h1 {
-  font-size: 90px;
+  font-size: 55px;
 }
 
 h2,
@@ -71,6 +71,36 @@ li {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.typewriter-text {
+  display: inline-block;
+  overflow: hidden; // Ensures the text is hidden as it's typed
+  border-right: 0.15em solid #333; // The blinking cursor
+  white-space: nowrap;
+  letter-spacing: 0.08em;
+  animation: typing 2.5s steps(11, end),
+    // Adjust 22 to the number of characters in your text
+    blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #333;
+  }
 }
 
 // Responsive padding on small screens

@@ -25,6 +25,12 @@ function App() {
   return (
     <div className="App">
       <div className="page-container">
+        <div className="top-heading">
+          <h1>
+            <span className="typewriter-text">SavorSwift!</span>
+          </h1>
+        </div>
+
         <Navbar />
         <ToastContainer />
 
