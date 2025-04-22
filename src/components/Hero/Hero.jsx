@@ -23,12 +23,16 @@ const Hero = () => {
             <span></span>
             <span></span>
             <span></span>
+            <span></span>
+            <span></span>
           </button>
           <button
             className="btn btn--secondary"
             onClick={() => navigate("/recipes")}
           >
             Browse Dishes <span></span>
+            <span></span>
+            <span></span>
             <span></span>
             <span></span>
             <span></span>

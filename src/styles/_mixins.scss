@@ -58,12 +58,12 @@
 
   span {
     position: absolute;
-    width: 25%;
+    width: 20%; // 5 spans = 100% total
     height: 100%;
     background-color: var(--c);
     transform: translateY(150%);
     border-radius: 50%;
-    transition: 0.5s;
+    transition: transform 0.5s ease;
     z-index: -1;
   }
 
@@ -75,20 +75,26 @@
     }
   }
 
+  // Offsetting each span across the button
   span:nth-child(2) {
     left: 0%;
     transition-delay: 0s;
   }
   span:nth-child(3) {
-    left: 25%;
+    left: 20%;
     transition-delay: 0.1s;
   }
   span:nth-child(4) {
-    left: 50%;
+    left: 40%;
     transition-delay: 0.2s;
   }
   span:nth-child(5) {
-    left: 75%;
+    left: 60%;
     transition-delay: 0.3s;
   }
+  span:nth-child(6) {
+    left: 80%;
+    transition-delay: 0.4s;
+  }
 }
+
