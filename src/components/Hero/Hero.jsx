@@ -12,7 +12,7 @@ const Hero = () => {
         <HeroCarousel />
       </div>
       <div className="hero__content">
-        <h1>Fresh meals for every lifestyle</h1>
+        <h1>Fresh meals, <br/> every lifestyle</h1>
         <p>No commitments. No cancellation fees. Just flavor.</p>
         <div className="hero__buttons">
           <button
@@ -23,12 +23,16 @@ const Hero = () => {
             <span></span>
             <span></span>
             <span></span>
+            <span></span>
+            <span></span>
           </button>
           <button
             className="btn btn--secondary"
             onClick={() => navigate("/recipes")}
           >
             Browse Dishes <span></span>
+            <span></span>
+            <span></span>
             <span></span>
             <span></span>
             <span></span>

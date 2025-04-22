@@ -1,8 +1,8 @@
 @use 'variables';
 
 button {
-  --c: rgb(218, 165, 32); // keep for now unless you want to convert to a SCSS variable
-  color: var(--c);
+  color: variables.$button-color;
+  --c: #{variables.$button-color};
   font-size: 16px;
   border: 0.3em solid var(--c);
   border-radius: 0.5em;
